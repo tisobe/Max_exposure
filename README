@@ -1,0 +1,137 @@
+
+How to compute the telemetered maximum dose exposure trend.
+-----------------------------------------------------------
+
+----
+ACIS
+----
+
+STEP 1:
+-------
+First, get month long cumulative exposure map from level 2 data.
+
+perl /data/mta4/MTA/bin/acis_dose_get_data.perl <start_year> <start_month> <end_year> <end_month>
+
+For example:
+
+	 perl /data/mta4/MTA/bin/acis_dose_get_data.perl 2004 3 2004 3
+
+to get Mar 2004 exposure map.
+
+This will create ACIS_<month>_<year>.fits file (e.g., ACIS_03_2004.fits) in the directry 
+you are working.
+
+Second, open the fits file with ds9, and examine the data. Go to "Scale", and select
+"Scale Parameters". This will open up a histgram of count rate distribution. Estimate
+an appropriate upper limit. 
+
+Thrid, use fimgtrim to remove any data point higher than the upper limit:
+
+	fimgtrim infile=ACIS_MM_YYYY.fits outfile=out.fits  threshlo threshup const_lo const_up
+	where:	threshlo: lower threshold (= 0)
+		threshup: upper threshold --- the value you selected
+		const_lo: a replace value for lower threshold
+		const_up: a replace value for upper threshold (= 0)
+
+copy out.fit back to ACIS_MM_YYYY.fits
+
+STEP 2:
+------
+Combine with the previous cumulative data: 
+
+	/data/mta4/www/REPORTS/MONTHLY/<dir>/ACIS_07_1999_<prev month>_<year>.fits.gz.
+
+After unzip this, combine this with a new fits file.
+
+	figmarge ACIS_07_1999_MM'_YYYY'.fits @file ACIS_07_1999_MM_YYYY.fits
+	where: MM' is the previous month (e.g. 02);
+	       YYYY' is the year for the previous month (e.g.2004)
+	       MM  is this month (e.g. 03)
+	       YYYY is the year for this month (e.g. 2004)
+	       @file is a file containing a line:
+			ACIS_MM_YYYY.fits,0,0 (e.g. ACIS_03_2004.fits,0,0)
+
+STEP 3:
+------
+Compute statistics:
+
+perl /data/mta4/MTA/bin/acis_dose_extract_stat_data_month.perl <year> <month> <dir1> <dir2> <out_dir>
+
+where:
+	<year>: 	the year that you wnat to compute
+	<month>:	the month that you want to compute
+	<dir1>:		the directory containing a cumulative data fits file
+	<dir2>:		the directory containing a this mounth's fits file
+	<out_dir>:	output directory:  /data/mta/www/mta_max_exp/Data
+
+This add this month's statistics to data files, e.g.
+	i_3_n_0_acc_out: CCD I3 cumulative data
+	i_3_n_0_dff_out: CCD I3 none cumulative data
+
+
+STEP 4:
+-------
+First, create plots fo these data:
+perl /data/mta4/MTA/bin/acis_dose_plot_exposure_stat.perl <in_dir> <out_dir>
+
+where:
+	<in_dir>: input dir /data/mta/www/mta_max_exp/Data
+	<out_dir>: output dir  /data/mta/www/mta_max_exp/Plots
+
+Second, create html pages for data display
+perl /data/mta4/MTA/bin/acis_dose_make_data_html.perl <in_dir>
+
+where:
+	<in_dir>: data directory, created html page will also save in the same directory.
+
+
+---
+HRC
+---
+Creation of theexposure maps for HRC is basically same as that of ACIS, except we use level 1 data.
+
+Step 1
+------
+Get data:
+
+perl /data/mta4/MTA/bin/hrc_dose_get_data.perl <start_year> <start_month> <end_year> <end_month>
+
+This will create two fits files:
+	HRCS_MM_YYYY.fits
+	HRCI_MM_YYYY.fits
+
+We do not do triming of data for HRC.
+
+
+STEP 2
+------
+Combine with the previous cumulative data:
+
+        /data/mta4/www/REPORTS/MONTHLY/<dir>/HRCS_08_1999_<prev month>_<year>.fits.gz.
+        /data/mta4/www/REPORTS/MONTHLY/<dir>/HRCI_08_1999_<prev month>_<year>.fits.gz.
+
+After unzip this, combine this with a new fits file.
+
+        figmarge HRCS_08_1999_MM'_YYYY'.fits @file HRCS_08_1999_MM_YYYY.fits
+        figmarge HRCI_08_1999_MM'_YYYY'.fits @file HRCS_0I_1999_MM_YYYY.fits
+
+STEP 3
+------
+Compute statistics:
+
+perl /data/mta4/MTA/bin/hrc_dose_extract_stat_data_month.perl <year> <month> <dir1> <dir2> <out_dir>
+
+
+STEP 4
+------
+First, create plots fo these data:
+perl /data/mta4/MTA/bin/hrc_dose_plot_exposure_stat.perl <in_dir> <out_dir>
+
+Second, create html pages for data display
+perl /data/mta4/MTA/bin/hrc_dose_make_data_html.perl <in_dir>
+
+
+
+The results can be observed at:
+	
+	http://asc.harvard.edu/mta_days/mta_max_exp/exposure.html
