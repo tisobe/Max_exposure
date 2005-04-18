@@ -5,7 +5,7 @@ TASK = Acis_hist
 
 include /data/mta4/MTA/include/Makefile.MTA
 
-BIN  = acis_dose_extract_stat_data.perl acis_dose_extract_stat_data_month.perl acis_dose_get_data.perl acis_dose_make_cum.perl acis_dose_make_data_html.perl acis_dose_plot_exposure_stat.perl hrc_dose_extract_stat_data.perl hrc_dose_extract_stat_data_month.perl hrc_dose_get_data.perl hrc_dose_make_data_html.perl hrc_dose_plot_exposure_stat.perl
+BIN  = acis_dose_extract_stat_data.perl acis_dose_extract_stat_data_month.perl acis_dose_get_data.perl acis_dose_make_cum.perl acis_dose_make_data_html.perl acis_dose_plot_exposure_stat.perl hrc_dose_extract_stat_data.perl hrc_dose_extract_stat_data_month.perl hrc_dose_get_data.perl hrc_dose_make_data_html.perl hrc_dose_plot_exposure_stat.perl hrc_doese_get_data_full_rage.perl
 DOC  = README
 
 install:

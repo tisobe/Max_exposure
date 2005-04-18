@@ -2,12 +2,12 @@
 
 #########################################################################################
 #											#
-#	acis_dose_get_data.perl: obtain ACIS Evt2 data for a month and create		#
+#	acis_dose_get_data.perl: obtain ACIS Evt1 data for a month and create		#
 #				 cumulative data fits file				#
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last updated: 03/25/2005							#
+#	last updated: 04/18/2005							#
 #											#
 #########################################################################################
 
@@ -104,8 +104,8 @@ for($year = $start_year; $year <= $end_year; $year++){
 		print OUT "operation=browse\n";
 		print OUT "dataset=flight\n";
 		print OUT "detector=acis\n";
-		print OUT "level=2\n";
-		print OUT "filetype=evt2\n";
+		print OUT "level=1\n";
+		print OUT "filetype=evt1\n";
 		print OUT "tstart=$line1\n";
 		print OUT "tstop=$line2\n";
 		print OUT "go\n";
@@ -149,8 +149,8 @@ for($year = $start_year; $year <= $end_year; $year++){
 		print OUT "operation=retrieve\n";
 		print OUT "dataset=flight\n";
 		print OUT "detector=acis\n";
-		print OUT "level=2\n";
-		print OUT "filetype=evt2\n";
+		print OUT "level=1\n";
+		print OUT "filetype=evt1\n";
 #		print OUT "obsid=$obsid\n";
 		print OUT "filename=$first\n";
 		print OUT "go\n";
@@ -178,8 +178,8 @@ for($year = $start_year; $year <= $end_year; $year++){
 			print OUT "operation=retrieve\n";
 			print OUT "dataset=flight\n";
 			print OUT "detector=acis\n";
-			print OUT "level=2\n";
-			print OUT "filetype=evt2\n";
+			print OUT "level=1\n";
+			print OUT "filetype=evt1\n";
 #			print OUT "obsid=$obsid\n";
 			print OUT "filename=$file\n";
 			print OUT "go\n";

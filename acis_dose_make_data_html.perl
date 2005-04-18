@@ -6,7 +6,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Mar 17, 2005							#
+#	last update: Apr 18, 2005							#
 #											#
 #########################################################################################
 	
@@ -18,15 +18,27 @@ if($in_dir eq ''){
 
 $list = `ls $in_dir/*dff_out`;
 @list = split(/\s+/, $list);
+OUTER:
 foreach $file (@list){
+	if($file =~ /HRC/i){
+		next OUTER;
+	}
 	@atemp = split(/_dff_out/, $file);
 
 	$acc_file = "$atemp[0]".'_acc_out';
 	$out_file = "$atemp[0]".'.html';
+	if($atemp[0] =~ /s_/i){
+		@btemp = split(/s_/, $atemp[0]);
+		@ctemp = split(/_/,  $btemp[1]);
+		$ccd = 's'."$ctemp[0]";
+	}else{
+		@btemp = split(/i_/, $atemp[0]);
+		@ctemp = split(/_/,  $btemp[1]);
+		$ccd = 'i'."$ctemp[0]";
+	}
+	$node = $ctemp[2];
 
-	@btemp = split(/\\/, $atemp[0]);
-	$title = $btemp[1];
-
+	$title = 'CCD '."$ccd".' Node '."$node";
 	@year   = ();
 	@month  = ();
 	@avg    = ();
@@ -139,10 +151,14 @@ foreach $file (@list){
 		if($month[$i] < 10){
 			$tmonth = '0'."$month[$i]";
 		}
-		$line = "$year[$i]$cmonth".'/'."ACIS_$tmonth".'_'."$year[$i]".'.fits.gz';
-		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>fits</a></td>'."\n";
-		$line = "$year[$i]$cmonth".'/'."ACIS_$tmonth".'_'."$year[$i]".'.gif';
-		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>map</a></td>'."\n";
+#		$line = "$year[$i]$cmonth".'/'."ACIS_$tmonth".'_'."$year[$i]".'.fits.gz';
+		$line = "ACIS_$tmonth".'_'."$year[$i]"."_$ccd".'.fits.gz';
+#		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>fits</a></td>'."\n";
+		print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/Month/'."$line".'>fits</a></td>'."\n";
+#		$line = "$year[$i]$cmonth".'/'."ACIS_$tmonth".'_'."$year[$i]".'.gif';
+		$line = "ACIS_$tmonth".'_'."$year[$i]"."_$ccd".'.png';
+#		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>map</a></td>'."\n";
+		print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/Images/'."$line".'>map</a></td>'."\n";
 
 		print OUT "<td>$aavg[$i]</td>\t";
 		print OUT "<td>$asdv[$i]</td>\t";
@@ -152,10 +168,14 @@ foreach $file (@list){
 		print OUT "<td>$amaxpos[$i]</td>\t";
 		print OUT "<td>$am10[$i]</td>\t";
 		print OUT "<td>$am10pos[$i]</td>\n";
-		$line = "$year[$i]$cmonth".'/'."ACIS_07_1999_$tmonth".'_'."$year[$i]".'.fits.gz';
-		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>fits</a></td>'."\n";
-		$line = "$year[$i]$cmonth".'/'."ACIS_07_1999_$tmonth".'_'."$year[$i]".'.gif';
-		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>map</a></td>'."\n";
+#		$line = "$year[$i]$cmonth".'/'."ACIS_07_1999_$tmonth".'_'."$year[$i]".'.fits.gz';
+		$line = "ACIS_07_1999_$tmonth".'_'."$year[$i]"."_$ccd".'.fits.gz';
+#		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>fits</a></td>'."\n";
+		print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/Cumulative/'."$line".'>fits</a></td>'."\n";
+#		$line = "$year[$i]$cmonth".'/'."ACIS_07_1999_$tmonth".'_'."$year[$i]".'.gif';
+		$line = "ACIS_07_1999_$tmonth".'_'."$year[$i]"."_$ccd".'.png';
+#		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>map</a></td>'."\n";
+		print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/Images/'."$line".'>map</a></td>'."\n";
 		print OUT '</tr>',"\n";
 	}
 	print OUT '</table>';

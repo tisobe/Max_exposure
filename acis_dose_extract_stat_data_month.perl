@@ -8,7 +8,7 @@
 #												#
 #	author: t. isobe (tisobe@cfa.harvard.edu)						#
 #												#
-#	last update: Mar 17, 2005								#
+#	last update: Apr 18, 2005								#
 #												#
 #################################################################################################	
 
@@ -39,182 +39,159 @@ if($month < 10){
 
 ##################################
 
-#
-#----- file names
-#
-		$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'.fits';
-		$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'.fits';
-
 #-------- ACIS I2 Chip ----------------
 
-#		$line = "$name1".'[264:1288,2182:2437]';
-		$line = "$name1".'[264:1288,2184:2435]';
-		$out_name = 'i_2_n_0_acc_out';
-		comp_stat();
+$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_i2.fits*';
+$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_i2.fits*';
 
-#		$line = "$name2".'[264:1288,2182:2437]';
-		$line = "$name2".'[264:1288,2184:2435]';
-		$out_name = 'i_2_n_0_dff_out';
-		comp_stat();
+$line = "$name1".'[1:1024,1:256]';
+$out_name = 'i_2_n_0_acc_out';
+comp_stat();
 
-#		$line = "$name1".'[264:1288,1926:2181]';
-		$line = "$name1".'[264:1288,1928:2179]';
-		$out_name = 'i_2_n_1_acc_out';
-		comp_stat();
+$line = "$name2".'[1:1024,1:256]';
+$out_name = 'i_2_n_0_dff_out';
+comp_stat();
 
-#		$line = "$name2".'[264:1288,1926:2181]';
-		$line = "$name2".'[264:1288,1928:2179]';
-		$out_name = 'i_2_n_1_dff_out';
-		comp_stat();
+$line = "$name1".'[1:1024,257:508]';            # the last few columns are dropped
+$out_name = 'i_2_n_1_acc_out';  		# because they are bad columns and too bright
+comp_stat();    # this applies for all CCDs
 
-#		$line = "$name1".'[264:1288,1670:1925]';
-		$line = "$name1".'[264:1288,1672:1923]';
-		$out_name = 'i_2_n_2_acc_out';
-		comp_stat();
+$line = "$name2".'[1:1024,257:508]';
+$out_name = 'i_2_n_1_dff_out';
+comp_stat();
 
-#		$line = "$name2".'[264:1288,1670:1925]';
-		$line = "$name2".'[264:1288,1672:1923]';
-		$out_name = 'i_2_n_2_dff_out';
-		comp_stat();
+$line = "$name1".'[1:1024,513:768]';
+$out_name = 'i_2_n_2_acc_out';
+comp_stat();
 
-#		$line = "$name1".'[264:1288,1414:1669]';
-		$line = "$name1".'[264:1288,1416:1667]';
-		$out_name = 'i_2_n_3_acc_out';
-		comp_stat();
+$line = "$name2".'[1:1024,513:768]';
+$out_name = 'i_2_n_2_dff_out';
+comp_stat();
 
-#		$line = "$name2".'[264:1288,1414:1669]';
-		$line = "$name2".'[264:1288,1416:1667]';
-		$out_name = 'i_2_n_3_dff_out';
-		comp_stat();
+$line = "$name1".'[1:1024,769:1020]';
+$out_name = 'i_2_n_3_acc_out';
+comp_stat();
+
+$line = "$name2".'[1:1024,769:1020]';
+$out_name = 'i_2_n_3_dff_out';
+comp_stat();
 
 
 #-------- ACIS I3 Chip ----------------
 
-#		$line = "$name1".'[1308:2332,1414:1669]';
-		$line = "$name1".'[1308:2332,1416:1667]';
-		$out_name = 'i_3_n_0_acc_out';
-		comp_stat();
+$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_i3.fits*';
+$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_i3.fits*';
 
-#		$line = "$name2".'[1308:2332,1414:1669]';
-		$line = "$name2".'[1308:2332,1416:1667]';
-		$out_name = 'i_3_n_0_dff_out';
-		comp_stat();
+$line = "$name1".'[1:1024,769:1020]';
+$out_name = 'i_3_n_0_acc_out';
+comp_stat();
 
-#		$line = "$name1".'[1308:2332,1670:1925]';
-		$line = "$name1".'[1308:2332,1672:1923]';
-		$out_name = 'i_3_n_1_acc_out';
-		comp_stat();
+$line = "$name2".'[1:1024,769:1020]';
+$out_name = 'i_3_n_0_dff_out';
+comp_stat();
 
-#		$line = "$name2".'[1308:2332,1670:1925]';
-		$line = "$name2".'[1308:2332,1672:1923]';
-		$out_name = 'i_3_n_1_dff_out';
-		comp_stat();
+$line = "$name1".'[1:1024,513:768]';
+$out_name = 'i_3_n_1_acc_out';
+comp_stat();
 
-#		$line = "$name1".'[1308:2332,1926:2181]';
-		$line = "$name1".'[1308:2332,1928:2179]';
-		$out_name = 'i_3_n_2_acc_out';
-		comp_stat();
+$line = "$name2".'[1:1024,513:768]';
+$out_name = 'i_3_n_1_dff_out';
+comp_stat();
 
-#		$line = "$name2".'[1308:2332,1926:2181]';
-		$line = "$name2".'[1308:2332,1928:2179]';
-		$out_name = 'i_3_n_2_dff_out';
-		comp_stat();
+$line = "$name1".'[1:1024,257:508]';
+$out_name = 'i_3_n_2_acc_out';
+comp_stat();
 
-#		$line = "$name1".'[1308:2332,2182:2437]';
-		$line = "$name1".'[1308:2332,2184:2435]';
-		$out_name = 'i_3_n_3_acc_out';
-		comp_stat();
+$line = "$name2".'[1:1024,257:508]';
+$out_name = 'i_3_n_2_dff_out';
+comp_stat();
 
-#		$line = "$name2".'[1308:2332,2182:2437]';
-		$line = "$name2".'[1308:2332,2184:2435]';
-		$out_name = 'i_3_n_3_dff_out';
-		comp_stat();
+$line = "$name1".'[1:1024,1:256]';
+$out_name = 'i_3_n_3_acc_out';
+comp_stat();
+
+$line = "$name2".'[1:1024,1:256]';
+$out_name = 'i_3_n_3_dff_out';
+comp_stat();
 
 
 #-------- ACIS S2 Chip ----------------
 
-#		$line = "$name1".'[78:333,56:1076]';
-		$line = "$name1".'[80:331,56:1076]';
-		$out_name = 's_2_n_0_acc_out';
-		comp_stat();
+$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_s2.fits*';
+$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_s2.fits*';
 
-#		$line = "$name2".'[78:333,56:1076]';
-		$line = "$name2".'[80:331,56:1076]';
-		$out_name = 's_2_n_0_dff_out';
-		comp_stat();
+$line = "$name1".'[1:256,1:1020]';
+$out_name = 's_2_n_0_acc_out';
+comp_stat();
 
-#		$line = "$name1".'[334:589,56:1076]';
-		$line = "$name1".'[336:587,56:1076]';
-		$out_name = 's_2_n_1_acc_out';
-		comp_stat();
+$line = "$name2".'[1:256,1:1020]';
+$out_name = 's_2_n_0_dff_out';
+comp_stat();
 
-#		$line = "$name2".'[334:589,56:1076]';
-		$line = "$name2".'[336:587,56:1076]';
-		$out_name = 's_2_n_1_dff_out';
-		comp_stat();
+$line = "$name1".'[257:508,1:1020]';
+$out_name = 's_2_n_1_acc_out';
+comp_stat();
 
-#		$line = "$name1".'[590:845,56:1076]';
-		$line = "$name1".'[592:843,56:1076]';
-		$out_name = 's_2_n_2_acc_out';
-		comp_stat();
+$line = "$name2".'[257:508,1:1020]';
+$out_name = 's_2_n_1_dff_out';
+comp_stat();
 
-#		$line = "$name2".'[590:845,56:1076]';
-		$line = "$name2".'[592:843,56:1076]';
-		$out_name = 's_2_n_2_dff_out';
-		comp_stat();
+$line = "$name1".'[513:768,1:1020]';
+$out_name = 's_2_n_2_acc_out';
+comp_stat();
 
-#		$line = "$name1".'[845:1100,56:1076]';
-		$line = "$name1".'[847:1098,56:1076]';
-		$out_name = 's_2_n_3_acc_out';
-		comp_stat();
+$line = "$name2".'[513:768,1:1020]';
+$out_name = 's_2_n_2_dff_out';
+comp_stat();
 
-#		$line = "$name2".'[845:1100,56:1076]';
-		$line = "$name2".'[847:1098,56:1076]';
-		$out_name = 's_2_n_3_dff_out';
-		comp_stat();
+$line = "$name1".'[769:1024,1:1020]';
+$out_name = 's_2_n_3_acc_out';
+comp_stat();
+
+$line = "$name2".'[769:1024,1:1020]';
+$out_name = 's_2_n_3_dff_out';
+comp_stat();
 
 
 #-------- ACIS S3 Chip ----------------
 
-#		$line = "$name1".'[1120:1375,56:1076]';
-		$line = "$name1".'[1122:1373,56:1076]';
-		$out_name = 's_3_n_0_acc_out';
-		comp_stat();
 
-#		$line = "$name2".'[1120:1375,56:1076]';
-		$line = "$name2".'[1122:1373,56:1076]';
-		$out_name = 's_3_n_0_dff_out';
-		comp_stat();
+$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_s3.fits*';
+$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_s3.fits*';
 
-#		$line = "$name1".'[1376:1631,56:1076]';
-		$line = "$name1".'[1378:1629,56:1076]';
-		$out_name = 's_3_n_1_acc_out';
-		comp_stat();
+$line = "$name1".'[1:256,1:1020]';
+$out_name = 's_3_n_0_acc_out';
+comp_stat();
 
-#		$line = "$name2".'[1376:1631,56:1076]';
-		$line = "$name2".'[1378:1629,56:1076]';
-		$out_name = 's_3_n_1_dff_out';
-		comp_stat();
+$line = "$name2".'[1:256,1:1020]';
+$out_name = 's_3_n_0_dff_out';
+comp_stat();
 
-#		$line = "$name1".'[1632:1887,56:1076]';
-		$line = "$name1".'[1634:1885,56:1076]';
-		$out_name = 's_3_n_2_acc_out';
-		comp_stat();
+$line = "$name1".'[257:508,1:1020]';
+$out_name = 's_3_n_1_acc_out';
+comp_stat();
 
-#		$line = "$name2".'[1632:1887,56:1076]';
-		$line = "$name2".'[1634:1885,56:1076]';
-		$out_name = 's_3_n_2_dff_out';
-		comp_stat();
+$line = "$name2".'[257:508,1:1020]';
+$out_name = 's_3_n_1_dff_out';
+comp_stat();
 
-#		$line = "$name1".'[1888:2143,56:1076]';
-		$line = "$name1".'[1890:2141,56:1076]';
-		$out_name = 's_3_n_3_acc_out';
-		comp_stat();
+$line = "$name1".'[513:768,1:1020]';
+$out_name = 's_3_n_2_acc_out';
+comp_stat();
 
-#		$line = "$name2".'[1888:2143,56:1076]';
-		$line = "$name2".'[1890:2141,56:1076]';
-		$out_name = 's_3_n_3_dff_out';
-		comp_stat();
+$line = "$name2".'[513:768,1:1020]';
+$out_name = 's_3_n_2_dff_out';
+comp_stat();
+
+$line = "$name1".'[769:1024,1:1020]';
+$out_name = 's_3_n_3_acc_out';
+comp_stat();
+
+$line = "$name2".'[769:1024,1:1020]';
+$out_name = 's_3_n_3_dff_out';
+comp_stat();
+
+#-----------------------------
 
 
 ######################################################################
