@@ -49,19 +49,19 @@ if($month < 10){
 		$name4 = "$in_dir2".'/HRCI_'."$smonth".'_'."$year".'.fits*';
 
 		$line = $name1;
-		$out_name = 'hrcs_acc_out';
+		$out_name = "$out_dir/".'hrcs_acc_out';
 		comp_stat();
 
 		$line = $name2;
-		$out_name = 'hrcs_dff_out';
+		$out_name = "$out_dir/".'hrcs_dff_out';
 		comp_stat();
 
 		$line = $name3;
-		$out_name = 'hrci_acc_out';
+		$out_name = "$out_dir/".'hrci_acc_out';
 		comp_stat();
 
 		$line = $name4;
-		$out_name = 'hrci_dff_out';
+		$out_name = "$out_dir/".'hrci_dff_out';
 		comp_stat();
 
 

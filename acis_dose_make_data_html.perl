@@ -16,13 +16,10 @@ if($in_dir eq ''){
 	exit 1;
 }
 
-$list = `ls $in_dir/*dff_out`;
+$list = `ls $in_dir/hrc*dff_out`;
 @list = split(/\s+/, $list);
 OUTER:
 foreach $file (@list){
-	if($file =~ /HRC/i){
-		next OUTER;
-	}
 	@atemp = split(/_dff_out/, $file);
 
 	$acc_file = "$atemp[0]".'_acc_out';

@@ -19,7 +19,7 @@ For example:
 to get Mar 2004 exposure map.
 
 This will create ACIS_<month>_<year>.fits file (e.g., ACIS_03_2004.fits) in the directry 
-you are working. Save this file in /data/mta/www/mta_max_exp/Month/ (you should zip it).
+you are working. 
 
 Second, open the fits file with ds9, and examine the data. Go to "Scale", and select
 "Scale Parameters". This will open up a histgram of count rate distribution. Estimate
@@ -34,6 +34,7 @@ Thrid, use fimgtrim to remove any data point higher than the upper limit:
 		const_up: a replace value for upper threshold (= 0)
 
 copy out.fit back to ACIS_MM_YYYY.fits
+Save this file in /data/mta/www/mta_max_exp/Month/ (you should zip it).
 
 STEP 2:
 ------
@@ -53,8 +54,9 @@ Then run:
 This will create correction part in a direcotry ./Save (acisf*_img_part.fits and acisf*_img_full.fits.
 The former contains only corrected part, the latter is a full image). Not all the data will creates a correction 
 fits file, since some of them do not have any data on CCD s3. A combined image data is also created and 
-named : comb_out.fits (contains only corretion part for the month). Use this file to correct the missing part.
+named : comb_out.fits (contains only corretion part for the month). Use this file to correct the missing part. 
 Note; if s3 CCD is empty, comb_out.fits will be corrupted; so make sure that s3 actually has data.
+(5/4/05 the script is updated so that if there is no s3 obs. comb_out.fit won't be created.)
 
 STEP 3:
 ------
@@ -62,10 +64,11 @@ Create separate images for CCDs I2, I3, S2, and S3
 List names of fits files that you just created in a file (for example: fits_list),
 then run:
 	perl /data/mta4/MTA/bin/acis_dose_seprate_ccd.perl fits_list
+where fits_list contains list of fits files (if it is for monthly only one fits file name).
 This will creates separate images for I2, I3, S2, and S3.If the original
 fits file has a name of: ACIS_08_2004.fits, then the resulted files are ACIS_08_2004_i2.fits etc.
 
-Make sure that you make these separate fits files for both monthly and cumulative dose maps.
+Open each fits file with ds9 again, and trim unwanted upper part as you did in Step 1.
 
 
 STEP 4:
