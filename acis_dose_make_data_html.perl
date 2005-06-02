@@ -16,7 +16,7 @@ if($in_dir eq ''){
 	exit 1;
 }
 
-$list = `ls $in_dir/hrc*dff_out`;
+$list = `ls $in_dir/acis*dff_out`;
 @list = split(/\s+/, $list);
 OUTER:
 foreach $file (@list){
