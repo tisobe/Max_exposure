@@ -16,7 +16,7 @@ $start_month = $ARGV[1];
 $end_year    = $ARGV[2];
 $end_month   = $ARGV[3];
 $user        =`cat /data/mta4/MTA/data/.dare`;
-$hakama      = `cat /data/mta4/MTA/.hakama`;
+$hakama      = `cat /data/mta4/MTA/data/.hakama`;
 
 chomp $start_year;
 chomp $start_month;
