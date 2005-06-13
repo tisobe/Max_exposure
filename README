@@ -187,3 +187,49 @@ perl /data/mta4/MTA/bin/hrc_dose_make_data_html.perl <in_dir>
 The results can be observed at:
 	
 	http://asc.harvard.edu/mta_days/mta_max_exp/exposure.html
+
+
+---------------------
+HRC Full Exposure Map
+---------------------
+To create full exposure maps for HRC-I and HRC-S are done by following steps.
+
+1. extract data from archive:
+	perl hrc_dose_get_data_full_rage.perl <start year> <start month> <end year> <end month> <user> <pass> <out_dir>
+	where:	<start year> <start month> starting year and month of data which you want to extract
+		<end year> <end month>     ending year and month of data which you want to extract
+
+		example: 2005 5 2005 5--- this extract data for the month of May 2005 only.
+	
+		<user> <pass> arc4gl 	   user name and password
+
+		<out_dir>		   directory name where all hrc fits files go
+
+2. create cumulative exposrue map for the month:
+	perl hrc_dose_make_cum_add_to_last.perl <in_dir> <cum_dir> <year> <month>
+	
+	where <in_dir>		a directory name which saves monthly exposure maps
+	      <cum_dir>         a directory name which saves cumulative exposrue maps
+	      <year> <month>    year and month of which you want to create cumulative maps
+				(you must have cumulative maps for the previous maps.)
+
+3. compute statistics:
+	perl hrc_dose_dff_comp_stat_month.perl <in_dir> <out_dir> <year> <month>
+	perl hrc_dose_acc_comp_stat_month.perl <in_dir> <out_dir> <year> <month>
+
+	where <in_dir> 		input directory name 
+	      <out_dir>		output directory name--- this must contains previous output
+				since this script append the new data to them.
+	      <year> <month>    year and month of which you want to compute statistics.
+
+4. plot trends:
+	perl hrc_dose_plot_exposure_stat_section.perl <in_dir> <out_dir>
+
+	where <in_dir>		output directory created by step 3
+	      <out_dir>	        output directory for gif files
+
+5. create data files for html:
+	perl hrc_dose_make_data_html_full_range.perl <in_dir>
+
+	where <in_dir>		output direcotory created by ste 3. The results will be
+				saved in the same directory

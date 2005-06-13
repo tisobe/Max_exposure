@@ -105,8 +105,8 @@ foreach $file (@list){
 
 	print OUT '<tr>',"\n";
 	print OUT '<td>&#160</td><td>&#160</td>',"\n";
-	print OUT '<td colspan=8>Monlthy</td>',"\n";
-	print OUT '<td colspan=8>Cumulative</td>',"\n";
+	print OUT '<td colspan=7>Monlthy</td>',"\n";
+	print OUT '<td colspan=7>Cumulative</td>',"\n";
 	print OUT '</tr><tr>',"\n";
 	print OUT '<th>Year</th>',"\n";
 	print OUT '<th>Month</th>',"\n";
