@@ -146,7 +146,7 @@ Get data:
 
 perl /data/mta4/MTA/bin/hrc_dose_get_data.perl <start_year> <start_month> <end_year> <end_month>
 
-This will create two fits files:
+This will create two fits files (in Save/):
 	HRCS_MM_YYYY.fits
 	HRCI_MM_YYYY.fits
 
@@ -157,8 +157,10 @@ STEP 2
 ------
 Combine with the previous cumulative data:
 
-        /data/mta4/www/REPORTS/MONTHLY/<dir>/HRCS_08_1999_<prev month>_<year>.fits.gz.
-        /data/mta4/www/REPORTS/MONTHLY/<dir>/HRCI_08_1999_<prev month>_<year>.fits.gz.
+###        /data/mta4/www/REPORTS/MONTHLY/<dir>/HRCS_08_1999_<prev month>_<year>.fits.gz.
+###        /data/mta4/www/REPORTS/MONTHLY/<dir>/HRCI_08_1999_<prev month>_<year>.fits.gz.
+	   /data/mta_www/mta_max_exp/Cumulative_hrc_old/HRCS_08_1999_<prev month>_<year>.fits.gz.
+	   /data/mta_www/mta_max_exp/Cumulative_hrc_old/HRCI_08_1999_<prev month>_<year>.fits.gz.
 
 After unzip this, combine this with a new fits file.
 

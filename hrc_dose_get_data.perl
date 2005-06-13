@@ -2,7 +2,7 @@
 
 #########################################################################################
 #											#
-#	hrc_dose_get_data.perl: obtain ACIS Evt2 data for a month and create		#
+#	hrc_dose_get_data.perl: obtain ACIS Evt1 data for a month and create		#
 #				 cumulative data fits file				#
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
@@ -77,8 +77,8 @@ for($year = $start_year; $year <= $end_year; $year++){
 			$smonth = '0'."$month";
 		}
 
-		$out_file_i = '/HRCI_'."$smonth".'_'."$year".'.fits';
-		$out_file_s = '/HRCS_'."$smonth".'_'."$year".'.fits';
+		$out_file_i = './HRCI_'."$smonth".'_'."$year".'.fits';
+		$out_file_s = './HRCS_'."$smonth".'_'."$year".'.fits';
 
 		$line1 = "$smonth/01/$short_year".',00:00:00';
 		$next_month = $month+1;
