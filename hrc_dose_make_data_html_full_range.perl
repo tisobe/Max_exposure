@@ -34,7 +34,11 @@ foreach $file (@list){
 	$out_file = "$atemp[0]".'.html';
 
 	@btemp = split(/_/, $atemp[0]);
-	$sec = $btemp[1];				#----- section indicator
+	$chk = 0;
+	foreach (@btemp){
+		$chk++;
+	}
+	$sec = $btemp[$chk -1];				#----- section indicator
 
 	@btemp = split(/\\/, $atemp[0]);
 	$title = 'HRC '."$pos".' Sec:'."$sec";
@@ -150,7 +154,7 @@ foreach $file (@list){
 #			print OUT '<td>No Image</td>',"\n";
 		}else{
 #			print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>fits</a></td>'."\n";
-			print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/Month_hrc/'."$line".'>fits</a></td>'."\n";
+			print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/HRC/Month_hrc/'."$line".'>fits</a></td>'."\n";
 #			$line = "$year[$i]$cmonth".'/'.'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'.gif';
 			$line = 'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'.png';
 #			print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>map</a></td>'."\n";
@@ -166,7 +170,7 @@ foreach $file (@list){
 #		$line = "$year[$i]$cmonth".'/'.'HRC'."$pos"."_08_1999_$tmonth".'_'."$year[$i]".'.fits.gz';
 		$line = 'HRC'."$pos"."_08_1999_$tmonth".'_'."$year[$i]".'_'."$sec".'.fits.gz';
 #		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>fits</a></td>'."\n";
-		print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/Cumulative_hrc/'."$line".'>fits</a></td>'."\n";
+		print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/HRC/Cumulative_hrc/'."$line".'>fits</a></td>'."\n";
 #		$line = "$year[$i]$cmonth".'/'.'HRC'."$pos"."_08_1999_$tmonth".'_'."$year[$i]".'.gif';
 		$line = 'HRC'."$pos"."_08_1999_$tmonth".'_'."$year[$i]".'.png';
 #		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>map</a></td>'."\n";
