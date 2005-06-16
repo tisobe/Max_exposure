@@ -99,8 +99,10 @@ foreach $file (@list){
 	close(FH);
 		
 	open(OUT, ">$out_file");
-	print OUT '<HTML><BODY TEXT="#FFFFFF" BGCOLOR="#000000" LINK="#00CCFF" ';
-	print OUT 'VLINK="#B6FFFF" ALINK="#FF0000"background="./stars.jpg">',"\n";
+#	print OUT '<HTML><BODY TEXT="#FFFFFF" BGCOLOR="#000000" LINK="#00CCFF" ';
+#	print OUT 'VLINK="#B6FFFF" ALINK="#FF0000"background="./stars.jpg">',"\n";
+	print OUT '<HTML><BODY TEXT="#FFFFFF" BGCOLOR="#000000" LINK="yellow" ';
+	print OUT 'VLINK="yellow" ALINK="yellow"background="./stars.jpg">',"\n";
 	print OUT '<title>Data</title>',"\n";
 	
 	print OUT "<center> <h1>Data: $title </h1> </center>\n";
