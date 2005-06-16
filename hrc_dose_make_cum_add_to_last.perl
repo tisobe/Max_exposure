@@ -29,10 +29,10 @@ if ($lmonth < 1){
 }else{
 	$lyear = $tyear;
 }
-if($tmonth < 10){
+if($tmonth < 10 && $tmonth !~ /^0/){
 	$tmonth = '0'."$tmonth";
 }
-if($lmonth < 10){
+if($lmonth < 10 && $lmonth !~ /^0/){
 	$lmonth = '0'."$lmonth";
 }
 

@@ -146,7 +146,7 @@ foreach $file (@list){
 		$in_month = $month[$i];
 		chg_month_format();
 		$tmonth = $month[$i];
-		if($month[$i] < 10){
+		if($month[$i] < 10 && $month[$i] !~ /^0/){
 			$tmonth = '0'."$month[$i]";
 		}
 #		$line = "$year[$i]$cmonth".'/'.'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'.fits.gz';

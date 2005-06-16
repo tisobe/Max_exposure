@@ -19,7 +19,7 @@ for($year = 1999; $year <= $tyear; $year++){
 			last OUTER;
 		}
 		$cmonth = $month;
-		if($month < 10){
+		if($month < 10 && $month !~ /^0/){
 			$cmonth = '0'."$month";
 		}
 		$name = "$in_dir".'/ACIS_'."$cmonth".'_'."$year".'.fits*';
