@@ -11,6 +11,8 @@
 #											#
 #########################################################################################
 
+$ftools = '/home/ascds/DS.release/otsbin/';
+
 $start_year  = $ARGV[0];
 $start_month = $ARGV[1];
 $end_year    = $ARGV[2];
@@ -163,7 +165,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 		$line = "$first".'[EVENTS][bin tdetx=2800:5200:1, tdety=1650:4150:1][option type=i4]';
 		system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 
-		system("chimgtyp out.fits  total.fits datatype=LONG Inull=-99 clobber=yes");
+		system("$ftools/chimgtyp out.fits  total.fits datatype=LONG Inull=-99 clobber=yes");
 		system("echo total.fits,0,0 > file");
 
 		system("rm $first");
@@ -194,12 +196,12 @@ for($year = $start_year; $year <= $end_year; $year++){
 			system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 
 			$check = `ls total.fits`;
-			system("chimgtyp out.fits temp3.fits datatype=LONG Inull=-99 clobber=yes");
+			system("$ftools/chimgtyp out.fits temp3.fits datatype=LONG Inull=-99 clobber=yes");
 			if($check !~ /total/){
 				system("mv temp3.fits total.fits");
 				next OUTER;
 			}
-			system("fimgmerge temp3.fits \@file mtemp.fits");
+			system("$ftools/fimgmerge temp3.fits \@file mtemp.fits");
 			system("mv mtemp.fits total.fits");
 			system("rm $file");
 		}
@@ -216,7 +218,7 @@ sub comp_stat{
                 my($file_name, $upper, $max, $ftemp);
                 ($file_name, $upper) = @_;
 
-                system("fimgstat $file_name threshlo=0 threshup=$upper > zstat");
+                system("$ftools/fimgstat $file_name threshlo=0 threshup=$upper > zstat");
                 open(SFH, './zstat');
                 while(<SFH>){
                         chomp $_;
@@ -243,8 +245,8 @@ sub find_10th {
         my($file_name, $upper);
         ($file_name) = @_;
 
-        system("fimhisto $file_name  outfile.fits range=indef,indef binsize=1 clobber='yes'");
-        system("fdump outfile.fits zout - - clobber='yes'");
+        system("$ftools/fimhisto $file_name  outfile.fits range=indef,indef binsize=1 clobber='yes'");
+        system("$ftools/fdump outfile.fits zout - - clobber='yes'");
         open(FH, './zout');
         @hbin = ();
         @hcnt = ();

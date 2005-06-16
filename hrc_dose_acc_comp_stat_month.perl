@@ -11,6 +11,7 @@
 #													#
 #########################################################################################################
 
+$ftools = '/home/ascds/DS.release/otsbin/';
 
 $indir  = $ARGV[0];					#--- data file location
 $outdir = $ARGV[1];					#--- stat data directory
@@ -50,7 +51,7 @@ foreach $header ('HRCS', 'HRCI'){
 			close(OUT);
 			next OUTER;
 		}
-		system("fimgstat $name i/inf i/inf > zstat");
+		system("$ftools/fimgstat $name i/inf i/inf > zstat");
 		open(FH, './zstat');
 		while(<FH>){
 			chomp $_;
@@ -80,7 +81,7 @@ foreach $header ('HRCS', 'HRCI'){
 		system("rm zstat");
 
                 find_10th("$name");
-                system("fimgstat $name threshlo=0 threshup=$upper > zstat");
+                system("$ftools/fimgstat $name threshlo=0 threshup=$upper > zstat");
                 open(FH, './zstat');
                 while(<FH>){
                         chomp $_;
@@ -131,8 +132,8 @@ foreach $header ('HRCS', 'HRCI'){
 sub find_10th {
 
         ($fzzz) = @_;
-        system("fimhisto $fzzz outfile.fits range=indef,indef binsize=1 clobber='yes'");
-        system("fdump outfile.fits zout - - clobber='yes'");
+        system("$ftools/fimhisto $fzzz outfile.fits range=indef,indef binsize=1 clobber='yes'");
+        system("$ftools/fdump outfile.fits zout - - clobber='yes'");
         open(FH, './zout');
         @hbin = ();
         @hcnt = ();

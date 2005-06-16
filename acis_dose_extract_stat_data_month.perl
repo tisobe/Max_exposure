@@ -12,6 +12,8 @@
 #												#
 #################################################################################################	
 
+$ftools = '/home/ascds/DS.release/otsbin/';
+
 $year    = $ARGV[0];
 $month   = $ARGV[1];
 $in_dir  = $ARGV[2];
@@ -234,11 +236,11 @@ sub month_num_to_lett{
 
 sub comp_stat{
 	system("dmcopy \"$line\" temp.fits");
-#	system("fimgstat temp.fits I/INDEF I/INDEF > result");
-	system("fimgstat temp.fits threshlo=1 threshup=I/INDEF > result");	#-- to avoid get min from outside of the edge of a CCD
+#	system("$ftools/fimgstat temp.fits I/INDEF I/INDEF > result");
+	system("$ftools/fimgstat temp.fits threshlo=1 threshup=I/INDEF > result");	#-- to avoid get min from outside of the edge of a CCD
 
 	find_10th("temp.fits");						#-- find the 10th brightest ccd position and the count
-	system("fimgstat temp.fits threshlo=0 threshup=$upper > result2");
+	system("$ftools/fimgstat temp.fits threshlo=0 threshup=$upper > result2");
 	system("rm temp.fits");
 	print_stat();							#-- extract results and print data out
 }
@@ -304,8 +306,8 @@ sub print_stat{
 
 sub find_10th {
 
-        system("fimhisto temp.fits outfile.fits range=indef,indef binsize=1 clobber='yes'");
-        system("fdump outfile.fits zout - - clobber='yes'");
+        system("$ftools/fimhisto temp.fits outfile.fits range=indef,indef binsize=1 clobber='yes'");
+        system("$ftools/fdump outfile.fits zout - - clobber='yes'");
         open(FH, './zout');
         @hbin = ();
         @hcnt = ();

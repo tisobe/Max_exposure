@@ -11,6 +11,8 @@
 #											#
 #########################################################################################
 
+$ftools = '/home/ascds/DS.release/otsbin/';
+
 $start_year  = $ARGV[0];
 $start_month = $ARGV[1];
 $end_year    = $ARGV[2];
@@ -159,7 +161,7 @@ print "$file\n";
 	
 				system("dmcopy \"$line\" out.fits  option=image  clobber=yes");
 
-				system("chimgtyp out.fits  total.fits datatype=LONG Inull=-99 clobber=yes");
+				system("$ftools/chimgtyp out.fits  total.fits datatype=LONG Inull=-99 clobber=yes");
 				system("echo total.fits,0,0 > file");
 		
 				system("rm $first");
@@ -172,12 +174,12 @@ print "$file\n";
 					system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 	
 					$check = `ls total.fits`;
-					system("chimgtyp out.fits temp3.fits datatype=LONG Inull=-99 clobber=yes");
+					system("$ftools/chimgtyp out.fits temp3.fits datatype=LONG Inull=-99 clobber=yes");
 					if($check !~ /total/){
 						system("mv temp3.fits total.fits");
 						next OUTER;
 					}
-					system("fimgmerge temp3.fits \@file mtemp.fits");
+					system("$ftools/fimgmerge temp3.fits \@file mtemp.fits");
 					system("mv mtemp.fits total.fits");
 					system("rm $file");
 				}
@@ -198,7 +200,7 @@ print "$file\n";
 	
 				system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 
-				system("chimgtyp out.fits  total.fits datatype=LONG Inull=-99 clobber=yes");
+				system("$ftools/chimgtyp out.fits  total.fits datatype=LONG Inull=-99 clobber=yes");
 				system("echo total.fits,0,0 > file");
 		
  				system("rm $first");
@@ -210,12 +212,12 @@ print "$file\n";
 					if (-e 'out.fits') {unlink 'out.fits';}
 					system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 					$check = `ls total.fits`;
-					system("chimgtyp out.fits temp3.fits datatype=LONG Inull=-99 clobber=yes");
+					system("$ftools/chimgtyp out.fits temp3.fits datatype=LONG Inull=-99 clobber=yes");
 					if($check !~ /total/){
 						system("mv temp3.fits total.fits");
 						next OUTER;
 					}
-					system("fimgmerge temp3.fits \@file mtemp.fits");
+					system("$ftools/fimgmerge temp3.fits \@file mtemp.fits");
 					system("mv mtemp.fits total.fits");
 					system("rm $file");
 				}

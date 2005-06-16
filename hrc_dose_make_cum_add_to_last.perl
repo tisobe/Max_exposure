@@ -11,6 +11,8 @@
 #												#
 #################################################################################################
 
+$ftools = '/home/ascds/DS.release/otsbin/';
+
 $in_dir  = $ARGV[0];	#----- directory contains hrc maps for each month
 $cum_dir = $ARGV[1];	#----- directory contains hrc cumultavie data
 $tyear   = $ARGV[2];	#----- the year ending the accumulation
@@ -48,11 +50,11 @@ foreach $inst ('HRCI', 'HRCS'){
 		$test = `ls $name`;
 		chomp $test;
 		if($test =~ /$inst/){
-			system("chimgtyp $name temp3.fits datatype=DOUBLE Inull=-99 clobber=yes");
+			system("$ftools/chimgtyp $name temp3.fits datatype=DOUBLE Inull=-99 clobber=yes");
 			open(OUT, '>file');
 			print OUT "temp3.fits,0,0\n";
 			close(OUT);
-			system("fimgmerge $lname \@file $out clobber=yes");
+			system("$ftools/fimgmerge $lname \@file $out clobber=yes");
 			system("gzip $out");
 		}else{
 			$out2 = "$out".'.gz';

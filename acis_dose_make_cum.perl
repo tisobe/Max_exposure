@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+$ftools = '/home/ascds/DS.release/otsbin/';
+
 $in_dir = $ARGV[0];
 $tyear  = $ARGV[1];
 $tmonth = $ARGV[2];
@@ -25,16 +27,16 @@ for($year = 1999; $year <= $tyear; $year++){
 		if($year == 1999 && $month == 7){
 			system("cp $name $out");
 			system("cp $name temp.fits");
-			system("chimgtyp temp.fits temp2.fits datatype=DOUBLE Inull=-99 clobber=yes");
+			system("$ftools/chimgtyp temp.fits temp2.fits datatype=DOUBLE Inull=-99 clobber=yes");
 			system("mv temp2.fits temp.fits");
 			next OUTER1;
 		}
 		
-		system("chimgtyp $name temp3.fits datatype=DOUBLE Inull=-99 clobber=yes");
+		system("$ftools/chimgtyp $name temp3.fits datatype=DOUBLE Inull=-99 clobber=yes");
 		open(OUT, '>file');
 		print OUT "temp3.fits,0,0\n";
 		close(OUT);
-		system("fimgmerge temp.fits \@file $out clobber=yes");
+		system("$ftools/fimgmerge temp.fits \@file $out clobber=yes");
 		system("cp $out temp.fits");
 	}
 }
