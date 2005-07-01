@@ -105,6 +105,18 @@ foreach $file (@list){
 	
 	print OUT "<center> <h1>Data: $title </h1> </center>\n";
 
+#
+#----  update the html page
+#
+
+        ($usec, $umin, $uhour, $umday, $umon, $uyear, $uwday, $uyday, $uisdst)= localtime(time);
+
+        $year  = 1900   + $uyear;
+        $month = $umon  + 1;
+
+        $line = "<br><H3> Last Update: $month/$umday/$year</H3>";
+        print OUT "$line\n";
+
 	print OUT '<table border=1 cellspacing=3 cellpadding=3>',"\n";
 
 	print OUT '<tr>',"\n";
@@ -178,17 +190,6 @@ foreach $file (@list){
 		print OUT '</tr>',"\n";
 	}
 	print OUT '</table>';
-#
-#----  update the html page
-#
-
-        ($usec, $umin, $uhour, $umday, $umon, $uyear, $uwday, $uyday, $uisdst)= localtime(time);
-
-        $year  = 1900   + $uyear;
-        $month = $umon  + 1;
-
-        $line = "<br><br><H3> Last Update: $month/$umday/$year</H3><br>";
-        print OUT "$line\n";
 
         close(OUT);
 }
