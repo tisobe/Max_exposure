@@ -20,6 +20,13 @@ $end_month   = $ARGV[3];
 $user        =`cat /data/mta4/MTA/data/.dare`;
 $hakama      = `cat /data/mta4/MTA/data/.hakama`;
 
+$test = `ls -d `;
+if($test =~ /Save/){
+	system("rm ./Save/*");
+}else{
+	system("mkdir ./Save");
+}
+
 chomp $start_year;
 chomp $start_month;
 chomp $end_year;
