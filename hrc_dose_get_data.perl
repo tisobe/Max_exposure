@@ -17,13 +17,17 @@ $start_year  = $ARGV[0];
 $start_month = $ARGV[1];
 $end_year    = $ARGV[2];
 $end_month   = $ARGV[3];
-$user        = $ARGV[4];
-$hakama      = $ARGV[5];
+$user        =`cat /data/mta4/MTA/data/.dare`;
+$hakama      = `cat /data/mta4/MTA/data/.hakama`;
 
 chomp $start_year;
 chomp $start_month;
 chomp $end_year;
 chomp $end_month;
+chomp $user;
+chomp $hakama;
+$user   =~ s/\s+//g;
+$hakama =~ s/\s+//g;
 
 if($start_year !~/\d/ || $start_month !~/\d/ || $end_year!~ /\d/ || $end_month !~ /\d/
 				 || $user eq '' || $hakama eq ''){
