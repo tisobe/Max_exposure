@@ -95,6 +95,4 @@ $file_name = "$main_html/exposure.html";
 
 system("cat $main_html/house_keeping/exposure.html ./ztemp > $main_html/exposure.html");
 
-system("cat $main_html/house_keeping/high_drop_rate_list.html ./ztemp > $main_html/high_drop_rate_list.html");
-
 system("rm ./ztemp");

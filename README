@@ -233,3 +233,12 @@ To create full exposure maps for HRC-I and HRC-S are done by following steps.
 
 	where <in_dir>		output direcotory created by ste 3. The results will be
 				saved in the same directory
+
+
+-----------------
+html page update
+-----------------
+
+perl dose_plot_html_for_plot.perl
+
+This will update all html page (except for data html pages)
