@@ -157,10 +157,8 @@ STEP 2
 ------
 Combine with the previous cumulative data:
 
-###        /data/mta4/www/REPORTS/MONTHLY/<dir>/HRCS_08_1999_<prev month>_<year>.fits.gz.
-###        /data/mta4/www/REPORTS/MONTHLY/<dir>/HRCI_08_1999_<prev month>_<year>.fits.gz.
-	   /data/mta_www/mta_max_exp/Cumulative_hrc_old/HRCS_08_1999_<prev month>_<year>.fits.gz.
-	   /data/mta_www/mta_max_exp/Cumulative_hrc_old/HRCI_08_1999_<prev month>_<year>.fits.gz.
+   /data/mta_www/mta_max_exp/Cumulative_hrc/HRCS_08_1999_<prev month>_<year>.fits.gz.
+   /data/mta_www/mta_max_exp/Cumulative_hrc/HRCI_08_1999_<prev month>_<year>.fits.gz.
 
 After unzip this, combine this with a new fits file.
 
@@ -173,6 +171,14 @@ Compute statistics:
 
 perl /data/mta4/MTA/bin/hrc_dose_extract_stat_data_month.perl <year> <month> <dir1> <dir2> <out_dir>
 
+where:
+        <year>:         the year that you wnat to compute
+        <month>:        the month that you want to compute
+        <dir1>:         the directory containing a cumulative data fits file
+        <dir2>:         the directory containing a this mounth's fits file
+        <out_dir>:      output directory:  /data/mta/www/mta_max_exp/Data
+
+
 
 STEP 4
 ------
@@ -181,6 +187,10 @@ perl /data/mta4/MTA/bin/hrc_dose_plot_exposure_stat.perl <in_dir> <out_dir>
 
 Second, create html pages for data display
 perl /data/mta4/MTA/bin/hrc_dose_make_data_html.perl <in_dir>
+
+where:
+        <in_dir>: input dir /data/mta/www/mta_max_exp/Data
+        <out_dir>: output dir  /data/mta/www/mta_max_exp/Plots
 
 
 

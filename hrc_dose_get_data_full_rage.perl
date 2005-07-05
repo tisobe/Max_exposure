@@ -11,7 +11,7 @@
 #											#
 #########################################################################################
 
-$ftools = '/home/ascds/DS.release/otsbin/'
+$ftools = '/home/ascds/DS.release/otsbin/';
 
 #
 #---- usage: perl hrc_doese_get_data_full_rage.perl 2004 3 2004 3 <arc4gl user name> <passwd>
