@@ -185,13 +185,12 @@ STEP 4
 First, create plots fo these data:
 perl /data/mta4/MTA/bin/hrc_dose_plot_exposure_stat.perl <in_dir> <out_dir>
 
-Second, create html pages for data display
-perl /data/mta4/MTA/bin/hrc_dose_make_data_html.perl <in_dir>
-
 where:
         <in_dir>: input dir /data/mta/www/mta_max_exp/Data
         <out_dir>: output dir  /data/mta/www/mta_max_exp/Plots
 
+Second, create html pages for data display
+perl /data/mta4/MTA/bin/hrc_dose_make_data_html.perl <in_dir>
 
 
 The results can be observed at:
