@@ -121,8 +121,8 @@ foreach $file (@list){
 
 	print OUT '<tr>',"\n";
 	print OUT '<td>&#160</td><td>&#160</td>',"\n";
-	print OUT '<td colspan=7>Monlthy</td>',"\n";
-	print OUT '<td colspan=7>Cumulative</td>',"\n";
+	print OUT '<td colspan=8>Monlthy</td>',"\n";
+	print OUT '<td colspan=8>Cumulative</td>',"\n";
 	print OUT '</tr><tr>',"\n";
 	print OUT '<th>Year</th>',"\n";
 	print OUT '<th>Month</th>',"\n";
@@ -133,6 +133,7 @@ foreach $file (@list){
 	print OUT '<th>Max</th>',"\n";
 	print OUT '<th>Max Position</th>',"\n";
 	print OUT '<th>Data</th>',"\n";
+	print OUT '<th>Map</th>',"\n";
 
 	print OUT '<th>Mean</th>',"\n";
 	print OUT '<th>SD</th>',"\n";
@@ -141,6 +142,7 @@ foreach $file (@list){
 	print OUT '<th>Max</th>',"\n";
 	print OUT '<th>Max Position</th>',"\n";
 	print OUT '<th>Data</th>',"\n";
+	print OUT '<th>Map</th>',"\n";
 	print OUT '</tr>',"\n";
 
 	for($i = 0; $i < $cnt; $i++){
@@ -163,14 +165,15 @@ foreach $file (@list){
 		$line = 'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'_'."$sec".'.fits.gz';
 		if($avg[$i] !~ /\d/){
 			print OUT '<td>No Data</td>',"\n";
-#			print OUT '<td>No Image</td>',"\n";
+			print OUT '<td>No Image</td>',"\n";
 		}else{
 #			print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>fits</a></td>'."\n";
 			print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/HRC/Month_hrc/'."$line".'>fits</a></td>'."\n";
 #			$line = "$year[$i]$cmonth".'/'.'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'.gif';
-			$line = 'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'.png';
+#			$line = 'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'.png';
+			$line = 'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'_'."$sec".'.gif';
 #			print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>map</a></td>'."\n";
-#			print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/Images/'."$line".'>map</a></td>'."\n";
+			print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/HRC/Month_hrc/'."$line".'>map</a></td>'."\n";
 		}
 
 		print OUT "<td>$aavg[$i]</td>\t";
@@ -180,13 +183,14 @@ foreach $file (@list){
 		print OUT "<td>$amax[$i]</td>\t";
 		print OUT "<td>$amaxpos[$i]</td>\t";
 #		$line = "$year[$i]$cmonth".'/'.'HRC'."$pos"."_08_1999_$tmonth".'_'."$year[$i]".'.fits.gz';
-		$line = 'HRC'."$pos"."_08_1999_$tmonth".'_'."$year[$i]".'_'."$sec".'.fits.gz';
+		$line = 'HRC'."$pos"."_09_1999_$tmonth".'_'."$year[$i]".'_'."$sec".'.fits.gz';
 #		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>fits</a></td>'."\n";
 		print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/HRC/Cumulative_hrc/'."$line".'>fits</a></td>'."\n";
 #		$line = "$year[$i]$cmonth".'/'.'HRC'."$pos"."_08_1999_$tmonth".'_'."$year[$i]".'.gif';
-		$line = 'HRC'."$pos"."_08_1999_$tmonth".'_'."$year[$i]".'.png';
+#		$line = 'HRC'."$pos"."_09_1999_$tmonth".'_'."$year[$i]".'.png';
+		$line = 'HRC'."$pos"."_09_1999_$tmonth".'_'."$year[$i]".'_'."$sec".'.png';
 #		print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>map</a></td>'."\n";
-#		print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/Images/'."$line".'>map</a></td>'."\n";
+		print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/HRC/Cumulative_hrc/'."$line".'>map</a></td>'."\n";
 		print OUT '</tr>',"\n";
 	}
 	print OUT '</table>';
