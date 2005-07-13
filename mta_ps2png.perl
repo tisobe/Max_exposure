@@ -19,13 +19,5 @@ chomp $out_plot;
 
 $bin_dir  = "/data/mta4/MTA/bin/";
 
-system("/opt/local/bin/ds9 $in_file -zoom to fit -scale histequ -cmap Heat -print destination file -print filename foo.ps -print -lower -iconify -exit");
-
-system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./foo.ps|$bin_dir/pnmcrop|$bin_dir/ppmtogif > $out_plot");
-
-#
-#----- if you need to rotate a figure,  add " $bin_dir/pnmflip -r270 " or an appropriate angle in the line above
-#
-
-system("rm foo.ps");
+system("/opt/local/bin/ds9 $in_file -zoom to fit -scale histequ -cmap Heat -saveimage png $out_plot  -lower -iconify -exit");
 
