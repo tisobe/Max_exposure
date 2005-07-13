@@ -2,7 +2,7 @@
 
 #################################################################################
 #										#
-#	ps2gif.perl: change a ps file to gif file				#
+#	ps2png.perl: change a ps file to png file				#
 #										#
 #		this script work only from rhodes				#
 #										#
