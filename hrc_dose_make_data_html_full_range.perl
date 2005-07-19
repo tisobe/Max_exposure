@@ -171,7 +171,7 @@ foreach $file (@list){
 			print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/HRC/Month_hrc/'."$line".'>fits</a></td>'."\n";
 #			$line = "$year[$i]$cmonth".'/'.'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'.gif';
 #			$line = 'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'.png';
-			$line = 'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'_'."$sec".'.gif';
+			$line = 'HRC'."$pos"."_$tmonth".'_'."$year[$i]".'_'."$sec".'.png';
 #			print OUT '<td><a href=http://asc.harvard.edu/mta/REPORTS/MONTHLY/'."$line".'>map</a></td>'."\n";
 			print OUT '<td><a href=http://cxc.harvard.edu/mta_days/mta_max_exp/HRC/Month_hrc/'."$line".'>map</a></td>'."\n";
 		}
