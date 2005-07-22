@@ -106,7 +106,6 @@ sub month_num_to_lett{
 ###########################################################################
 
 sub comp_stat{
-print "$line\n";
 	$ztest = `ls $line`;
 	if($ztest =~ /$line/){
 		system("$ftools/fimgstat $line threshlo=0 threshup=I/INDEF > result");	#-- to avoid get min from outside of the edge of a CCD

@@ -152,7 +152,6 @@ for($year = $start_year; $year <= $end_year; $year++){
 				$hrcs_cnt++;
 			}else{
 				push(@hrci_list, $file);
-print "$file\n";
 				$hrci_cnt++;
 			}
 		}
