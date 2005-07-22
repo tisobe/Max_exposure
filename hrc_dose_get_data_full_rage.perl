@@ -223,7 +223,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 					$mfile    = 'file'."$i";
 					system("echo $fit_file,0,0 > $mfile");
 				}	
-				system("rm first");
+#				system("rm first");
 
 				OUTER:
 				foreach $file (@hrcs_list){
@@ -248,7 +248,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 						system("$ftools/fimgmerge temp3.fits \@zfile mtemp.fits");
 						system("mv mtemp.fits $fit_file");
 					}
-					system("rm $file");
+#					system("rm $file");
 				}
 				system("rm out.fits temp3.fits");
 				for($i = 0; $i < 10; $i++){
@@ -292,7 +292,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 					$mfile    = 'file'."$i";
 					system("echo $fit_file,0,0 > $mfile");
 				}
- 				system("rm $first");
+# 				system("rm $first");
 
 				OUTER:
 				foreach $file (@hrci_list){
@@ -314,7 +314,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 						system("$ftools/fimgmerge temp3.fits \@zfile mtemp.fits");
 						system("mv mtemp.fits $fit_file");
 					}
-					system("rm $file");
+#					system("rm $file");
 				}
 				system("rm out.fits temp3.fits");
 				for($i = 0; $i < 9; $i++){

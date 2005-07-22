@@ -54,7 +54,8 @@ foreach $inst ('HRCI', 'HRCS'){
 			open(OUT, '>file');
 			print OUT "temp3.fits,0,0\n";
 			close(OUT);
-			system("$ftools/fimgmerge $lname \@file $out clobber=yes");
+			system("$ftools/fimgmerge $lname \@file ./zout.fits  clobber=yes");
+			system("mv ./zout.fits $out");
 			system("gzip $out");
 		}else{
 			$out2 = "$out".'.gz';

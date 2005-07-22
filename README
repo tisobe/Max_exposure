@@ -138,6 +138,17 @@ where:
 ---
 HRC
 ---
+
+Run following two scripts to get both center and full HRC dose maps. These are run automatically
+(as cron jobs) on 3rd or every momth to create dose maps for the previous month.
+
+perl /data/mta4/MTA/bin/hrc_create_center_dose_map.perl
+
+perl /data/mta4/MTA/bin/hrc_create_full_dose_map.perl
+
+
+####### OLD STEP BY STEP METHODS ########
+
 Creation of the exposure maps for HRC is basically same as that of ACIS.
 
 Step 1
