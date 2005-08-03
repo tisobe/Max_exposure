@@ -196,7 +196,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 		@rend  = (4915, 9831, 14747, 19663, 24579, 29495, 34411, 39327, 44243, 49159);
 		if($hrcs_cnt > 0){
 			if($hrcs_cnt == 1){
-				$file = shift(@hrcs_list);
+				$first = shift(@hrcs_list);
 				for($i = 0; $i < 10; $i++){
 					$line = "$first".'[EVENTS][bin rawx=0:4095:1, rawy='."$rstart[$i]:$rend[$i]";
 					$line = "$line".':1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4,mem=100]';
