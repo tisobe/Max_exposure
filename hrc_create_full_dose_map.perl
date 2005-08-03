@@ -12,8 +12,8 @@
 
 $bin_dir  = '/data/mta4/MTA/bin/';			# this works only from rhodes
 $dat_dir  = '/data/mta4/MTA/data/';
-$mon_dir  = '/data/mta/Script/Exposure/Hrc/Month_hrc/';
-$cum_dir  = '/data/mta/Script/Exposure/Hrc/Cumulative_hrc/';
+$mon_dir  = '/data/mta_www/mta_max_exp/Month_hrc/';
+$cum_dir  = '/data/mta_www/mta_max_exp/Cumulative_hrc/';
 $data_out = '/data/mta/www/mta_max_exp/HRC/Data/';
 $plot_dir = '/data/mta/www/mta_max_exp/HRC/Plots/';
 $mays_dir = '/data/mays/MTA/Exposure/Hrc/';

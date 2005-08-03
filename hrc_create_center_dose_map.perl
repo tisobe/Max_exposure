@@ -14,8 +14,8 @@ $ftools = '/home/ascds/DS.release/otsbin/';
 
 $bin_dir  = '/data/mta4/MTA/bin/';		# this works only from rhodes
 $dat_dir  = '/data/mta4/MTA/data/';
-$mon_dir  = '/data/mta/Script/Exposure/Month_hrc/';
-$cum_dir  = '/data/mta/Script/Exposure/Cumulative_hrc/';
+$mon_dir  = '/data/mta_www/mta_max_exp/Month_hrc/';
+$cum_dir  = '/data/mta_www/mta_max_exp/Cumulative_hrc/';
 $data_out = '/data/mta/www/mta_max_exp/Data/';
 $plot_dir = '/data/mta/www/mta_max_exp/Plots/';
 $img_dir  = '/data/mta_www/mta_max_exp/Images';
@@ -69,7 +69,8 @@ if($tmonth < 1){
 
 system("perl $bin_dir/hrc_dose_get_data.perl $lyear $lmonth $lyear $lmonth $usr $pass");
 
-system("mv ./Save/HRC*fits $mon_dir");
+system("mv ./Save/HRC*fits $mon_dir/");
+system("gzip  $mon_dir/*fits");
 system("rm -rf Save");
 
 $dlmonth = $lmonth;
