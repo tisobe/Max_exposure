@@ -20,14 +20,6 @@ $data_out = '/data/mta/www/mta_max_exp/Data/';
 $plot_dir = '/data/mta/www/mta_max_exp/Plots/';
 $img_dir  = '/data/mta_www/mta_max_exp/Images';
 
-$bin_dir  = '/data/mta4/MTA/bin/';		# this works only from rhodes
-$dat_dir  = '/data/mta4/MTA/data/';
-$mon_dir  = '/data/mta/Script/Exposure/Test2/Test_out/Month_hrc/';
-$cum_dir  = '/data/mta/Script/Exposure/Test2/Test_out/Cumulative_hrc/';
-$data_out = '/data/mta/Script/Exposure/Test2/Test_out/Hrc/Data/';
-$plot_dir = '/data/mta/Script/Exposure/Test2/Test_out/Hrc/Plots/';
-$img_dir  = '/data/mta/Script/Exposure/Test2/Test_out/Images';
-
 
 $usr = `cat $dat_dir/.dare`;
 $pass = `cat $dat_dir/.hakama`;

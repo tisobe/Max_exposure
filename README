@@ -79,7 +79,7 @@ Combine with the previous cumulative data:
 
 After unzip this, combine this with a new fits file.
 
-	figmarge ACIS_07_1999_MM'_YYYY'.fits @file ACIS_07_1999_MM_YYYY.fits
+	fimgmerge ACIS_07_1999_MM'_YYYY'.fits @file ACIS_07_1999_MM_YYYY.fits
 	where: MM' is the previous month (e.g. 02);
 	       YYYY' is the year for the previous month (e.g.2004)
 	       MM  is this month (e.g. 03)
