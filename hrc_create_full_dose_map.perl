@@ -93,6 +93,8 @@ if($lmonth < 10 && $lmonth !~ /0/){
 
 $new_data = '*'."$emonth".'_'."$lyear".'*';
 
+system("gzip $mon_dir/$new_data");
 system("cp $mon_dir/$new_data $mays_dir/Month_hrc");
 
+system("gzip $cum_dir/$new_data");
 system("cp $cum_dir/$new_data $mays_dir/Cumulative_hrc");

@@ -33,7 +33,7 @@ foreach $header ('HRCS', 'HRCI'){
 		}
 		$lower = lc $header;
 		$out   = "$outdir".'/'."$lower".'_'."$sec".'_acc';
-		$name  = "$indir".'/'."$header".'_09_1999_'."$tmonth".'_'."$tyear".'_'."$sec".'.fits.gz';
+		$name  = "$indir".'/'."$header".'_09_1999_'."$tmonth".'_'."$tyear".'_'."$sec".'.fits.*';
 
 		system("ls $name");
 		$test = `ls $indir/*`;
