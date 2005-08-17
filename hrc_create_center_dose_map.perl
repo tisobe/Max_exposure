@@ -10,16 +10,20 @@
 #											#
 #########################################################################################
 
-$ftools = '/home/ascds/DS.release/otsbin/';
+###############################################################################
+#---- set directories
 
-$bin_dir  = '/data/mta4/MTA/bin/';		# this works only from rhodes
-$dat_dir  = '/data/mta4/MTA/data/';
+$bin_dir  = '/data/mta/MTA/bin/';
+$dat_dir  = '/data/mta/MTA/data/';
 $mon_dir  = '/data/mta_www/mta_max_exp/Month_hrc/';
 $cum_dir  = '/data/mta_www/mta_max_exp/Cumulative_hrc/';
 $data_out = '/data/mta/www/mta_max_exp/Data/';
 $plot_dir = '/data/mta/www/mta_max_exp/Plots/';
 $img_dir  = '/data/mta_www/mta_max_exp/Images';
 
+$lookup   = '/home/ascds/DS.release/data/dmmerge_header_lookup.txt';    # dmmerge header rule lookup table
+
+###############################################################################
 
 $usr = `cat $dat_dir/.dare`;
 $pass = `cat $dat_dir/.hakama`;
@@ -93,12 +97,11 @@ foreach $inst ('HRCI', 'HRCS'){
 	$test  = `ls $name`;
 	chomp $test;
 	if($test =~ /$name/){
-		system("$ftools/chimgtyp $name temp3.fits datatype=DOUBLE Inull=-99 clobber=yes");
-		open(OUT, '>file');
-		print OUT "temp3.fits,0,0\n";
-		close(OUT);
-		system("$ftools/fimgmerge $tname \@file ./zout.fits  clobber=yes");
-		system("mv ./zout.fits $out");
+
+		$line ="$name".'[opt type=i4,null=-99]';
+		system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber='yes'");
+
+		system("dmmerge infile=\"$tname,$temp3.fits\" outfile=$out outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
 		system("gzip $out");
 	}else{
 		$out2 = "$out".'.gz';

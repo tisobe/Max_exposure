@@ -6,17 +6,25 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Jul 21, 2005							#
+#	last update: Aug 17, 2005							#
 #											#
 #########################################################################################
 
-$bin_dir  = '/data/mta4/MTA/bin/';			# this works only from rhodes
-$dat_dir  = '/data/mta4/MTA/data/';
-$mon_dir  = '//data/mta/Script/Exposure/Hrc/Month_hrc/';
-$cum_dir  = '/data/mta/Script/Exposure/Hrc/Cumulative_hrc/';
-$data_out = '/data/mta/www/mta_max_exp/HRC/Data/';
-$plot_dir = '/data/mta/www/mta_max_exp/HRC/Plots/';
-$mays_dir = '/data/mays/MTA/Exposure/Hrc/';
+###############################################################################
+#---- set directories
+
+$bin_dir  = '/data/mta/MTA/bin/';
+$dat_dir  = '/data/mta/MTA/data/';
+$mon_dir  = '/data/mta_www/mta_max_exp/Month_hrc/';
+$cum_dir  = '/data/mta_www/mta_max_exp/Cumulative_hrc/';
+$data_out = '/data/mta/www/mta_max_exp/Data/';
+$plot_dir = '/data/mta/www/mta_max_exp/Plots/';
+$img_dir  = '/data/mta_www/mta_max_exp/Images';
+
+$mays_dir = '/data/mays/MTA/Exposure/Hrc/';			#----- copying data
+
+###############################################################################
+
 
 $usr = `cat $dat_dir/.dare`;
 $pass = `cat $dat_dir/.hakama`;
