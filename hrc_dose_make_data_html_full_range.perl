@@ -11,6 +11,7 @@
 #########################################################################################
 	
 $in_dir  = $ARGV[0];
+
 if($in_dir eq ''){
 	print "Usage: perl hrc_dose_make_data_html.perl <data dir>\n";
 	exit 1;

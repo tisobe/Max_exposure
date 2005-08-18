@@ -1,6 +1,11 @@
 #!/usr/bin/perl
 
-$ftools = '/home/ascds/DS.release/otsbin/';
+###############################################################################
+#---- set directories
+
+$lookup   = '/home/ascds/DS.release/data/dmmerge_header_lookup.txt';    # dmmerge header rule lookup table
+
+###############################################################################
 
 $in_dir = $ARGV[0];
 $tyear  = $ARGV[1];
@@ -27,16 +32,18 @@ for($year = 1999; $year <= $tyear; $year++){
 		if($year == 1999 && $month == 7){
 			system("cp $name $out");
 			system("cp $name temp.fits");
-			system("$ftools/chimgtyp temp.fits temp2.fits datatype=DOUBLE Inull=-99 clobber=yes");
+
+			$line ='temp.fits[opt type=i4,null=-99]';
+			system("dmcopy infile=\"$line\"  outfile=temp2.fits clobber=yes");
+
 			system("mv temp2.fits temp.fits");
 			next OUTER1;
 		}
 		
-		system("$ftools/chimgtyp $name temp3.fits datatype=DOUBLE Inull=-99 clobber=yes");
-		open(OUT, '>file');
-		print OUT "temp3.fits,0,0\n";
-		close(OUT);
-		system("$ftools/fimgmerge temp.fits \@file $out clobber=yes");
+		$line = "$name".'[opt type=i4,null=-99]';
+		system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber=yes");
+
+		system("dmmerge infile="temp.fits,temp3.fits" outfile=$out outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
 		system("cp $out temp.fits");
 	}
 }

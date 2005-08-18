@@ -6,11 +6,9 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Apr 18, 2005							#
+#	last update: Aug 18, 2005							#
 #											#
 #########################################################################################
-
-$ftools = '/home/ascds/DS.release/otsbin/';
 
 $in_dir  = $ARGV[0];
 if($in_dir eq ''){

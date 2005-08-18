@@ -6,11 +6,36 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Jul 19, 2005							#
+#	last update: Aug 17, 2005							#
 #											#
 #########################################################################################
 
-$bin_dir = '/data/mta4/MTA/bin/';
+#
+#---- set directories
+#
+
+$temp_in = `cat ./dir_list`;
+@dir_list = split(/\s+/, $temp_in);
+
+$chk = 0;
+foreach (@dir_list){
+        $chk++;
+}
+if($chk == 0){
+        print "dir_list is not set\n";
+        exit 1;
+}
+
+$bin_dir  = $dir_list[0];
+$dat_dir  = $dir_list[1];
+$mon_dir  = $dir_list[2];
+$cum_dir  = $dir_list[3];
+$data_out = $dir_list[4];
+$plot_dir = $dir_list[5];
+$img_dir  = $dir_list[6];
+$web_dir  = $dir_list[7];
+$lookup   = $dir_list[8];
+
 
 $in_dir  = $ARGV[0];		# input directory name
 $out_dir = $ARGV[1];		# output directory name

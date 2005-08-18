@@ -10,11 +10,11 @@ STEP 1:
 -------
 First, get month long cumulative exposure map from level 1 data.
 
-perl /data/mta4/MTA/bin/acis_dose_get_data.perl <start_year> <start_month> <end_year> <end_month>
+perl /data/mta/MTA/bin/acis_dose_get_data.perl <start_year> <start_month> <end_year> <end_month>
 
 For example:
 
-	 perl /data/mta4/MTA/bin/acis_dose_get_data.perl 2004 3 2004 3
+	 perl /data/mta/MTA/bin/acis_dose_get_data.perl 2004 3 2004 3
 
 to get Mar 2004 exposure map.
 
@@ -63,7 +63,7 @@ STEP 3:
 Create separate images for CCDs I2, I3, S2, and S3
 List names of fits files that you just created in a file (for example: fits_list),
 then run:
-	perl /data/mta4/MTA/bin/acis_dose_seprate_ccd.perl fits_list
+	perl /data/mta/MTA/bin/acis_dose_seprate_ccd.perl fits_list
 where fits_list contains list of fits files (if it is for monthly only one fits file name).
 This will creates separate images for I2, I3, S2, and S3.If the original
 fits file has a name of: ACIS_08_2004.fits, then the resulted files are ACIS_08_2004_i2.fits etc.
@@ -94,7 +94,7 @@ STEP 5:
 ------
 Compute statistics:
 
-perl /data/mta4/MTA/bin/acis_dose_extract_stat_data_month.perl <year> <month> <dir1> <dir2> <out_dir>
+perl /data/mta/MTA/bin/acis_dose_extract_stat_data_month.perl <year> <month> <dir1> <dir2> <out_dir>
 
 where:
 	<year>: 	the year that you wnat to compute
@@ -109,7 +109,7 @@ This add this month's statistics to data files, e.g.
 
 If you want to compute the entire period (starting Jul 1999), use
 
-perl /data/mta4/MTA/bin/hrc_dose_extract_stat_data.perl
+perl /data/mta/MTA/bin/hrc_dose_extract_stat_data.perl
 
 for this, the cumulative data must be in ./Save directory, and monthly data must be
 in ./Save/Data directory.
@@ -118,14 +118,14 @@ in ./Save/Data directory.
 STEP 6:
 -------
 First, create plots fo these data:
-perl /data/mta4/MTA/bin/acis_dose_plot_exposure_stat.perl <in_dir> <out_dir>
+perl /data/mta/MTA/bin/acis_dose_plot_exposure_stat.perl <in_dir> <out_dir>
 
 where:
 	<in_dir>: input dir /data/mta/www/mta_max_exp/Data
 	<out_dir>: output dir  /data/mta/www/mta_max_exp/Plots
 
 Second, create html pages for data display
-perl /data/mta4/MTA/bin/acis_dose_make_data_html.perl <in_dir>
+perl /data/mta/MTA/bin/acis_dose_make_data_html.perl <in_dir>
 
 where:
 	<in_dir>: data directory, created html page will also save in the same directory.
@@ -142,9 +142,9 @@ HRC
 Run following two scripts to get both center and full HRC dose maps. These are run automatically
 (as cron jobs) on 3rd or every momth to create dose maps for the previous month.
 
-perl /data/mta4/MTA/bin/hrc_create_center_dose_map.perl
+perl /data/mta/MTA/bin/hrc_create_center_dose_map.perl
 
-perl /data/mta4/MTA/bin/hrc_create_full_dose_map.perl
+perl /data/mta/MTA/bin/hrc_create_full_dose_map.perl
 
 
 ####### OLD STEP BY STEP METHODS ########
@@ -155,7 +155,7 @@ Step 1
 ------
 Get data:
 
-perl /data/mta4/MTA/bin/hrc_dose_get_data.perl <start_year> <start_month> <end_year> <end_month>
+perl /data/mta/MTA/bin/hrc_dose_get_data.perl <start_year> <start_month> <end_year> <end_month>
 
 This will create two fits files (in Save/):
 	HRCS_MM_YYYY.fits
@@ -180,7 +180,7 @@ STEP 3
 ------
 Compute statistics:
 
-perl /data/mta4/MTA/bin/hrc_dose_extract_stat_data_month.perl <year> <month> <dir1> <dir2> <out_dir>
+perl /data/mta/MTA/bin/hrc_dose_extract_stat_data_month.perl <year> <month> <dir1> <dir2> <out_dir>
 
 where:
         <year>:         the year that you wnat to compute
@@ -194,14 +194,14 @@ where:
 STEP 4
 ------
 First, create plots fo these data:
-perl /data/mta4/MTA/bin/hrc_dose_plot_exposure_stat.perl <in_dir> <out_dir>
+perl /data/mta/MTA/bin/hrc_dose_plot_exposure_stat.perl <in_dir> <out_dir>
 
 where:
         <in_dir>: input dir /data/mta/www/mta_max_exp/Data
         <out_dir>: output dir  /data/mta/www/mta_max_exp/Plots
 
 Second, create html pages for data display
-perl /data/mta4/MTA/bin/hrc_dose_make_data_html.perl <in_dir>
+perl /data/mta/MTA/bin/hrc_dose_make_data_html.perl <in_dir>
 
 
 The results can be observed at:

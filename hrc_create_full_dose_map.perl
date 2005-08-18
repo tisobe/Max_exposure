@@ -10,23 +10,34 @@
 #											#
 #########################################################################################
 
-###############################################################################
+#
 #---- set directories
+#
 
-$bin_dir  = '/data/mta/MTA/bin/';
-$dat_dir  = '/data/mta/MTA/data/';
-$mon_dir  = '/data/mta_www/mta_max_exp/Month_hrc/';
-$cum_dir  = '/data/mta_www/mta_max_exp/Cumulative_hrc/';
-$data_out = '/data/mta/www/mta_max_exp/Data/';
-$plot_dir = '/data/mta/www/mta_max_exp/Plots/';
-$img_dir  = '/data/mta_www/mta_max_exp/Images';
+$temp_in = `cat ./dir_list`;
+@dir_list = split(/\s+/, $temp_in);
 
-$mays_dir = '/data/mays/MTA/Exposure/Hrc/';			#----- copying data
+$chk = 0;
+foreach (@dir_list){
+        $chk++;
+}
+if($chk == 0){
+        print "dir_list is not set\n";
+        exit 1;
+}
 
-###############################################################################
+$bin_dir  = $dir_list[0];
+$dat_dir  = $dir_list[1];
+$mon_dir  = $dir_list[2];
+$cum_dir  = $dir_list[3];
+$data_out = $dir_list[4];
+$plot_dir = $dir_list[5];
+$img_dir  = $dir_list[6];
+$web_dir  = $dir_list[7];
+$lookup   = $dir_list[8];
 
 
-$usr = `cat $dat_dir/.dare`;
+$usr  = `cat $dat_dir/.dare`;
 $pass = `cat $dat_dir/.hakama`;
 chomp $usr;
 chomp $pass;
@@ -90,19 +101,23 @@ system("perl $bin_dir/hrc_dose_make_data_html_full_range.perl $data_out");
 system("perl $bin_dir/hrc_dose_conv_to_png.perl $mon_dir $mon_dir $lyear $lmonth");
 system("perl $bin_dir/hrc_dose_conv_to_png.perl $cum_dir $cum_dir $lyear $lmonth");
 
+###################################################################################
+#---following was commented out, since this operation cannot be done from colossus
+#---see hrc_dose_copy_data_to_may.perl
+###################################################################################
 #
 #--- copy data to "mays" which can be seen from the outer world
 #
-
-$emonth = $lmonth;
-if($lmonth < 10 && $lmonth !~ /0/){
-	$emonth = '0'."$lmonth";
-}
-
-$new_data = '*'."$emonth".'_'."$lyear".'*';
-
-system("gzip $mon_dir/$new_data");
-system("cp $mon_dir/$new_data $mays_dir/Month_hrc");
-
-system("gzip $cum_dir/$new_data");
-system("cp $cum_dir/$new_data $mays_dir/Cumulative_hrc");
+#
+#$emonth = $lmonth;
+#if($lmonth < 10 && $lmonth !~ /0/){
+#	$emonth = '0'."$lmonth";
+#}
+#
+#$new_data = '*'."$emonth".'_'."$lyear".'*';
+#
+#system("gzip $mon_dir/$new_data");
+#system("cp $mon_dir/$new_data $mays_dir/Month_hrc");
+#
+#system("gzip $cum_dir/$new_data");
+#system("cp $cum_dir/$new_data $mays_dir/Cumulative_hrc");

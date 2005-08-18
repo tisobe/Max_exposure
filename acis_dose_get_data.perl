@@ -7,18 +7,26 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last updated: 04/18/2005							#
+#	last updated: 08/18/2005							#
 #											#
 #########################################################################################
 
-$ftools = '/home/ascds/DS.release/otsbin/';
+###############################################################################
+#---- set directories
+
+$bin_dir  = '/data/mta/MTA/bin/';
+$dat_dir  = '/data/mta/MTA/data/';
+
+$lookup   = '/home/ascds/DS.release/data/dmmerge_header_lookup.txt';    # dmmerge header rule lookup table
+
+###############################################################################
 
 $start_year  = $ARGV[0];
 $start_month = $ARGV[1];
 $end_year    = $ARGV[2];
 $end_month   = $ARGV[3];
-$user        =`cat /data/mta4/MTA/data/.dare`;
-$hakama      = `cat /data/mta4/MTA/data/.hakama`;
+$user        = `cat $dat_dir/.dare`;
+$hakama      = `cat $dat_dir/.hakama`;
 
 chomp $start_year;
 chomp $start_month;
@@ -165,7 +173,9 @@ for($year = $start_year; $year <= $end_year; $year++){
 		$line = "$first".'[EVENTS][bin tdetx=2800:5200:1, tdety=1650:4150:1][option type=i4]';
 		system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 
-		system("$ftools/chimgtyp out.fits  total.fits datatype=LONG Inull=-99 clobber=yes");
+		$line = 'out.fits[opt type=i4,null=-99]';
+		system("dmcopy infile=\"$line\" outfile=total.fits clobber=yes");
+
 		system("echo total.fits,0,0 > file");
 
 		system("rm $first");
@@ -196,12 +206,16 @@ for($year = $start_year; $year <= $end_year; $year++){
 			system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 
 			$check = `ls total.fits`;
-			system("$ftools/chimgtyp out.fits temp3.fits datatype=LONG Inull=-99 clobber=yes");
+
+			$line = 'out.fits[opt type=i4,null=-99]';
+			system("dmcopy infile=\"$line\" outfile=temp3.fits clobber=yes");
+
 			if($check !~ /total/){
 				system("mv temp3.fits total.fits");
 				next OUTER;
 			}
-			system("$ftools/fimgmerge temp3.fits \@file mtemp.fits");
+
+			system("dmmerge \"temp3.fits,total.fits" outfile='mtemp.fits outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
 			system("mv mtemp.fits total.fits");
 			system("rm $file");
 		}
@@ -209,63 +223,3 @@ for($year = $start_year; $year <= $end_year; $year++){
 		system("mv total.fits $out_file");
 	}
 }
-
-##########################################################################
-### Following two sub scripts are not used in this script              ###
-##########################################################################
-
-sub comp_stat{
-                my($file_name, $upper, $max, $ftemp);
-                ($file_name, $upper) = @_;
-
-                system("$ftools/fimgstat $file_name threshlo=0 threshup=$upper > zstat");
-                open(SFH, './zstat');
-                while(<SFH>){
-                        chomp $_;
-                        if($_ =~ /The maximum/){
-                                @ftemp = split(/=/, $_);
-                                $max = $ftemp[1];
-                                $max =~ s/\s+//;
-                        }
-			if($_ =~ /The location of maximum is at pixel number/){
-				@ftemp = split(/=/, $_);
-				$location = $ftemp[1];
-			}
-                }
-		close(SFH);
-                system("rm zstat");
-                return $max;
-}
-
-##########################################################################
-### find_10th: finding 10th brightest pisxel position and the count    ###
-##########################################################################
-
-sub find_10th {
-        my($file_name, $upper);
-        ($file_name) = @_;
-
-        system("$ftools/fimhisto $file_name  outfile.fits range=indef,indef binsize=1 clobber='yes'");
-        system("$ftools/fdump outfile.fits zout - - clobber='yes'");
-        open(FH, './zout');
-        @hbin = ();
-        @hcnt = ();
-        $tot = 0;
-        while(<FH>){
-                chomp $_;
-                @htemp = split(/\s+/, $_);
-                if($htemp[1] =~ /\d/ && $htemp[2] =~ /\d/ && $htemp[3] > 0){
-                        push(@hbin, $htemp[1]);
-                        push(@hcnt, $htemp[3]);
-                        $tot++;
-                }
-        }
-        close(FH);
-        $upper = $hbin[$tot-11];
-        if($tot < 10 || $upper ==  0){
-                $upper = "I/INDEF";
-        }
-        system("rm outfile.fits zout");
-	return $upper;
-}
-

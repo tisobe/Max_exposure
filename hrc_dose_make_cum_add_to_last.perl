@@ -7,11 +7,36 @@
 #												#
 #		author: t. isobe (tisobe@cfa.harvard.edu)					#
 #												#
-#		last update: Jun 13, 2005							#
+#		last update: Aug 17, 2005							#
 #												#
 #################################################################################################
 
-$ftools = '/home/ascds/DS.release/otsbin/';
+#
+#---- set directories
+#
+
+$temp_in = `cat ./dir_list`;
+@dir_list = split(/\s+/, $temp_in);
+
+$chk = 0;
+foreach (@dir_list){
+        $chk++;
+}
+if($chk == 0){
+        print "dir_list is not set\n";
+        exit 1;
+}
+
+$bin_dir  = $dir_list[0];
+$dat_dir  = $dir_list[1];
+$mon_dir  = $dir_list[2];
+$cum_dir  = $dir_list[3];
+$data_out = $dir_list[4];
+$plot_dir = $dir_list[5];
+$img_dir  = $dir_list[6];
+$web_dir  = $dir_list[7];
+$lookup   = $dir_list[8];
+
 
 $in_dir  = $ARGV[0];	#----- directory contains hrc maps for each month
 $cum_dir = $ARGV[1];	#----- directory contains hrc cumultavie data
@@ -50,11 +75,11 @@ foreach $inst ('HRCI', 'HRCS'){
 		$test = `ls $name`;
 		chomp $test;
 		if($test =~ /$inst/){
-			system("$ftools/chimgtyp $name temp3.fits datatype=DOUBLE Inull=-99 clobber=yes");
-			open(OUT, '>file');
-			print OUT "temp3.fits,0,0\n";
-			close(OUT);
-			system("$ftools/fimgmerge $lname \@file ./zout.fits  clobber=yes");
+
+			$line = "$name".'[opt type=i4,null=-99]';
+			system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber=yes");
+
+			system("dmmerge infile=\"$lname,temp3.fits\" outfile=./zout.fits outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
 			system("mv ./zout.fits $out");
 			system("gzip $out");
 		}else{

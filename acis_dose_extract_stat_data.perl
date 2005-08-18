@@ -11,7 +11,13 @@
 #												#
 #################################################################################################	
 
-$ftools = '/home/ascds/DS.release/otsbin/';
+###############################################################################
+#---- set directories
+
+$web_dir  = '/data/mta/www/mta_max_exp/';
+
+###############################################################################
+
 #
 #------- find today's date
 #
@@ -73,12 +79,9 @@ for($year = $byear; $year <= $tyear; $year++){
 ##################################
 
 		month_num_to_lett($month);
-#		$in_dir = './Save';					#--- data for cumulative data
-#		$in_dir = "/data/mta4/www/REPORTS/MONTHLY/$year$cmonth";
-		$in_dir = "/data/mta/www/mta_max_exp//Cumulative";
-#		$in_dir2 = './Save/Data';				#--- data for each month
-#		$in_dir2 = "/data/mta4/www/REPORTS/MONTHLY/$year$cmonth";
-		$in_dir2 = "/data/mta/www/mta_max_exp//Month";
+
+		$in_dir  = "$web_dir/Cumulative";
+		$in_dir2 = "$web_dir/Month";
 
 ##################################
 
@@ -287,12 +290,17 @@ sub month_num_to_lett{
 
 sub comp_stat{
 	system("dmcopy \"$line\" temp.fits");
-#	system("$ftools/fimgstat temp.fits I/INDEF I/INDEF > result");
-	system("$ftools/fimgstat temp.fits threshlo=1 threshup=I/INDEF > result");	#-- to avoid get min from outside of the edge of a CCD
+
+	system("dmimgthresh infile=temp.fits outfile=zthresh.fits  cut=\"0:\" value=0 clobber=yes");
+	system("dmstat infile=zthresh.fits centroid=no > result");
+	system("rm zthresh.fits");
 
 	find_10th("temp.fits");						#-- find the 10th brightest ccd position and the count
-	system("$ftools/fimgstat temp.fits threshlo=0 threshup=$upper > result2");
-	system("rm temp.fits");
+
+	system("dmimgthresh infile=temp.fits outfile=zthresh.fits  cut=\"0:$upper\" value=0 clobber=yes");
+	system("dmstat infile=zthresh.fits centroid=no > result2");
+	system("rm zthresh.fits temp.fits");
+
 	print_stat();							#-- extract results and print data out
 }
 
@@ -355,8 +363,9 @@ sub print_stat{
 
 sub find_10th {
 
-        system("$ftools/fimhisto temp.fits outfile.fits range=indef,indef binsize=1 clobber='yes'");
-        system("$ftools/fdump outfile.fits zout - - clobber='yes'");
+	system("dmimghist infile=temp.fits outfile=outfile.fits 1::1 strict clobber=yes");
+	system("dmlist infile=outfile.fits outfile=./zout opt=data");
+
         open(FH, './zout');
         @hbin = ();
         @hcnt = ();

@@ -7,11 +7,9 @@
 #												#
 #	author: t. isobe (tisobe@cfa.harvard.edu)						#
 #												#
-#	last update: Mar 23, 2005								#
+#	last update: Aug 17, 2005								#
 #												#
 #################################################################################################	
-
-$ftools = '/home/ascds/DS.release/otsbin/';
 
 #
 #------- find today's date
@@ -148,16 +146,28 @@ sub month_num_to_lett{
 ###########################################################################
 
 sub comp_stat{
-print "$line\n";
 	$ztest = `ls $line`;
 	if($ztest =~ /$line/){
-		system("$ftools/fimgstat $line threshlo=0 threshup=I/INDEF > result");	#-- to avoid get min from outside of the edge of a CCD
-	
+#
+#-- to avoid get min from outside of the edge of a CCD
+#
+		system("dmimgthresh infile=$line outfile=zcut.fits  cut=\"0:\" value=0 clobber=yes");
+		system("dmstat infile=zthresh.fits centroid=no > result");
+		system("rm zthresh.fits");
+
 		$upper = 'I/INDEF';
 		$chk = `cat ./result`;
+
+#
+#-- find the 10th brightest ccd position and the count
+#
 		if($chk =~ /mean/){
-			$upper = find_10th("$line");				#-- find the 10th brightest ccd position and the count
-			system("$ftools/fimgstat $line threshlo=0 threshup=$upper > result2");
+
+			find_10th("$line");
+
+			system("dmimgthresh infile=$line outfile=zthresh.fits  cut=\"0:$upper\" value=0 clobber=yes");
+			system("dmstat infile=zthresh.fits centroid=no > result2");
+			system("rm zthresh.fits");
 		}
 	}else{
 		open(ZZ, '> result');
@@ -190,19 +200,17 @@ sub print_stat{
 
         while(<IN>) {
                 chomp $_;
-                @atemp = split(/=/,$_);
-                if($atemp[0] eq 'The mean of the selected image                '){
-                        $mean = $atemp[1];
-                }elsif($atemp[0] eq 'The standard deviation of the selected image  '){
-                        $dev = $atemp[1];
-                }elsif($atemp[0] eq 'The minimum of selected image                 '){
-                        $min = $atemp[1];
-                }elsif($atemp[0] eq 'The maximum of selected image                 '){
-                        $max = $atemp[1];
-                }elsif($atemp[0] eq 'The location of minimum is at pixel number    '){
-			$min_pos = $atemp[1];
-		}elsif($atemp[0] eq 'The location of maximum is at pixel number    '){
-			$max_pos = $atemp[1];
+                @atemp = split(/\s+/,$_);
+                if($_ =~ /mean/){
+                        $mean = $atemp[2];
+		}elsif($_ =~ /std/){
+			$dev  = $atemp[2];
+		}elsif($_ =~ /min/){
+			$min     = $atemp[2];
+			$min_pos = $atemp[4];
+		}elsif($_ =~ /max/){
+			$max     = $atemp[2];
+			$max_pos = $atemp[4];
 		}
         }
         close(IN);
@@ -212,22 +220,21 @@ sub print_stat{
         open(IN,"./result2");
         while(<IN>) {
                 chomp $_;
-                @atemp = split(/=/,$_);
-                if($atemp[0] eq 'The mean of the selected image                '){
-                        $mean2 = $atemp[1];
-                }elsif($atemp[0] eq 'The standard deviation of the selected image  '){
-                        $dev2 = $atemp[1];
-                }elsif($atemp[0] eq 'The minimum of selected image                 '){
-                        $min2 = $atemp[1];
-                }elsif($atemp[0] eq 'The maximum of selected image                 '){
-                        $max2 = $atemp[1];
-                }elsif($atemp[0] eq 'The location of minimum is at pixel number    '){
-			$min_pos2 = $atemp[1];
-		}elsif($atemp[0] eq 'The location of maximum is at pixel number    '){
-			$max_pos2 = $atemp[1];
+                @atemp = split(/\s+/,$_);
+                if($_ =~ /mean/){
+                        $mean2 = $atemp[2];
+		}elsif($_ =~ /std/){
+			$dev2  = $atemp[2];
+		}elsif($_ =~ /min/){
+			$min2     = $atemp[2];
+			$min_pos2 = $atemp[4];
+		}elsif($_ =~ /max/){
+			$max2     = $atemp[2];
+			$max_pos2 = $atemp[4];
 		}
         }
         close(IN);
+
         open(OUT,">>$out_name");
         print OUT "$year\t$month\t$mean\t$dev\t$min\t$min_pos\t$max\t$max_pos\t$max2\t$max_pos2\n";
         close(OUT);
@@ -242,8 +249,9 @@ sub print_stat{
 sub find_10th {
 	
 	($fzzz) = @_;
-        system("$ftools/fimhisto $fzzz outfile.fits range=indef,indef binsize=1 clobber='yes'");
-        system("$ftools/fdump outfile.fits zout - - clobber='yes'");
+	system("dmimghist infile=$fzzz outfile=outfile.fits 1::1 strict clobber=yes");
+	system("dmlist infile=outfile.fits outfile=./zout opt=data");
+
         open(FH, './zout');
         @hbin = ();
         @hcnt = ();

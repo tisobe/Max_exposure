@@ -6,11 +6,9 @@
 #													#
 #		author: t. isobe (tisobe@cfa.harvard.edu)						#
 #													#
-#		last update: Jun 13, 2005								#
+#		last update: Aug 18, 2005								#
 #													#
 #########################################################################################################
-
-$ftools = '/home/ascds/DS.release/otsbin/';
 
 $indir  = $ARGV[0];					#--- data file location
 $outdir = $ARGV[1];					#--- stat data directory
@@ -50,28 +48,26 @@ foreach $header ('HRCS', 'HRCI'){
 			close(OUT);
 			next OUTER;
 		}
-		system("$ftools/fimgstat $name i/inf i/inf > zstat");
+		system('dmstat infile=$name centroid=0 > zstat");
 		open(FH, './zstat');
 		while(<FH>){
 			chomp $_;
-			@atemp = split(/=/, $_);
-			if($_ =~ /The mean of the selected image/){
-				$mean = $atemp[1];
+			@atemp = split(/\s+/, $_);
+			if($_ =~ /mean/){
+				$mean = $atemp[2];
 				$mean =~ s/\s+//g;
-			}elsif($_ =~ /The standard deviation/){
-				$std  = $atemp[1];
+			}elsif($_ =~ /std/){
+				$std  = $atemp[2];
 				$std  =~ s/\s+//g;
-			}elsif($_ =~ /The minimum of selected image/){
-				$min  = $atemp[1];
-				$min  =~ s/\s+//g;
-			}elsif($_ =~ /The maximum of selected/){
-				$max  = $atemp[1];
-				$max  =~ s/\s+//g;
-			}elsif($_ =~ /The location of minimum/){
-				$min_loc = $atemp[1];
+			}elsif($_ =~ /min/){
+				$min     = $atemp[2];
+				$min     =~ s/\s+//g;
+				$min_loc = $atemp[4];
 				$min_loc =~ s/\s+//g;
-			}elsif($_ =~ /The location of maximum/){
-				$max_loc = $atemp[1];
+			}elsif($_ =~ /max/){
+				$max     = $atemp[2];
+				$max     =~ s/\s+//g;
+				$max_loc = $atemp[4];
 				$max_loc =~ s/\s+//g;
 			}
 		}
@@ -80,16 +76,19 @@ foreach $header ('HRCS', 'HRCI'){
 		system("rm zstat");
 
                 find_10th("$name");
-                system("$ftools/fimgstat $name threshlo=0 threshup=$upper > zstat");
+
+		system("dmimgthresh infile=$name outfile=zthresh.fits  cut=\"0:$upper\" value=0 clobber=yes");
+		system("dmstat infile=zthresh.fits centroid=no > zstat");
+		system("rm zthresh.fits");
+
                 open(FH, './zstat');
                 while(<FH>){
                         chomp $_;
-                        @atemp = split(/=/, $_);
-                        if($_ =~ /The maximum of selected/){
-                                $max10  = $atemp[1];
+                        @atemp = split(/\s+/, $_);
+                        if($_ =~ /max/){
+                                $max10  = $atemp[2];
                                 $max10  =~ s/\s+//g;
-                        }elsif($_ =~ /The location of maximum/){
-                                $max10_loc = $atemp[1];
+                                $max10_loc = $atemp[4];
                                 $max10_loc =~ s/\s+//g;
                         }
                 }
@@ -131,8 +130,9 @@ foreach $header ('HRCS', 'HRCI'){
 sub find_10th {
 
         ($fzzz) = @_;
-        system("$ftools/fimhisto $fzzz outfile.fits range=indef,indef binsize=1 clobber='yes'");
-        system("$ftools/fdump outfile.fits zout - - clobber='yes'");
+	system("dmimghist infile=$fzzz outfile=outfile.fits 1::1 strict clobber=yes");
+	system("dmlist infile=outfile.fits outfile=./zout opt=data");
+
         open(FH, './zout');
         @hbin = ();
         @hcnt = ();
@@ -147,7 +147,9 @@ sub find_10th {
                 }
         }
         close(FH);
+
         $upper = $hbin[$tot-10];
+
 	if($upper !~ /\d/){
 		$upper = 0;
 	}

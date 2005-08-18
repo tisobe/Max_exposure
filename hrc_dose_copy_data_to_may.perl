@@ -6,24 +6,38 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Aug 17, 2005                                                       #
+#       last update: Aug 18, 2005                                                       #
 #                                                                                       #
 #########################################################################################
 
-###############################################################################
+#
 #---- set directories
+#
 
-$bin_dir  = '/data/mta/MTA4/bin/';				#---- this must be run from rhodes
-$dat_dir  = '/data/mta/MTA4/data/';
-$mon_dir  = '/data/mta_www/mta_max_exp/Month_hrc/';
-$cum_dir  = '/data/mta_www/mta_max_exp/Cumulative_hrc/';
-$data_out = '/data/mta/www/mta_max_exp/Data/';
-$plot_dir = '/data/mta/www/mta_max_exp/Plots/';
-$img_dir  = '/data/mta_www/mta_max_exp/Images';
+$temp_in = `cat ./dir_list`;
+@dir_list = split(/\s+/, $temp_in);
+
+$chk = 0;
+foreach (@dir_list){
+        $chk++;
+}
+if($chk == 0){
+        print "dir_list is not set\n";
+        exit 1;
+}
+
+$bin_dir  = $dir_list[0];
+$dat_dir  = $dir_list[1];
+$mon_dir  = $dir_list[2];
+$cum_dir  = $dir_list[3];
+$data_out = $dir_list[4];
+$plot_dir = $dir_list[5];
+$img_dir  = $dir_list[6];
+$web_dir  = $dir_list[7];
+$lookup   = $dir_list[8];
 
 $mays_dir = '/data/mays/MTA/Exposure/Hrc/';                     #----- copying data
 
-###############################################################################
 
 #
 #--- get today's date

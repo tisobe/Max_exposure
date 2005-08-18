@@ -9,11 +9,17 @@ use PGPLOT;
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Mar 17, 2005							#
+#	last update: Aug 18, 2005							#
 #											#
 #########################################################################################
 
-$ftools = '/home/ascds/DS.release/otsbin/';
+###############################################################################
+#---- set directories
+
+$bin_dir  = '/data/mta/MTA/bin/';
+$dat_dir  = '/data/mta/MTA/data/';
+
+###############################################################################
 
 $in_dir  = $ARGV[0];
 $out_dir = $ARGV[1];
@@ -254,7 +260,7 @@ foreach $ccd ('i_2', 'i_3', 's_2', 's_3'){
 
 		$out_gif = "$out_dir".'/'."$ccd"."_$node".'.gif';
 
-system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|/data/mta4/MTA/bin/pnmcrop| /data/mta4/MTA/bin/pnmflip -r270 |/data/mta4/MTA/bin/ppmtogif > $out_gif");
+system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|/data/$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_gif");
 
 	}
 }

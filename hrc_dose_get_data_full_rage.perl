@@ -7,11 +7,36 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last updated: 04/18/2005							#
+#	last updated: 08/17/2005							#
 #											#
 #########################################################################################
 
-$ftools = '/home/ascds/DS.release/otsbin/';
+#
+#---- set directories
+#
+
+$temp_in = `cat ./dir_list`;
+@dir_list = split(/\s+/, $temp_in);
+
+$chk = 0;
+foreach (@dir_list){
+        $chk++;
+}
+if($chk == 0){
+        print "dir_list is not set\n";
+        exit 1;
+}
+
+$bin_dir  = $dir_list[0];
+$dat_dir  = $dir_list[1];
+$mon_dir  = $dir_list[2];
+$cum_dir  = $dir_list[3];
+$data_out = $dir_list[4];
+$plot_dir = $dir_list[5];
+$img_dir  = $dir_list[6];
+$web_dir  = $dir_list[7];
+$lookup   = $dir_list[8];
+
 
 #
 #---- usage: perl hrc_doese_get_data_full_rage.perl 2004 3 2004 3 <arc4gl user name> <passwd>
@@ -151,7 +176,9 @@ for($year = $start_year; $year <= $end_year; $year++){
 		close(OUT);
 
 		system('rm hrcf*evt1.fits*');
+
 		`echo $hakama |arc4gl -U$user -Sarcocc -iinput_line`;
+
 		system('gzip -d *gz');
 		$list = `ls hrcf*evt1.fits*`;
 
@@ -166,14 +193,14 @@ for($year = $start_year; $year <= $end_year; $year++){
 #---- classify each HRC file into S or I file.
 #
 		foreach $file (@list){
-			system("$ftools/fdump $file zout - 1 clobber='yes'");
+			system("dmlist infile=$file outfile=zout opt=head");
 			open(FH, './zout');
 			OUTER:
 			while(<FH>){
 				chomp $_;
 				if($_ =~/DETNAM/){
-					@atemp = split(/\'/, $_);
-					$detector = $atemp[1];
+					@atemp = split(/\s+/, $_);
+					$detector = $atemp[2];
 					$detector =~s/\s+//g;
 					last OUTER;
 				}
@@ -206,7 +233,9 @@ for($year = $start_year; $year <= $end_year; $year++){
 #
 					system("dmcopy \"$line\" out.fits  option=image  clobber=yes");
 
-					system("$ftools/chimgtyp out.fits  total.fits datatype=LONG Inull=-99 clobber=yes");
+					$line ='out.fits[opt type=i4,null=-99]';
+					system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
+
 					system("mv total.fits $out_dir/$out_file_s[$i]");
 				}
 			}else{
@@ -219,9 +248,8 @@ for($year = $start_year; $year <= $end_year; $year++){
 					system("dmcopy \"$line\" out.fits  option=image  clobber=yes");
 
 					$fit_file = 'total'."$i".'.fits';
-					system("$ftools/chimgtyp out.fits  $fit_file datatype=LONG Inull=-99 clobber=yes");
-					$mfile    = 'file'."$i";
-					system("echo $fit_file,0,0 > $mfile");
+					$line     = 'out.fits[opt type=i4,null=-99]';
+					system("dmcopy infile=\"$line\"  outfile=$fit_file clobber=yes");
 				}	
 #				system("rm first");
 
@@ -238,14 +266,16 @@ for($year = $start_year; $year <= $end_year; $year++){
 		
 						$fit_file = 'total'."$i".'.fits';
 						$check = `ls $fit_file`;
-						$mfile = 'file'."$i";
-						system("$ftools/chimgtyp out.fits temp3.fits datatype=LONG Inull=-99 clobber=yes");
+
+						$line = 'out.fits[opt type=i4,null=-99]';
+						system("dmcopy infile=\"$line\" outifle=temp3.fits clobber=yes");
+
 						if($check !~ /total/){
 							system("mv temp3.fits $fit_file");
 							next OUTER;
 						}
-						system("cp $mfile zfile");
-						system("$ftools/fimgmerge temp3.fits \@zfile mtemp.fits");
+
+						system("dmmerge infile=\"temp3.fits,$fit_file\" outfile=mtemp.fits outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
 						system("mv mtemp.fits $fit_file");
 					}
 #					system("rm $file");
@@ -276,7 +306,8 @@ for($year = $start_year; $year <= $end_year; $year++){
 		
 					system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 	
-					system("$ftools/chimgtyp out.fits  total.fits datatype=LONG Inull=-99 clobber=yes");
+					$line = 'out.fits[opt type=i4,null=-99]';
+					system("dmcopy infile=\"$line\" outfile=total.fits clobber=yes");
 				}
 				system("mv $file $out_dir/$out_file_i[$i]");
 			}else{
@@ -288,9 +319,9 @@ for($year = $start_year; $year <= $end_year; $year++){
 					system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 	
 					$fit_file = 'total'."$i".'.fits';
-					system("$ftools/chimgtyp out.fits  $fit_file datatype=LONG Inull=-99 clobber=yes");
-					$mfile    = 'file'."$i";
-					system("echo $fit_file,0,0 > $mfile");
+
+					$line = 'out.fits[opt type=i4,null=-99]';
+					system("dmcopy infile=\"$line\" outfile=$fit_file clobber=yes");
 				}
 # 				system("rm $first");
 
@@ -304,14 +335,16 @@ for($year = $start_year; $year <= $end_year; $year++){
 
 						$fit_file = 'total'."$i".'.fits';
 						$check = `ls $fit_file`;
-						$mfile = 'file'."$i";
-						system("$ftools/chimgtyp out.fits temp3.fits datatype=LONG Inull=-99 clobber=yes");
+
+						$line = 'out.fits[opt type=i4,null=-99]';
+						system("dmcopy infile=\"$line\" outfile=temp3.fits clobber=yes");
+
 						if($check !~ /total/){
 							system("mv temp3.fits $fit_file");
 							next OUTER;
 						}
-						system("cp $mfile zfile");
-						system("$ftools/fimgmerge temp3.fits \@zfile mtemp.fits");
+
+						system("dmmerge infile=\"temp3.fits,$fit_file\" outfile= mtemp.fits outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
 						system("mv mtemp.fits $fit_file");
 					}
 #					system("rm $file");

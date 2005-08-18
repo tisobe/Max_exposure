@@ -9,11 +9,36 @@ use PGPLOT;
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Mar 25, 2005							#
+#	last update: Aug 18, 2005							#
 #											#
 #########################################################################################
 
-$ftools = '/home/ascds/DS.release/otsbin/';
+#
+#---- set directories
+#
+
+$temp_in = `cat ./dir_list`;
+@dir_list = split(/\s+/, $temp_in);
+
+$chk = 0;
+foreach (@dir_list){
+        $chk++;
+}
+if($chk == 0){
+        print "dir_list is not set\n";
+        exit 1;
+}
+
+$bin_dir  = $dir_list[0];
+$dat_dir  = $dir_list[1];
+$mon_dir  = $dir_list[2];
+$cum_dir  = $dir_list[3];
+$data_out = $dir_list[4];
+$plot_dir = $dir_list[5];
+$img_dir  = $dir_list[6];
+$web_dir  = $dir_list[7];
+$lookup   = $dir_list[8];
+
 
 $in_dir  = $ARGV[0];
 $out_dir = $ARGV[1];
@@ -219,7 +244,7 @@ foreach $ccd ('hrci', 'hrcs'){
 
 		$out_gif = "$out_dir".'/'."$ccd".'.gif';
 
-system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|/data/mta4/MTA/bin/pnmcrop| /data/mta4/MTA/bin/pnmflip -r270 |/data/mta4/MTA/bin/ppmtogif > $out_gif");
+system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| /$bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_gif");
 
 }
 
