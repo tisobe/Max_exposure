@@ -10,21 +10,17 @@
 #                                                                                       #
 #########################################################################################
 
-###############################################################################
-#---- set directories
 
-$bin_dir  = '/data/mta/MTA/bin/';
-$dat_dir  = '/data/mta/MTA/data/';
-$mon_dir  = '/data/mta/www/mta_max_exp/Month_hrc/';
-$cum_dir  = '/data/mta/www/mta_max_exp/Cumulative_hrc/';
-$data_out = '/data/mta/www/mta_max_exp/Data/';
-$plot_dir = '/data/mta/www/mta_max_exp/Plots/';
-$img_dir  = '/data/mta/www/mta_max_exp/Images';
-$web_dir  = '/data/mta/www/mta_max_exp/';
+$bin_dir  = '/data/mta/MTA/bin/';			# a directory which holds all scripts
+$dat_dir  = '/data/mta/MTA/data/';			# a directory which holds all data used by the scripts
+$mon_dir  = '/data/mta/www/mta_max_exp/Month_hrc/';	# a directory which holds all hrc monthly data
+$cum_dir  = '/data/mta/www/mta_max_exp/Cumulative_hrc/';# a directory which holds all hrc cumulative data
+$data_out = '/data/mta/www/mta_max_exp/Data/';		# a directory which holds computed results
+$plot_dir = '/data/mta/www/mta_max_exp/Plots/';		# a directory which holds all plots
+$img_dir  = '/data/mta/www/mta_max_exp/Images/';	# a directory which holds all png images
+$web_dir  = '/data/mta/www/mta_max_exp/';		# a top directory
 
 $lookup   = '/home/ascds/DS.release/data/dmmerge_header_lookup.txt';    # dmmerge header rule lookup table
-
-###############################################################################
 
 #
 #--- print out a directory list so that other scripts can read it.
