@@ -6,24 +6,26 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Aug 18, 2005                                                       #
+#       last update: Aug 19, 2005                                                       #
 #                                                                                       #
 #########################################################################################
 
 
-$bin_dir  = '/data/mta/MTA/bin/';			# a directory which holds all scripts
-$dat_dir  = '/data/mta/MTA/data/';			# a directory which holds all data used by the scripts
-$mon_dir  = '/data/mta/www/mta_max_exp/Month_hrc/';	# a directory which holds all hrc monthly data
-$cum_dir  = '/data/mta/www/mta_max_exp/Cumulative_hrc/';# a directory which holds all hrc cumulative data
-$data_out = '/data/mta/www/mta_max_exp/Data/';		# a directory which holds computed results
-$plot_dir = '/data/mta/www/mta_max_exp/Plots/';		# a directory which holds all plots
-$img_dir  = '/data/mta/www/mta_max_exp/Images/';	# a directory which holds all png images
-$web_dir  = '/data/mta/www/mta_max_exp/';		# a top directory
+$bin_dir  = '/data/mta/MTA/bin/';			    # a directory which holds all scripts
+$dat_dir  = '/data/mta/MTA/data/';			    # a directory which holds all data used by the scripts
+$mon_dir  = '/data/mta/www/mta_max_exp/Month_hrc/';	    # a directory which holds all hrc monthly data
+$cum_dir  = '/data/mta/www/mta_max_exp/Cumulative_hrc/';    # a directory which holds all hrc cumulative data
+$mon_dir2 = '/data/mta/Script/Exposure/HRC/Month_hrc/';	    # a directory which holds all hrc monthly data
+$cum_dir2 = '/data/mta/Script/Exposure/HRC/Cumulative_hrc/';# a directory which holds all hrc cumulative data
+$data_out = '/data/mta/www/mta_max_exp/Data/';		    # a directory which holds computed results
+$plot_dir = '/data/mta/www/mta_max_exp/Plots/';		    # a directory which holds all plots
+$img_dir  = '/data/mta/www/mta_max_exp/Images/';	    # a directory which holds all png images
+$web_dir  = '/data/mta/www/mta_max_exp/';		    # a top directory
 
 $lookup   = '/home/ascds/DS.release/data/dmmerge_header_lookup.txt';    # dmmerge header rule lookup table
 
 #
-#--- print out a directory list so that other scripts can read it.
+#--- print out directory lists so that other scripts can read it.
 #
 open(OUT, '>./dir_list');
 
@@ -37,5 +39,37 @@ print OUT "$img_dir\n";
 print OUT "$web_dir\n";
 print OUT "$lookup\n";
 
-close(OUT)
+close(OUT);
+
+open(OUT, '>./dir_list2');
+
+print OUT "$bin_dir\n";
+print OUT "$dat_dir\n";
+print OUT "$mon_dir2\n";
+print OUT "$cum_dir2\n";
+print OUT "$data_out\n";
+print OUT "$plot_dir\n";
+print OUT "$img_dir\n";
+print OUT "$web_dir\n";
+print OUT "$lookup\n";
+
+close(OUT);
+
+
+open(OUT, '>./dir_list3');
+
+print OUT "$bin_dir\n";
+print OUT "$dat_dir\n";
+print OUT "$lookup\n";
+
+close(OUT);
+
+
+open(OUT, '>./dir_list4');
+
+print OUT "$bin_dir\n";
+print OUT "$dat_dir\n";
+print OUT "$web_dir\n";
+
+close(OUT);
 

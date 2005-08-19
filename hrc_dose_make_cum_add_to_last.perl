@@ -7,7 +7,7 @@
 #												#
 #		author: t. isobe (tisobe@cfa.harvard.edu)					#
 #												#
-#		last update: Aug 17, 2005							#
+#		last update: Aug 19, 2005							#
 #												#
 #################################################################################################
 
@@ -15,7 +15,7 @@
 #---- set directories
 #
 
-$temp_in = `cat ./dir_list`;
+$temp_in = `cat ./dir_list2`;
 @dir_list = split(/\s+/, $temp_in);
 
 $chk = 0;

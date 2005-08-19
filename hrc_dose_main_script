@@ -13,3 +13,5 @@ perl /data/mta/MTA/bin/hrc_create_center_dose_map.perl
 perl /data/mta/MTA/bin/hrc_create_full_dose_map.perl
 
 perl /data/mta/MTA/bin/hrc_dose_update_main_html.perl
+
+rm dir_list*

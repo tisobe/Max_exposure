@@ -15,7 +15,7 @@
 #---- set directories
 #
 
-$temp_in = `cat ./dir_list`;
+$temp_in = `cat ./dir_list3`;
 @dir_list = split(/\s+/, $temp_in);
 
 $chk = 0;
@@ -29,13 +29,7 @@ if($chk == 0){
 
 $bin_dir  = $dir_list[0];
 $dat_dir  = $dir_list[1];
-$mon_dir  = $dir_list[2];
-$cum_dir  = $dir_list[3];
-$data_out = $dir_list[4];
-$plot_dir = $dir_list[5];
-$img_dir  = $dir_list[6];
-$web_dir  = $dir_list[7];
-$lookup   = $dir_list[8];
+$lookup   = $dir_list[2];
 
 
 $start_year  = $ARGV[0];
