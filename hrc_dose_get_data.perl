@@ -185,7 +185,13 @@ for($year = $start_year; $year <= $end_year; $year++){
 		if($hrcs_cnt > 0){
 			if($hrcs_cnt == 1){
 				$file = shift(@hrcs_list);
-				system("mv $file Save/$out_file_s");
+				$line = "$file".'[EVENTS][bin rawx=0:4095:1, rawy=22528:26623:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
+				system("dmcopy \"$line\" out.fits  option=image clobber=yes");
+
+				$line ='out.fits[opt type=i4,null=-99]';
+				system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
+
+				system("mv total.fits Save/$out_file_s");
 			}else{
 				$first =  shift(@hrcs_list);
 				
