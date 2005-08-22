@@ -101,7 +101,7 @@ if($dtmonth < 10){
 #
 
 foreach $inst ('HRCI', 'HRCS'){
-	$tname = "$cum_dir".'/'."$inst".'_08_1999_'."$dtmonth".'_'."$tyear".'.fits*';
+	$tname = "$cum_dir".'/'."$inst".'_08_1999_'."$dtmonth".'_'."$tyear".'.fits.gz';
 	$name  = "$mon_dir".'/'."$inst".'_'."$dlmonth".'_'."$lyear".'.fits*';
 	$out   = "$cum_dir".'/'."$inst".'_08_1999_'."$dlmonth".'_'."$lyear".'.fits';
 	$test  = `ls $name`;
