@@ -6,7 +6,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Aug 19, 2005							#
+#	last update: Aug 22, 2005							#
 #											#
 #########################################################################################
 
@@ -34,8 +34,6 @@ $data_out = $dir_list[4];
 $plot_dir = $dir_list[5];
 $img_dir  = $dir_list[6];
 $web_dir  = $dir_list[7];
-$lookup   = $dir_list[8];
-
 
 $usr  = `cat $dat_dir/.dare`;
 $pass = `cat $dat_dir/.hakama`;

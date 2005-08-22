@@ -6,7 +6,7 @@
 #									#
 #	author: t. isobe (tisobe@cfa.harvard.edu)			#
 #									#
-#	Last update : Aug 18, 2005					#
+#	Last update : Aug 22, 2005					#
 #									#
 #########################################################################
 
@@ -35,8 +35,6 @@ $data_out = $dir_list[4];
 $plot_dir = $dir_list[5];
 $img_dir  = $dir_list[6];
 $web_dir  = $dir_list[7];
-$lookup   = $dir_list[8];
-
 
 ($usec, $umin, $uhour, $umday, $umon, $uyear, $uwday, $uyday, $uisdst)= localtime(time);
 $year  = 1900   + $uyear;

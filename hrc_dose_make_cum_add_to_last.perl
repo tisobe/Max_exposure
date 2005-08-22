@@ -7,7 +7,7 @@
 #												#
 #		author: t. isobe (tisobe@cfa.harvard.edu)					#
 #												#
-#		last update: Aug 19, 2005							#
+#		last update: Aug 22, 2005							#
 #												#
 #################################################################################################
 
@@ -35,8 +35,6 @@ $data_out = $dir_list[4];
 $plot_dir = $dir_list[5];
 $img_dir  = $dir_list[6];
 $web_dir  = $dir_list[7];
-$lookup   = $dir_list[8];
-
 
 $in_dir  = $ARGV[0];	#----- directory contains hrc maps for each month
 $cum_dir = $ARGV[1];	#----- directory contains hrc cumultavie data
@@ -79,7 +77,7 @@ foreach $inst ('HRCI', 'HRCS'){
 			$line = "$name".'[opt type=i4,null=-99]';
 			system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber=yes");
 
-			system("dmmerge infile=\"$lname,temp3.fits\" outfile=./zout.fits outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
+			system("dmimgcalc infile=$lname infile2=temp3.fits outfile=./zout.fits operation=add clobber=yes");
 			system("mv ./zout.fits $out");
 			system("gzip $out");
 		}else{

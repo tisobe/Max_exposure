@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Aug 19, 2005                                                       #
+#       last update: Aug 22, 2005                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -22,8 +22,6 @@ $plot_dir = '/data/mta/www/mta_max_exp/Plots/';		    # a directory which holds a
 $img_dir  = '/data/mta/www/mta_max_exp/Images/';	    # a directory which holds all png images
 $web_dir  = '/data/mta/www/mta_max_exp/';		    # a top directory
 
-$lookup   = '/home/ascds/DS.release/data/dmmerge_header_lookup.txt';    # dmmerge header rule lookup table
-
 #
 #--- print out directory lists so that other scripts can read it.
 #
@@ -37,7 +35,6 @@ print OUT "$data_out\n";
 print OUT "$plot_dir\n";
 print OUT "$img_dir\n";
 print OUT "$web_dir\n";
-print OUT "$lookup\n";
 
 close(OUT);
 
@@ -51,7 +48,6 @@ print OUT "$data_out\n";
 print OUT "$plot_dir\n";
 print OUT "$img_dir\n";
 print OUT "$web_dir\n";
-print OUT "$lookup\n";
 
 close(OUT);
 
@@ -60,7 +56,6 @@ open(OUT, '>./dir_list3');
 
 print OUT "$bin_dir\n";
 print OUT "$dat_dir\n";
-print OUT "$lookup\n";
 
 close(OUT);
 

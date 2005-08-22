@@ -7,7 +7,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last updated: 08/18/2005							#
+#	last updated: 08/22/2005							#
 #											#
 #########################################################################################
 
@@ -16,8 +16,6 @@
 
 $bin_dir  = '/data/mta/MTA/bin/';
 $dat_dir  = '/data/mta/MTA/data/';
-
-$lookup   = '/home/ascds/DS.release/data/dmmerge_header_lookup.txt';    # dmmerge header rule lookup table
 
 ###############################################################################
 
@@ -215,7 +213,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 				next OUTER;
 			}
 
-			system("dmmerge \"temp3.fits,total.fits" outfile='mtemp.fits outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
+			system("dmimgcalc infile=temp3.fits infile2=total.fits outfile=mtemp.fits operation=add clobber=yes");
 			system("mv mtemp.fits total.fits");
 			system("rm $file");
 		}

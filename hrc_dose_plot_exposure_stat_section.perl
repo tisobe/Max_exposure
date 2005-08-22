@@ -8,7 +8,7 @@ use PGPLOT;
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Aug 17, 2005							#
+#	last update: Aug 22, 2005							#
 #											#
 #########################################################################################
 
@@ -30,7 +30,6 @@ if($chk == 0){
 
 $bin_dir  = $dir_list[0];
 $dat_dir  = $dir_list[1];
-$lookup   = $dir_list[2];
 
 $in_dir  = $ARGV[0];
 $out_dir = $ARGV[1];

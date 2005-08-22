@@ -7,7 +7,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last updated: 08/19/2005							#
+#	last updated: 08/22/2005							#
 #											#
 #########################################################################################
 
@@ -29,7 +29,6 @@ if($chk == 0){
 
 $bin_dir  = $dir_list[0];
 $dat_dir  = $dir_list[1];
-$lookup   = $dir_list[2];
 
 #
 #---- usage: perl hrc_doese_get_data_full_rage.perl 2004 3 2004 3 <arc4gl user name> <passwd>
@@ -268,7 +267,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 							next OUTER;
 						}
 
-						system("dmmerge infile=\"temp3.fits,$fit_file\" outfile=mtemp.fits outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
+						system("dmimgcalc infile=temp3.fits infile2=$fit_file outfile=mtemp.fits operation=add clobber=yes");
 						system("mv mtemp.fits $fit_file");
 					}
 #					system("rm $file");
@@ -337,7 +336,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 							next OUTER;
 						}
 
-						system("dmmerge infile=\"temp3.fits,$fit_file\" outfile= mtemp.fits outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
+						system("dmimgcalc infile=temp3.fits infile2=$fit_file outfile= mtemp.fits operation=add clobber=yes");
 						system("mv mtemp.fits $fit_file");
 					}
 #					system("rm $file");

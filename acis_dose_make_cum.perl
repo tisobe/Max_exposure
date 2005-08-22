@@ -1,12 +1,5 @@
 #!/usr/bin/perl
 
-###############################################################################
-#---- set directories
-
-$lookup   = '/home/ascds/DS.release/data/dmmerge_header_lookup.txt';    # dmmerge header rule lookup table
-
-###############################################################################
-
 $in_dir = $ARGV[0];
 $tyear  = $ARGV[1];
 $tmonth = $ARGV[2];
@@ -43,7 +36,7 @@ for($year = 1999; $year <= $tyear; $year++){
 		$line = "$name".'[opt type=i4,null=-99]';
 		system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber=yes");
 
-		system("dmmerge infile="temp.fits,temp3.fits" outfile=$out outBlock='' columnList='' lookupTab=\"$lookup\" clobber=yes");
+		system("dmimgcalc infile=temp.fits infile2=temp3.fits outfile=$out operation=add clobber=yes");
 		system("cp $out temp.fits");
 	}
 }
