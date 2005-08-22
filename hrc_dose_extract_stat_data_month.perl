@@ -7,7 +7,7 @@
 #												#
 #	author: t. isobe (tisobe@cfa.harvard.edu)						#
 #												#
-#	last update: Aug 17, 2005								#
+#	last update: Aug 22, 2005								#
 #												#
 #################################################################################################	
 
@@ -41,11 +41,11 @@ if($month < 10){
 #
 #----- file names
 #
-		$name1 = "$in_dir".'/HRCS_08_1999_'."$smonth".'_'."$year".'.fits*';
-		$name2 = "$in_dir2".'/HRCS_'."$smonth".'_'."$year".'.fits*';
+		$name1 = "$in_dir".'/HRCS_08_1999_'."$smonth".'_'."$year".'.fits.gz';
+		$name2 = "$in_dir2".'/HRCS_'."$smonth".'_'."$year".'.fits.gz';
 
-		$name3 = "$in_dir".'/HRCI_08_1999_'."$smonth".'_'."$year".'.fits*';
-		$name4 = "$in_dir2".'/HRCI_'."$smonth".'_'."$year".'.fits*';
+		$name3 = "$in_dir".'/HRCI_08_1999_'."$smonth".'_'."$year".'.fits.gz';
+		$name4 = "$in_dir2".'/HRCI_'."$smonth".'_'."$year".'.fits.gz';
 
 		$line = $name1;
 		$out_name = "$out_dir/".'hrcs_acc_out';
@@ -110,7 +110,7 @@ sub comp_stat{
 #
 		system("dmimgthresh infile=$line outfile=zcut.fits  cut=\"0:\" value=0 clobber=yes");
 		system("dmstat	infile=zcut.fits  centroid=no > ./result");
-		system("rm zthresh.fits");
+		system("rm zcut.fits");
 	
 		$upper = 'I/INDEF';
 		$chk = `cat ./result`;
@@ -123,7 +123,7 @@ sub comp_stat{
 
 			system("dmimgthresh infile=$line outfile=zcut.fits  cut=\"0:$upper\" value=0 clobber=yes");
 			system("dmstat	infile=zcut.fits  centroid=no > ./result2");
-			system("rm zthresh.fits");
+			system("rm zcut.fits");
 		}
 	}else{
 		open(ZZ, '> result');
