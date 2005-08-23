@@ -8,7 +8,7 @@
 #												#
 #	author: t. isobe (tisobe@cfa.harvard.edu)						#
 #												#
-#	last update: Apr 18, 2005								#
+#	last update: Aug 23, 2005								#
 #												#
 #################################################################################################	
 
@@ -43,8 +43,8 @@ if($month < 10){
 
 #-------- ACIS I2 Chip ----------------
 
-$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_i2.fits*';
-$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_i2.fits*';
+$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_i2.fits.gz';
+$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_i2.fits.gz';
 
 $line = "$name1".'[1:1024,1:256]';
 $out_name = 'i_2_n_0_acc_out';
@@ -81,8 +81,8 @@ comp_stat();
 
 #-------- ACIS I3 Chip ----------------
 
-$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_i3.fits*';
-$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_i3.fits*';
+$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_i3.fits.gz';
+$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_i3.fits.gz';
 
 $line = "$name1".'[1:1024,769:1020]';
 $out_name = 'i_3_n_0_acc_out';
@@ -119,8 +119,8 @@ comp_stat();
 
 #-------- ACIS S2 Chip ----------------
 
-$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_s2.fits*';
-$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_s2.fits*';
+$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_s2.fits.gz';
+$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_s2.fits.gz';
 
 $line = "$name1".'[1:256,1:1020]';
 $out_name = 's_2_n_0_acc_out';
@@ -158,8 +158,8 @@ comp_stat();
 #-------- ACIS S3 Chip ----------------
 
 
-$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_s3.fits*';
-$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_s3.fits*';
+$name1 = "$in_dir".'/ACIS_07_1999_'."$smonth".'_'."$year".'_s3.fits.gz';
+$name2 = "$in_dir2".'/ACIS_'."$smonth".'_'."$year".'_s3.fits.gz';
 
 $line = "$name1".'[1:256,1:1020]';
 $out_name = 's_3_n_0_acc_out';
@@ -262,20 +262,22 @@ sub print_stat{
         open(IN,"./result");
         while(<IN>) {
                 chomp $_;
-                @atemp = split(/=/,$_);
-                if($atemp[0] eq 'The mean of the selected image                '){
-                        $mean = $atemp[1];
-                }elsif($atemp[0] eq 'The standard deviation of the selected image  '){
-                        $dev = $atemp[1];
-                }elsif($atemp[0] eq 'The minimum of selected image                 '){
-                        $min = $atemp[1];
-                }elsif($atemp[0] eq 'The maximum of selected image                 '){
-                        $max = $atemp[1];
-                }elsif($atemp[0] eq 'The location of minimum is at pixel number    '){
-			$min_pos = $atemp[1];
-		}elsif($atemp[0] eq 'The location of maximum is at pixel number    '){
-			$max_pos = $atemp[1];
-		}
+                @atemp = split(/\s+/,$_);
+                if($_ =~ /mean/){
+                        $mean = $atemp[2];
+                }elsif($_ =~ /sigma/){
+                        $dev = $atemp[2];
+                }elsif($_ =~ /min/){
+                        $min     = $atemp[2];
+                        @btemp   = split(/\(/, $_);
+                        @ctemp   = split(/\s+/, $btemp[1]);
+                        $min_pos = "($ctemp[1],$ctemp[2])";
+                }elsif($_ =~ /max/){
+                        $max = $atemp[2];
+                        @btemp   = split(/\(/, $_);
+                        @ctemp   = split(/\s+/, $btemp[1]);
+                        $max_pos = "($ctemp[1],$ctemp[2])";
+                }
         }
         close(IN);
 #
@@ -284,28 +286,34 @@ sub print_stat{
         open(IN,"./result2");
         while(<IN>) {
                 chomp $_;
-                @atemp = split(/=/,$_);
-                if($atemp[0] eq 'The mean of the selected image                '){
-                        $mean2 = $atemp[1];
-                }elsif($atemp[0] eq 'The standard deviation of the selected image  '){
-                        $dev2 = $atemp[1];
-                }elsif($atemp[0] eq 'The minimum of selected image                 '){
-                        $min2 = $atemp[1];
-                }elsif($atemp[0] eq 'The maximum of selected image                 '){
-                        $max2 = $atemp[1];
-                }elsif($atemp[0] eq 'The location of minimum is at pixel number    '){
-			$min_pos2 = $atemp[1];
-		}elsif($atemp[0] eq 'The location of maximum is at pixel number    '){
-			$max_pos2 = $atemp[1];
-		}
+                @atemp = split(/\s+/,$_);
+                if($_ =~ /max/){
+                        $max2     = $atemp[2];
+                        @btemp    = split(/\(/, $_);
+                        @ctemp    = split(/\s+/, $btemp[1]);
+                        $max_pos2 = "($ctemp[1],$ctemp[2])";
+                }
         }
         close(IN);
 	$out = "$out_dir".'/'."$out_name";
         open(OUT,">>$out");
-        print OUT "$year\t$month\t$mean\t$dev\t$min\t$min_pos\t$max\t$max_pos\t$max2\t$max_pos2\n";
+        print  OUT "$year\t$month\t";
+        printf OUT "%5.6f\t%5.6f\t%5.1f\t",$mean,$dev,$min;
+        print  OUT "$min_pos\t";
+        printf OUT "%5.1f\t",$max;
+        print  OUT "$max_pos\t";
+        printf OUT "%5.1f\t", $max2;
+        print  OUT "$max_pos2\n";
         close(OUT);
-        print "$out_name: $year\t$month\t$mean\t$dev\t$min\t$min_pos\t$max\t$max_pos\t$max2\t$max_pos2\n";
-        `rm result result2` ;
+        print   "$year\t$month\t";
+        printf  "%5.6f\t%5.6f\t%5.1f\t",$mean,$dev,$min;
+        print   "$min_pos\t";
+        printf  "%5.1f\t",$max;
+        print   "$max_pos\t";
+        printf  "%5.1f\t", $max2;
+        print   "$max_pos2\n";
+
+        system("rm result result2") ;
 }
 
 
@@ -315,7 +323,7 @@ sub print_stat{
 
 sub find_10th {
 
-	system("dmimghist infile=temp.fits  outfile=outfile.fits 1::1 strict clobber=yes");
+	system("dmimghist infile=temp.fits  outfile=outfile.fits hist=1::1 strict=yes clobber=yes");
 	system("dmlist infile=outfile.fits outfile=./zout opt=data");
 
         open(FH, './zout');

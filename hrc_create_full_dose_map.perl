@@ -67,6 +67,7 @@ if($umon == 0){
 
 system("perl $bin_dir/hrc_dose_get_data_full_rage.perl $lyear $lmonth $lyear $lmonth $usr $pass $mon_dir");
 
+system("gzip $mon_dir/*fits");
 #
 #--- create cumulative dose maps
 #

@@ -7,7 +7,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last updated: 08/22/2005							#
+#	last updated: 08/23/2005							#
 #											#
 #########################################################################################
 
@@ -169,7 +169,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 		system("gzip -d -f  *gz");
 
 		$line = "$first".'[EVENTS][bin tdetx=2800:5200:1, tdety=1650:4150:1][option type=i4]';
-		system("dmcopy \"$line\" out.fits  option=image clobber=yes");
+		system("dmcopy infile=\"$line\" outfile=out.fits  opt=image clobber=yes");
 
 		$line = 'out.fits[opt type=i4,null=-99]';
 		system("dmcopy infile=\"$line\" outfile=total.fits clobber=yes");
@@ -201,7 +201,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 
 			$line = "$file".'[EVENTS][bin tdetx=2800:5200:1, tdety=1650:4150:1][option type=i4]';
 			if (-e 'out.fits') {unlink 'out.fits';}
-			system("dmcopy \"$line\" out.fits  option=image clobber=yes");
+			system("dmcopy infile=\"$line\" outfile=out.fits  opt=image clobber=yes");
 
 			$check = `ls total.fits`;
 

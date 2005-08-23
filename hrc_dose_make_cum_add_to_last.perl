@@ -66,8 +66,8 @@ foreach $inst ('HRCI', 'HRCS'){
 		if($m == 9 && $inst eq 'HRCI'){
 			next OUTER;
 		}
-		$lname = "$cum_dir".'/'."$inst".'_09_1999_'."$lmonth".'_'."$lyear".'_'."$m".'.fits*';
-		$name  = "$in_dir".'/'."$inst".'_'."$tmonth".'_'."$tyear".'_'."$m".'.fits*';
+		$lname = "$cum_dir".'/'."$inst".'_09_1999_'."$lmonth".'_'."$lyear".'_'."$m".'.fits.gz';
+		$name  = "$in_dir".'/'."$inst".'_'."$tmonth".'_'."$tyear".'_'."$m".'.fits.gz';
 		$out   = "$cum_dir".'/'."$inst".'_09_1999_'."$tmonth".'_'."$tyear".'_'."$m".'.fits';
 
 		$test = `ls $name`;

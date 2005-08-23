@@ -6,7 +6,7 @@
 #													#
 #		author: t. isobe (tisobe@cfa.harvard.edu)						#
 #													#
-#		last update: Aug 18, 2005								#
+#		last update: Aug 22, 2005								#
 #													#
 #########################################################################################################
 
@@ -30,7 +30,7 @@ foreach $header ('HRCS', 'HRCI'){
 		}
 		$lower = lc $header;
 		$out   = "$outdir".'/'."$lower".'_'."$sec".'_dff';
-		$name  = "$indir".'/'."$header".'_'."$tmonth".'_'."$tyear".'_'."$sec".'.fits.*';
+		$name  = "$indir".'/'."$header".'_'."$tmonth".'_'."$tyear".'_'."$sec".'.fits.gz';
 
 		system("ls $name");
 		$test = `ls $indir/*`;
@@ -48,7 +48,7 @@ foreach $header ('HRCS', 'HRCI'){
 			close(OUT);
 			next OUTER;
 		}
-		system('dmstat infile=$name centroid=0 > zstat");
+		system("dmstat infile=$name centroid=no > zstat");
 		open(FH, './zstat');
 		while(<FH>){
 			chomp $_;
@@ -56,19 +56,21 @@ foreach $header ('HRCS', 'HRCI'){
 			if($_ =~ /mean/){
 				$mean = $atemp[2];
 				$mean =~ s/\s+//g;
-			}elsif($_ =~ /std/){
+			}elsif($_ =~ /sigma/){
 				$std  = $atemp[2];
 				$std  =~ s/\s+//g;
 			}elsif($_ =~ /min/){
 				$min     = $atemp[2];
 				$min     =~ s/\s+//g;
-				$min_loc = $atemp[4];
-				$min_loc =~ s/\s+//g;
+				@btemp   = split(/\(/, $_);
+				@ctemp   = split(/\s+/, $btemp[1]);
+				$min_loc = "($ctemp[1],$ctemp[2])";
 			}elsif($_ =~ /max/){
 				$max     = $atemp[2];
 				$max     =~ s/\s+//g;
-				$max_loc = $atemp[4];
-				$max_loc =~ s/\s+//g;
+				@btemp   = split(/\(/, $_);
+				@ctemp   = split(/\s+/, $btemp[1]);
+				$max_loc = "($ctemp[1],$ctemp[2])";
 			}
 		}
 		close(FH);
@@ -88,8 +90,9 @@ foreach $header ('HRCS', 'HRCI'){
                         if($_ =~ /max/){
                                 $max10  = $atemp[2];
                                 $max10  =~ s/\s+//g;
-                                $max10_loc = $atemp[4];
-                                $max10_loc =~ s/\s+//g;
+				@btemp   = split(/\(/, $_);
+				@ctemp   = split(/\s+/, $btemp[1]);
+				$max10_loc = "($ctemp[1],$ctemp[2])";
                         }
                 }
                 close(FH);
@@ -98,15 +101,15 @@ foreach $header ('HRCS', 'HRCI'){
 
 		open(OUT, ">>$out");
 		if($mean =~ /\d/){
-			print OUT  "$tyear\t $tmonth\t";
-			print OUT  "$mean\t";
-			print OUT  "$std\t";
-			print OUT  "$min\t";
-			print OUT  "$min_loc\t";
-			print OUT  "$max10\t";
-			print OUT  "$max10_loc\t";
-			print OUT  "$max\t";
-			print OUT  "$max_loc\n";
+			print  OUT  "$tyear\t $tmonth\t";
+			printf OUT  "%5.6f\t",$mean;
+			printf OUT  "%5.6f\t",$std;
+			printf OUT  "%5.1f\t",$min;
+			print  OUT  "$min_loc\t";
+			printf OUT  "%5.1f\t",$max10;
+			print  OUT  "$max10_loc\t";
+			printf OUT  "%5.1f\t",$max;
+			print  OUT  "$max_loc\n";
 		}else{
 			print OUT  "$tyear\t $tmonth\t";
 			print OUT  "NA\t";
@@ -130,7 +133,7 @@ foreach $header ('HRCS', 'HRCI'){
 sub find_10th {
 
         ($fzzz) = @_;
-	system("dmimghist infile=$fzzz outfile=outfile.fits 1::1 strict clobber=yes");
+	system("dmimghist infile=$fzzz outfile=outfile.fits hist=1::1 strict=yes clobber=yes");
 	system("dmlist infile=outfile.fits outfile=./zout opt=data");
 
         open(FH, './zout');

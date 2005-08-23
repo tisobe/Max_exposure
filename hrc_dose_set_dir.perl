@@ -18,6 +18,7 @@ $cum_dir  = '/data/mta/www/mta_max_exp/Cumulative_hrc/';    # a directory which 
 $mon_dir2 = '/data/mta/Script/Exposure/HRC/Month_hrc/';	    # a directory which holds all hrc monthly data
 $cum_dir2 = '/data/mta/Script/Exposure/HRC/Cumulative_hrc/';# a directory which holds all hrc cumulative data
 $data_out = '/data/mta/www/mta_max_exp/Data/';		    # a directory which holds computed results
+$data_out2= '/data/mta/www/mta_max_exp/HRC/Data/';	    # a directory which holds computed results (full data)
 $plot_dir = '/data/mta/www/mta_max_exp/Plots/';		    # a directory which holds all plots
 $img_dir  = '/data/mta/www/mta_max_exp/Images/';	    # a directory which holds all png images
 $web_dir  = '/data/mta/www/mta_max_exp/';		    # a top directory
@@ -44,7 +45,7 @@ print OUT "$bin_dir\n";
 print OUT "$dat_dir\n";
 print OUT "$mon_dir2\n";
 print OUT "$cum_dir2\n";
-print OUT "$data_out\n";
+print OUT "$data_out2\n";
 print OUT "$plot_dir\n";
 print OUT "$img_dir\n";
 print OUT "$web_dir\n";

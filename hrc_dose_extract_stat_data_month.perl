@@ -108,7 +108,7 @@ sub comp_stat{
 #
 #-- to avoid get min from outside of the edge of a CCD
 #
-		system("dmimgthresh infile=$line outfile=zcut.fits  cut=\"0:\" value=0 clobber=yes");
+		system("dmimgthresh infile=$line outfile=zcut.fits  cut=\"0:1.e10\" value=0 clobber=yes");
 		system("dmstat	infile=zcut.fits  centroid=no > ./result");
 		system("rm zcut.fits");
 	
@@ -163,10 +163,14 @@ sub print_stat{
 			$dev  = $atemp[2];
 		}elsif($_ =~ /min/){
 			$min     = $atemp[2];
-			$min_pos = $atemp[4];
+			@btemp   = split(/\(/, $_);
+			@ctemp   = split(/\s+/, $btemp[1]);
+			$min_pos = "($ctemp[1],$ctemp[2])";
 		}elsif($_ =~ /max/){
 			$max     = $atemp[2];
-			$max_pos = $atemp[4];
+			@btemp   = split(/\(/, $_);
+			@ctemp   = split(/\s+/, $btemp[1]);
+			$max_pos = "($ctemp[1],$ctemp[2])";
 		}
         }
         close(IN);
@@ -183,15 +187,26 @@ sub print_stat{
 			$dev2  = $atemp[2];
 		}elsif($_ =~ /min/){
 			$min2     = $atemp[2];
-			$min_pos2 = $atemp[4];
+			@btemp    = split(/\(/, $_);
+			@ctemp    = split(/\s+/, $btemp[1]);
+			$min_pos2 = "($ctemp[1],$ctemp[2])";
 		}elsif($_ =~ /max/){
 			$max2     = $atemp[2];
-			$max_pos2 = $atemp[4];
+			@btemp    = split(/\(/, $_);
+			@ctemp    = split(/\s+/, $btemp[1]);
+			$max_pos2 = "($ctemp[1],$ctemp[2])";
 		}
         }
         close(IN);
         open(OUT,">>$out_name");
-        print OUT "$year\t$month\t$mean\t$dev\t$min\t$min_pos\t$max\t$max_pos\t$max2\t$max_pos2\n";
+	print  OUT "$year\t$month\t";
+	printf OUT "%5.6f\t%5.6f\t%5.1f\t",$mean,$dev,$min;
+	print  OUT "$min_pos\t";
+	printf OUT "%5.1f\t",$max;
+	print  OUT "$max_pos\t";
+	printf OUT "%5.1f\t", $max2;
+	print  OUT "$max_pos2\n";
+	
         close(OUT);
         system("rm result result2") ;
 }
@@ -204,7 +219,7 @@ sub print_stat{
 sub find_10th {
 	
 	($fzzz) = @_;
-	system("dmimghist infile=$fzzz outfile=outfile.fits 1::1 strict clobber=yes");
+	system("dmimghist infile=$fzzz outfile=outfile.fits hist=1::1 strict=yes clobber=yes");
 	system("dmlist infile=outfile.fits outfile=zout opt=data");
         open(FH, './zout');
         @hbin = ();
