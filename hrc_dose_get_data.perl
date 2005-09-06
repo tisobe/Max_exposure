@@ -234,7 +234,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 		if($hrci_cnt > 0){
 			if($hrci_cnt == 1){
 				$file = shift(@hrci_list);
-				system("mv $file Save/$out_file_s");
+				system("mv $file Save/$out_file_i");
 			}else{
 				$first =  shift(@hrci_list);
 				
