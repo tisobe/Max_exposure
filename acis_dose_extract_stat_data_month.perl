@@ -239,7 +239,7 @@ sub comp_stat{
 #
 #-- to avoid get min from outside of the edge of a CCD
 #
-	system("dmimgthresh infile=temp.fits  outfile=zcut.fits  cut=\"0:\" value=0 clobber=yes");
+	system("dmimgthresh infile=temp.fits  outfile=zcut.fits  cut=\"0:1e10\" value=0 clobber=yes");
 	system("dmstat  infile=zcut.fits  centroid=no > ./result");
 	system("rm zthresh.fits");
 #
