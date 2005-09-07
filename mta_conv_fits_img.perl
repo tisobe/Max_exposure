@@ -42,7 +42,7 @@ if($infile =~ /-h/i){
 	exit 1;
 }
 
-if($scale ne 'log' || $scale ne 'power'){
+if($scale !~ /log/i && $scale !~ /power/i){
 	$scale = 'linear';
 }
 
