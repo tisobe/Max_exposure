@@ -188,10 +188,28 @@ for($year = $start_year; $year <= $end_year; $year++){
 				$line = "$file".'[EVENTS][bin rawx=0:4095:1, rawy=22528:26623:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
 				system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 
-				$line ='out.fits[opt type=i4,null=-99]';
-				system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
+				system("dmstat out.fits centroid=no > stest");
+				open(FH, "./stest");
+				$chk = 0;
+				OUTER:
+				while(<FH>){
+					chomp $_;
+					if($_ =~ /mean/){
+						@atemp = split(/\s+/, $_);
+						if($atemp[2] > 0){
+							$chk = 1;
+							last OUTER;
+						}
+					}
+				}
+				close(FH);
 
-				system("mv total.fits Save/$out_file_s");
+				if($chk > 0){
+					$line ='out.fits[opt type=i4,null=-99]';
+					system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
+	
+					system("mv total.fits Save/$out_file_s");
+				}
 			}else{
 				$first =  shift(@hrcs_list);
 				
@@ -199,9 +217,27 @@ for($year = $start_year; $year <= $end_year; $year++){
 	
 				system("dmcopy \"$line\" out.fits  option=image  clobber=yes");
 
-				$line ='out.fits[opt type=i4,null=-99]';
-				system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
+				system("dmstat out.fits centroid=no > stest");
+				open(FH, "./stest");
+				$chk = 0;
+				OUTER:
+				while(<FH>){
+					chomp $_;
+					if($_ =~ /mean/){
+						@atemp = split(/\s+/, $_);
+						if($atemp[2] > 0){
+							$chk = 1;
+							last OUTER;
+						}
+					}
+				}
+				close(FH);
+
+				if($chk > 0){
+					$line ='out.fits[opt type=i4,null=-99]';
+					system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
 		
+				}
 				system("rm $first");
 
 				OUTER:
@@ -209,21 +245,39 @@ for($year = $start_year; $year <= $end_year; $year++){
 
 					$line = "$file".'[EVENTS][bin rawx=0:4095:1, rawy=22528:26623:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
 					system("dmcopy \"$line\" out.fits  option=image clobber=yes");
-	
-					$check = `ls total.fits`;
 
-					$line ='out.fits[opt type=i4,null=-99]';
-					system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber='yes'");
-
-					if($check !~ /total/){
-						system("mv temp3.fits total.fits");
-						next OUTER;
+					system("dmstat out.fits centroid=no > stest");
+					open(FH, "./stest");
+					$chk = 0;
+					OUTER:
+					while(<FH>){
+						chomp $_;
+						if($_ =~ /mean/){
+							@atemp = split(/\s+/, $_);
+							if($atemp[2] > 0){
+								$chk = 1;
+								last OUTER;
+							}
+						}
 					}
+					close(FH);
+	
+					if($chk > 0){
+						$check = `ls total.fits`;
 
-					system("dmimgcalc infile=temp3.fits infile2=total.fits outfile=mtemp.fits operation=add  clobber=yes");
-
-					system("mv mtemp.fits total.fits");
-					system("rm $file");
+						$line ='out.fits[opt type=i4,null=-99]';
+						system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber='yes'");
+	
+						if($check !~ /total/){
+							system("mv temp3.fits total.fits");
+							next OUTER;
+						}
+	
+						system("dmimgcalc infile=temp3.fits infile2=total.fits outfile=mtemp.fits operation=add  clobber=yes");
+	
+						system("mv mtemp.fits total.fits");
+						system("rm $file");
+					}
 				}
 				system("mv total.fits Save/$out_file_s");
 			}
@@ -234,7 +288,31 @@ for($year = $start_year; $year <= $end_year; $year++){
 		if($hrci_cnt > 0){
 			if($hrci_cnt == 1){
 				$file = shift(@hrci_list);
-				system("mv $file Save/$out_file_i");
+				$line = "$file".'[EVENTS][bin rawx=6144:10239:1, rawy=6144:10239:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
+				system("dmcopy \"$line\" out.fits  option=image clobber=yes");
+
+				system("dmstat out.fits centroid=no > stest");
+				open(FH, "./stest");
+				$chk = 0;
+				OUTER:
+				while(<FH>){
+					chomp $_;
+					if($_ =~ /mean/){
+						@atemp = split(/\s+/, $_);
+						if($atemp[2] > 0){
+							$chk = 1;
+							last OUTER;
+						}
+					}
+				}
+				close(FH);
+
+				if($chk > 0){
+					$line ='out.fits[opt type=i4,null=-99]';
+					system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
+	
+					system("mv total.fits Save/$out_file_s");
+				}
 			}else{
 				$first =  shift(@hrci_list);
 				
@@ -242,8 +320,26 @@ for($year = $start_year; $year <= $end_year; $year++){
 	
 				system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 
-				$line ='out.fits[opt type=i4,null=-99]';
-				system("dmcopy infile=\"$line\"  outfile=total.fits clobber='yes'");
+				system("dmstat out.fits centroid=no > stest");
+				open(FH, "./stest");
+				$chk = 0;
+				OUTER:
+				while(<FH>){
+					chomp $_;
+					if($_ =~ /mean/){
+						@atemp = split(/\s+/, $_);
+						if($atemp[2] > 0){
+							$chk = 1;
+							last OUTER;
+						}
+					}
+				}
+				close(FH);
+	
+				if($chk > 0){
+					$line ='out.fits[opt type=i4,null=-99]';
+					system("dmcopy infile=\"$line\"  outfile=total.fits clobber='yes'");
+				}
 		
  				system("rm $first");
 
@@ -251,22 +347,40 @@ for($year = $start_year; $year <= $end_year; $year++){
 				foreach $file (@hrci_list){
 
 					$line = "$file".'[EVENTS][bin rawx=6144:10239:1, rawy=6144:10239:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
-					if (-e 'out.fits') {unlink 'out.fits';}
 					system("dmcopy \"$line\" out.fits  option=image clobber=yes");
-					$check = `ls total.fits`;
 
-					$line ='out.fits[opt type=i4,null=-99]';
-					system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber='yes'");
-
-					if($check !~ /total/){
-						system("mv temp3.fits total.fits");
-						next OUTER;
+					system("dmstat out.fits centroid=no > stest");
+					open(FH, "./stest");
+					$chk = 0;
+					OUTER:
+					while(<FH>){
+						chomp $_;
+						if($_ =~ /mean/){
+							@atemp = split(/\s+/, $_);
+							if($atemp[2] > 0){
+								$chk = 1;
+								last OUTER;
+							}
+						}
 					}
+					close(FH);
+	
+					if($chk > 0){
+						$check = `ls total.fits`;
 
-					system("dmimgcalc infile=temp3.fits infile2=total.fits outfile=mtemp.fits operation=add clobber=yes");
-
-					system("mv mtemp.fits total.fits");
-					system("rm $file");
+						$line ='out.fits[opt type=i4,null=-99]';
+						system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber='yes'");
+	
+						if($check !~ /total/){
+							system("mv temp3.fits total.fits");
+							next OUTER;
+						}
+	
+						system("dmimgcalc infile=temp3.fits infile2=total.fits outfile=mtemp.fits operation=add clobber=yes");
+	
+						system("mv mtemp.fits total.fits");
+						system("rm $file");
+					}
 				}
 				system("mv total.fits Save/$out_file_i");
 			}
