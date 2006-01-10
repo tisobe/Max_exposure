@@ -130,6 +130,23 @@ perl /data/mta/MTA/bin/acis_dose_make_data_html.perl <in_dir>
 where:
 	<in_dir>: data directory, created html page will also save in the same directory.
 
+Run: 	
+	perl /data/mta/MTA/bin/change_update_date.perl 
+
+to update update date to today's date in several other html pages.
+
+
+STEP 7:
+-------
+Creatin png images:
+Goto /data/mta/www/mta_max_exp/Month, and open this month's fits file with ds9,
+and save the iamge as a pn file. move the image to /data/mta/www/mta_max_exp/Images/ directory.
+
+Do same for /data/mta/www/mta_max_exp/Cumulative.
+
+
+
+
 
 
 
@@ -145,6 +162,10 @@ Run following two scripts to get both center and full HRC dose maps. These are r
 perl /data/mta/MTA/bin/hrc_create_center_dose_map.perl
 
 perl /data/mta/MTA/bin/hrc_create_full_dose_map.perl
+
+Run following script to create monthly report plot
+
+perl /data/mta/MTA/bin/hrc_dose_monthly_plot_stat.perl
 
 
 ####### OLD STEP BY STEP METHODS ########
