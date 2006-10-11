@@ -5,6 +5,16 @@ How to compute the telemetered maximum dose exposure trend.
 ----
 ACIS
 ----
+STEP 0;
+------
+Run the followings before runing scripts. This lets you to run ftool correctly.
+
+rm -rf param
+mkdir param
+source /home/mta/bin/reset_param
+setenv PFILES "${PDIRS}:${SYSPFILES}"
+set path = (/home/ascds/DS.release/bin/  $path)
+
 
 STEP 1:
 -------
@@ -33,12 +43,14 @@ Thrid, use fimgtrim to remove any data point higher than the upper limit:
 		const_lo: a replace value for lower threshold (= 0)
 		const_up: a replace value for upper threshold (= 0)
 
+try: fimgtrim ACIS_06_2006.fits 0 <upper_thresh> 0 0 out.fits
+
 copy out.fit back to ACIS_MM_YYYY.fits
 Save this file in /data/mta/www/mta_max_exp/Month/ (you should zip it).
 
 STEP 2:
 ------
-Go to /data/mta/www/mta_acis_sci_run, and open drop_<yyyy> and drop5x5_<yyyy>, and if there are any
+Go to /data/mta/www/mta_acis_sci_run/Year<yyyy>, and open drop_<yyyy> and drop5x5_<yyyy>, and if there are any
 high drop rate observations for the corresponding period, copy them into a file in a working directory.
 Format of the input line should be:
 #obsid  name                    start time      month   Int time        Inst    CCD     Grating Tot Cnt         Drop Rate 
@@ -70,6 +82,7 @@ fits file has a name of: ACIS_08_2004.fits, then the resulted files are ACIS_08_
 
 Open each fits file with ds9 again, and trim unwanted upper part as you did in Step 1.
 
+***** Should be unnecessary ? *************
 
 STEP 4:
 ------
@@ -90,8 +103,11 @@ After unzip this, combine this with a new fits file.
 
 Do the same operations for ccd I2, I3, S2, and S3.
 
+***** or use perl /data/mta/MTA/bin/acis_dose_seprate_ccd.perl fits_list again?*****
+
 STEP 5:
 ------
+***** gzip new cumulative file *****
 Compute statistics:
 
 perl /data/mta/MTA/bin/acis_dose_extract_stat_data_month.perl <year> <month> <dir1> <dir2> <out_dir>
@@ -109,7 +125,7 @@ This add this month's statistics to data files, e.g.
 
 If you want to compute the entire period (starting Jul 1999), use
 
-perl /data/mta/MTA/bin/hrc_dose_extract_stat_data.perl
+perl /data/mta/MTA/bin/acis_dose_extract_stat_data.perl
 
 for this, the cumulative data must be in ./Save directory, and monthly data must be
 in ./Save/Data directory.
@@ -138,12 +154,21 @@ to update update date to today's date in several other html pages.
 
 STEP 7:
 -------
-Creatin png images:
+Creating png images:
 Goto /data/mta/www/mta_max_exp/Month, and open this month's fits file with ds9,
+***** set scale=histogram eq., color=heat, window=600X665  ******
 and save the iamge as a pn file. move the image to /data/mta/www/mta_max_exp/Images/ directory.
 
+***** also do for i2,i3,s2,s3  ******
 Do same for /data/mta/www/mta_max_exp/Cumulative.
 
+
+
+STEP 8:
+------
+crate monthly report entry
+
+perl /data/mta/Script/Exposure/Max_exposure/acis_dose_monthly_report.perl
 
 
 
@@ -159,13 +184,20 @@ HRC
 Run following two scripts to get both center and full HRC dose maps. These are run automatically
 (as cron jobs) on 3rd or every momth to create dose maps for the previous month.
 
+The following scripts are run as cron jobs.
+
 perl /data/mta/MTA/bin/hrc_create_center_dose_map.perl
 
 perl /data/mta/MTA/bin/hrc_create_full_dose_map.perl
 
-Run following script to create monthly report plot
-
 perl /data/mta/MTA/bin/hrc_dose_monthly_plot_stat.perl
+
+The results are:
+
+   /data/mta_www/mta_max_exp/Plots/hrci.gi
+and
+   /data/mta_www/mta_max_exp/Plots/hrcs.gif
+
 
 
 ####### OLD STEP BY STEP METHODS ########

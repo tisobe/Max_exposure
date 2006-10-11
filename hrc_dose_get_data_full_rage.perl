@@ -344,7 +344,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 
 		if($hrci_cnt > 0){
 			if($hrci_cnt == 1){
-				$file = shift(@hrci_list);
+				$first = shift(@hrci_list);
 				for($i = 0; $i < 9; $i++){
 					$line = "$first".'[EVENTS][bin rawx='."$x_start[$i]:$x_end[$i]".':1,rawy=';
 					$line = "$line"."$y_start[$i]:$y_end[$i]".':1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4,mem=130]';
