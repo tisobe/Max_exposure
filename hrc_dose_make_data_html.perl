@@ -6,7 +6,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Mar 17, 2005							#
+#	last update: Oct 23, 2006							#
 #											#
 #########################################################################################
 	
@@ -16,7 +16,7 @@ if($in_dir eq ''){
 	exit 1;
 }
 
-$list = `ls $in_dir/*dff_out`;
+$list = `ls $in_dir/hrc*dff_out`;
 @list = split(/\s+/, $list);
 OUTER:
 foreach $file (@list){
