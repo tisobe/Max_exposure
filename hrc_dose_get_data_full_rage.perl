@@ -311,7 +311,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 							$check = `ls $fit_file`;
 
 							$line = 'out.fits[opt type=i4,null=-99]';
-							system("dmcopy infile=\"$line\" outifle=temp3.fits clobber=yes");
+							system("dmcopy infile=\"$line\" outfile=temp3.fits clobber=yes");
 	
 							if($check !~ /total/){
 								system("mv temp3.fits $fit_file");
