@@ -231,7 +231,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 					OUTER:
 					while(<FH>){
 						chomp $_;
-						if($_ =~ /mean/){
+						if($_ =~ /sum/){
 							@atemp = split(/\s+/, $_);
 							if($atemp[2] > 0){
 								$chk = 1;
@@ -262,7 +262,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 					OUTER:
 					while(<FH>){
 						chomp $_;
-						if($_ =~ /mean/){
+						if($_ =~ /sum/){
 							@atemp = split(/\s+/, $_);
 							if($atemp[2] > 0){
 								$chk = 1;
@@ -296,7 +296,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 						OUTER:
 						while(<FH>){
 							chomp $_;
-							if($_ =~ /mean/){
+							if($_ =~ /sum/){
 								@atemp = split(/\s+/, $_);
 								if($atemp[2] > 0){
 									$chk = 1;
@@ -357,7 +357,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 					OUTER:
 					while(<FH>){
 						chomp $_;
-						if($_ =~ /mean/){
+						if($_ =~ /sum/){
 							@atemp = split(/\s+/, $_);
 							if($atemp[2] > 0){
 								$chk = 1;
@@ -387,7 +387,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 					OUTER:
 					while(<FH>){
 						chomp $_;
-						if($_ =~ /mean/){
+						if($_ =~ /sum/){
 							@atemp = split(/\s+/, $_);
 							if($atemp[2] > 0){
 								$chk = 1;
@@ -420,7 +420,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 						OUTER:
 						while(<FH>){
 							chomp $_;
-							if($_ =~ /mean/){
+							if($_ =~ /sum/){
 								@atemp = split(/\s+/, $_);
 								if($atemp[2] > 0){
 									$chk = 1;
