@@ -245,6 +245,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 						$line ='out.fits[opt type=i4,null=-99]';
 						system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
 						system("mv total.fits $out_dir/$out_file_s[$i]");
+						system("gzip $out_dir/$out_file_s[$i]");
 					}
 				}
 			}else{
@@ -370,7 +371,8 @@ for($year = $start_year; $year <= $end_year; $year++){
 					if($chk > 0){
 						$line = 'out.fits[opt type=i4,null=-99]';
 						system("dmcopy infile=\"$line\" outfile=total.fits clobber=yes");
-						system("mv total.fits $out_dir/$out_file_s[$i]");
+						system("mv total.fits $out_dir/$out_file_i[$i]");
+						system("gzip $out_dir/$out_file_i[$i]");
 					}
 				}
 			}else{
