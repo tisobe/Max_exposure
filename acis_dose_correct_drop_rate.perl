@@ -49,8 +49,8 @@ while(<FH>){
 	}
 	@atemp = split(/\s+/, $_);
 	push(@obsid_list, $atemp[0]);
-#	$ratio = $atemp[8]/100;
-	$ratio = $atemp[9]/100;					# recording drop rate
+	$ratio = $atemp[8]/100;
+#	$ratio = $atemp[9]/100;					# recording drop rate
 	%{data.$atemp[0]} = (drop => ["$ratio"]);
 }
 close(FH);

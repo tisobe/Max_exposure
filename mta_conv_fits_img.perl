@@ -6,7 +6,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Jul 19, 2005							#
+#	last update: Mar 08, 2007							#
 #											#
 #########################################################################################
 
@@ -92,7 +92,7 @@ $outfile = "$outfile".'.'."$type";
 #--- convert the fits image to an eps image
 #
 
-system("dmimg2jpg $infile  greenfile='' bluefile='' regionfile='' outfile='foo.jpg' scalefunction='$scale' psfile='foo.ps'  lut=')lut.$color'  clobber='yes'");
+system("dmimg2jpg $infile  greenfile='' bluefile='' regionfile='' outfile='foo.jpg' scalefunction='$scale' psfile='foo.ps'  lut=')lut.$color' showgrid=no  clobber='yes'");
 
 if($type eq 'ps'){
 
