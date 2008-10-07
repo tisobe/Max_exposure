@@ -7,7 +7,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last updated: 07/13/2007							#
+#	last updated: 10/06/2008							#
 #											#
 #########################################################################################
 
@@ -130,7 +130,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 		}
 
 		open(OUT, ">./input_line");
-		print OUT "operation=retrieve\n";
+		print OUT "operation=browse\n";
 		print OUT "dataset=flight\n";
 		print OUT "detector=hrc\n";
 		print OUT "level=1\n";
@@ -142,19 +142,42 @@ for($year = $start_year; $year <= $end_year; $year++){
 
 		system('rm hrcf*evt1.fits*');
 
-		`echo $hakama |arc4gl -U$user -Sarcocc -iinput_line`;
+		`echo $hakama |arc4gl -U$user -Sarcocc -iinput_line > fits_list`;
+		open(IN, "fits_list");
+		@file_list = ();
+		while(<IN>){
+			chomp $_;
+			@htemp = split(/\s+/, $_);
+			if($htemp[0] =~ /hrcf/){
+				push(@file_list, $htemp[0]);
+			}
+		}
+		close(IN);
+		system("rm fits_list");
 
-		system('gzip -d *gz');
-		$list = `ls hrcf*evt1.fits*`;
-
-		@list = split(/\s+/, $list);
-		$cnt = 0;
-		@hrci_list = ();
 		$hrci_cnt  = 0;
-		@hrcs_list = ();
 		$hrcs_cnt  = 0;
 
-		foreach $file (@list){
+		foreach $file (@file_list){
+
+			open(OUT, ">./input_line");
+			print OUT "operation=retrieve\n";
+			print OUT "dataset=flight\n";
+			print OUT "detector=hrc\n";
+			print OUT "level=1\n";
+			print OUT "filetype=evt1\n";
+			print OUT "filename=$file\n";
+			print OUT "go\n";
+			close(OUT);
+	
+			`echo $hakama |arc4gl -U$user -Sarcocc -iinput_line`;
+
+			system("rm input_line");
+			system('gzip -d *gz');
+
+#
+#---- classify each HRC file into S or I file.
+#
 			system("dmlist infile=$file outfile=zout opt=head");
 			open(FH, './zout');
 			OUTER:
@@ -170,50 +193,11 @@ for($year = $start_year; $year <= $end_year; $year++){
 			close(FH);
 			system("rm zout");
 			if($detector =~ /HRC-S/i){
-				push(@hrcs_list, $file);
-				$hrcs_cnt++;
-			}else{
-				push(@hrci_list, $file);
-				$hrci_cnt++;
-			}
-		}
 
 #
 #----- HRC-S
 #
-
-		if($hrcs_cnt > 0){
-			if($hrcs_cnt == 1){
-				$file = shift(@hrcs_list);
 				$line = "$file".'[EVENTS][bin rawx=0:4095:1, rawy=22528:26623:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
-				system("dmcopy \"$line\" out.fits  option=image clobber=yes");
-
-				system("dmstat out.fits centroid=no > stest");
-				open(FH, "./stest");
-				$chk = 0;
-				OUTER:
-				while(<FH>){
-					chomp $_;
-					if($_ =~ /mean/){
-						@atemp = split(/\s+/, $_);
-						if($atemp[2] > 0){
-							$chk = 1;
-							last OUTER;
-						}
-					}
-				}
-				close(FH);
-
-				if($chk > 0){
-					$line ='out.fits[opt type=i4,null=-99]';
-					system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
-	
-					system("mv total.fits Save/$out_file_s");
-				}
-			}else{
-				$first =  shift(@hrcs_list);
-				
-				$line = "$first".'[EVENTS][bin rawx=0:4095:1, rawy=22528:26623:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
 	
 				system("dmcopy \"$line\" out.fits  option=image  clobber=yes");
 
@@ -233,61 +217,27 @@ for($year = $start_year; $year <= $end_year; $year++){
 				}
 				close(FH);
 
+
 				if($chk > 0){
 					$line ='out.fits[opt type=i4,null=-99]';
-					system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
+					system("dmcopy infile=\"$line\"  outfile=ztemp.fits clobber=yes");
 		
 				}
-				system("rm $first");
+				system("rm out.fits");
 
-				OUTER:
-				foreach $file (@hrcs_list){
-
-					$line = "$file".'[EVENTS][bin rawx=0:4095:1, rawy=22528:26623:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
-					system("dmcopy \"$line\" out.fits  option=image clobber=yes");
-
-					system("dmstat out.fits centroid=no > stest");
-					open(FH, "./stest");
-					$chk = 0;
-					OUTER:
-					while(<FH>){
-						chomp $_;
-						if($_ =~ /mean/){
-							@atemp = split(/\s+/, $_);
-							if($atemp[2] > 0){
-								$chk = 1;
-								last OUTER;
-							}
-						}
-					}
-					close(FH);
-	
-					if($chk > 0){
-						$check = `ls total.fits`;
-
-						$line ='out.fits[opt type=i4,null=-99]';
-						system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber='yes'");
-	
-						if($check !~ /total/){
-							system("mv temp3.fits total.fits");
-							next OUTER;
-						}
-	
-						system("dmimgcalc infile=temp3.fits infile2=total.fits outfile=mtemp.fits operation=add  clobber=yes");
-	
-						system("mv mtemp.fits total.fits");
-						system("rm $file");
-					}
+				if($hrcs_cnt ==  0){
+					system("mv ztemp.fits total_s.fits");
+				}elsif($hrcs_cnt > 0){
+					system("dmimgcalc infile=ztemp.fits infile2=total_s.fits outfile=mtemp.fits operation=add  clobber=yes");
+					sytem("rm ztemp.fits");
+					system("mv mtemp.fits total_s.fits");
 				}
-				system("mv total.fits Save/$out_file_s");
-			}
-		}
+				$hrcs_cnt++;
+
+			}else{
 #
 #---- HRC-I
 #
-		if($hrci_cnt > 0){
-			if($hrci_cnt == 1){
-				$file = shift(@hrci_list);
 				$line = "$file".'[EVENTS][bin rawx=6144:10239:1, rawy=6144:10239:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
 				system("dmcopy \"$line\" out.fits  option=image clobber=yes");
 
@@ -307,84 +257,30 @@ for($year = $start_year; $year <= $end_year; $year++){
 				}
 				close(FH);
 
+
 				if($chk > 0){
 					$line ='out.fits[opt type=i4,null=-99]';
-					system("dmcopy infile=\"$line\"  outfile=total.fits clobber=yes");
-	
-					system("mv total.fits Save/$out_file_i");
+					system("dmcopy infile=\"$line\"  outfile=ztemp.fits clobber=yes");
 				}
-			}else{
-				$first =  shift(@hrci_list);
-				
-				$line = "$first".'[EVENTS][bin rawx=6144:10239:1, rawy=6144:10239:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
-	
-				system("dmcopy \"$line\" out.fits  option=image clobber=yes");
-
-				system("dmstat out.fits centroid=no > stest");
-				open(FH, "./stest");
-				$chk = 0;
-				OUTER:
-				while(<FH>){
-					chomp $_;
-					if($_ =~ /mean/){
-						@atemp = split(/\s+/, $_);
-						if($atemp[2] > 0){
-							$chk = 1;
-							last OUTER;
-						}
-					}
+				system("rm out.fits");
+				if($hrci_cnt ==  0){
+					system("mv ztemp.fits total_i.fits");
+				}elsif($hrci_cnt > 0){
+					system("dmimgcalc infile=ztemp.fits infile2=total_i.fits outfile=mtemp.fits operation=add  clobber=yes");
+					system("rm ztemp.fits");
+					system("mv mtemp.fits total_i.fits");
 				}
-				close(FH);
-	
-				if($chk > 0){
-					$line ='out.fits[opt type=i4,null=-99]';
-					system("dmcopy infile=\"$line\"  outfile=total.fits clobber='yes'");
-				}
-		
- 				system("rm $first");
-
-				OUTER:
-				foreach $file (@hrci_list){
-
-					$line = "$file".'[EVENTS][bin rawx=6144:10239:1, rawy=6144:10239:1][status=xxxxxx00xxxxxxxxx000x000xx00xxxx][option type=i4 mem=80]';
-					system("dmcopy \"$line\" out.fits  option=image clobber=yes");
-
-					system("dmstat out.fits centroid=no > stest");
-					open(FH, "./stest");
-					$chk = 0;
-					OUTER:
-					while(<FH>){
-						chomp $_;
-						if($_ =~ /mean/){
-							@atemp = split(/\s+/, $_);
-							if($atemp[2] > 0){
-								$chk = 1;
-								last OUTER;
-							}
-						}
-					}
-					close(FH);
-	
-					if($chk > 0){
-						$check = `ls total.fits`;
-
-						$line ='out.fits[opt type=i4,null=-99]';
-						system("dmcopy infile=\"$line\"  outfile=temp3.fits clobber='yes'");
-	
-						if($check !~ /total/){
-							system("mv temp3.fits total.fits");
-							next OUTER;
-						}
-	
-						system("dmimgcalc infile=temp3.fits infile2=total.fits outfile=mtemp.fits operation=add clobber=yes");
-	
-						system("mv mtemp.fits total.fits");
-						system("rm $file");
-					}
-				}
-				system("mv total.fits Save/$out_file_i");
+				$hrci_cnt++;
 			}
+
+			
+		system("rm $file");
+		}
+		if($hrcs_cnt > 0){
+			system("mv total_s.fits Save/$out_file_s");
+		}
+		if($hrci_cnt > 0){
+			system("mv total_i.fits Save/$out_file_i");
 		}
 	}
-	system("rm hrcf*.fits");
 }
