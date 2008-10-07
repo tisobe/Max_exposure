@@ -229,7 +229,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 					system("mv ztemp.fits total_s.fits");
 				}elsif($hrcs_cnt > 0){
 					system("dmimgcalc infile=ztemp.fits infile2=total_s.fits outfile=mtemp.fits operation=add  clobber=yes");
-					sytem("rm ztemp.fits");
+					system("rm ztemp.fits");
 					system("mv mtemp.fits total_s.fits");
 				}
 				$hrcs_cnt++;
