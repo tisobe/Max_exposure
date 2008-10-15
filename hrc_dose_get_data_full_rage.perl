@@ -169,7 +169,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 
 		system('rm hrcf*evt1.fits*');
 
-####		`echo $hakama |arc4gl -U$user -Sarcocc -iinput_line >fits_list`;
+		`echo $hakama |arc4gl -U$user -Sarcocc -iinput_line >fits_list`;
 		system("rm input_line");
 
 		open(IN, "fits_list");
@@ -182,7 +182,7 @@ for($year = $start_year; $year <= $end_year; $year++){
 			}
 		}
 		close(IN);
-####		system("rm fits_list");
+		system("rm fits_list");
 		${hrci_cnt.0}  = 0;
 		${hrci_cnt.1}  = 0;
 		${hrci_cnt.2}  = 0;

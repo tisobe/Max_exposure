@@ -6,7 +6,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Aug 22, 2005							#
+#	last update: Oct 15, 2008							#
 #											#
 #########################################################################################
 
@@ -103,20 +103,21 @@ system("perl $bin_dir/hrc_dose_conv_to_png.perl $cum_dir $cum_dir $lyear $lmonth
 ###################################################################################
 #---following was commented out, since this operation cannot be done from colossus
 #---see hrc_dose_copy_data_to_may.perl
+#---these lines are re-activated on 10/15/08; now the operation is on rhodes
 ###################################################################################
 #
 #--- copy data to "mays" which can be seen from the outer world
 #
 #
-#$emonth = $lmonth;
-#if($lmonth < 10 && $lmonth !~ /0/){
-#	$emonth = '0'."$lmonth";
-#}
-#
-#$new_data = '*'."$emonth".'_'."$lyear".'*';
-#
-#system("gzip $mon_dir/$new_data");
-#system("cp $mon_dir/$new_data $mays_dir/Month_hrc");
-#
-#system("gzip $cum_dir/$new_data");
-#system("cp $cum_dir/$new_data $mays_dir/Cumulative_hrc");
+$emonth = $lmonth;
+if($lmonth < 10 && $lmonth !~ /0/){
+	$emonth = '0'."$lmonth";
+}
+
+$new_data = '*'."$emonth".'_'."$lyear".'*';
+
+system("gzip $mon_dir/$new_data");
+system("cp $mon_dir/$new_data $mays_dir/Month_hrc");
+
+system("gzip $cum_dir/$new_data");
+system("cp $cum_dir/$new_data $mays_dir/Cumulative_hrc");
