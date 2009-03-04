@@ -6,7 +6,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Oct 15, 2008							#
+#	last update: Mar 04, 2009							#
 #											#
 #########################################################################################
 
@@ -39,6 +39,8 @@ $usr  = `cat $dat_dir/.dare`;
 $pass = `cat $dat_dir/.hakama`;
 chomp $usr;
 chomp $pass;
+
+$mays_dir = '/data/mays/MTA/Exposure/Hrc/';
 
 #
 #--- get today's date
