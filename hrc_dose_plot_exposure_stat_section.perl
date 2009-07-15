@@ -8,7 +8,7 @@ use PGPLOT;
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Aug 22, 2005							#
+#	last update: Jul 15, 2009							#
 #											#
 #########################################################################################
 
@@ -307,7 +307,7 @@ foreach $head ('hrci', 'hrcs'){
 	
 		$out_gif = "$out_dir".'/'."$head".'_'."$i".'.gif';
 
-		system("echo ''|gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_gif");
+		system("echo ''|/opt/local/bin/gs -sDEVICE=ppmraw  -r256x256 -q -NOPAUSE -sOutputFile=-  ./pgplot.ps|$bin_dir/pnmcrop| $bin_dir/pnmflip -r270 |$bin_dir/ppmtogif > $out_gif");
 	
 	}
 }
