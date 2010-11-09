@@ -12,7 +12,7 @@ Run the followings before runing scripts. This lets you to run ftool correctly.
 rm -rf param
 mkdir param
 source /home/mta/bin/reset_param
-setenv PFILES "${PDIRS}:${SYSPFILES}"
+setenv PFILES "${PDIRS}"
 set path = (/home/ascds/DS.release/bin/  $path)
 
 
@@ -37,13 +37,16 @@ an appropriate upper limit (e.g., at the point the continuous distribution start
 
 Thrid, use fimgtrim to remove any data point higher than the upper limit:
 
-	fimgtrim infile=ACIS_MM_YYYY.fits outfile=out.fits  threshlo threshup const_lo const_up
-	where:	threshlo: lower threshold (= 0)
-		threshup: upper threshold --- the value you selected
-		const_lo: a replace value for lower threshold (= 0)
-		const_up: a replace value for upper threshold (= 0)
+#	fimgtrim infile=ACIS_MM_YYYY.fits outfile=out.fits  threshlo threshup const_lo const_up
+#	where:	threshlo: lower threshold (= 0)
+#		threshup: upper threshold --- the value you selected
+#		const_lo: a replace value for lower threshold (= 0)
+#		const_up: a replace value for upper threshold (= 0)
+#
+#try: fimgtrim ACIS_06_2006.fits 0 <upper_thresh> 0 0 out.fits
 
-try: fimgtrim ACIS_06_2006.fits 0 <upper_thresh> 0 0 out.fits
+dmimgthresh ACIS_MM_YYY.fits out.fits expfile="" cut="0:<upper limit>" value=0 clobber=yes
+
 
 copy out.fit back to ACIS_MM_YYYY.fits
 Save this file in /data/mta/www/mta_max_exp/Month/ (you should zip it).
@@ -92,14 +95,16 @@ Combine with the previous cumulative data:
 
 After unzip this, combine this with a new fits file.
 
-	fimgmerge ACIS_07_1999_MM'_YYYY'.fits @file ACIS_07_1999_MM_YYYY.fits
-	where: MM' is the previous month (e.g. 02);
-	       YYYY' is the year for the previous month (e.g.2004)
-	       MM  is this month (e.g. 03)
-	       YYYY is the year for this month (e.g. 2004)
-	       @file is a file containing line(s):
-			ACIS_MM_YYYY.fits,0,0 (e.g. ACIS_03_2004.fits,0,0)
-			comb_out.fits,0,0     (if a correction is required).
+#	fimgmerge ACIS_07_1999_MM'_YYYY'.fits @file ACIS_07_1999_MM_YYYY.fits
+#	where: MM' is the previous month (e.g. 02);
+#	       YYYY' is the year for the previous month (e.g.2004)
+#	       MM  is this month (e.g. 03)
+#	       YYYY is the year for this month (e.g. 2004)
+#	       @file is a file containing line(s):
+#			ACIS_MM_YYYY.fits,0,0 (e.g. ACIS_03_2004.fits,0,0)
+#			comb_out.fits,0,0     (if a correction is required).
+
+dmimgcalc /data/mta/www/mta_max_exp/Cumulative/ACIS_07_1999_MM_YYYY.fits.gz ACIS_mm_yyyy.fits  ACIS_07_1999_mm_yyyy.fits add
 
 Do the same operations for ccd I2, I3, S2, and S3.
 
@@ -134,7 +139,7 @@ in ./Save/Data directory.
 STEP 6:
 -------
 First, create plots fo these data:
-perl /data/mta/MTA/bin/acis_dose_plot_exposure_stat.perl <in_dir> <out_dir>
+/opt/local/bin/perl /data/mta/MTA/bin/acis_dose_plot_exposure_stat.perl <in_dir> <out_dir>
 
 where:
 	<in_dir>: input dir /data/mta/www/mta_max_exp/Data

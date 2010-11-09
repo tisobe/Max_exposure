@@ -6,14 +6,14 @@ mkdir param
 source /home/mta/bin/reset_param
 setenv PFILES "${PDIRS}" 
 
-perl /data/mta/MTA/bin/hrc_dose_set_dir.perl
+/opt/local/bin/perl /data/mta/MTA/bin/hrc_dose_set_dir.perl
 
-perl /data/mta/MTA/bin/hrc_create_center_dose_map.perl
+/opt/local/bin/perl /data/mta/MTA/bin/hrc_create_center_dose_map.perl
 
-perl /data/mta/MTA/bin/hrc_create_full_dose_map.perl
+/opt/local/bin/perl /data/mta/MTA/bin/hrc_create_full_dose_map.perl
 
-perl /data/mta/MTA/bin/hrc_dose_update_main_html.perl
+/opt/local/bin/perl /data/mta/MTA/bin/hrc_dose_update_main_html.perl
 
-perl /data/mta/MTA/bin/hrc_dose_monthly_plot_stat.perl
+/opt/local/bin/perl /data/mta/MTA/bin/hrc_dose_monthly_plot_stat.perl
 
 rm dir_list*
