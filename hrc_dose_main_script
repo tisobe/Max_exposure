@@ -17,3 +17,11 @@ setenv PFILES "${PDIRS}"
 /opt/local/bin/perl /data/mta/MTA/bin/hrc_dose_monthly_plot_stat.perl
 
 rm dir_list*
+
+
+chgrp mtagroup /data/mta/Script/Exposure/Hrc/*/*
+
+chgrp mtagroup /data/mta_www/mta_max_exp/HRC/*
+chgrp mtagroup /data/mta_www/mta_max_exp/HRC/*/*
+
+
