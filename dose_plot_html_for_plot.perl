@@ -6,7 +6,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last updat: Aug 17, 2005							#
+#	last updat: Mar 16, 2011							#
 #											#
 #########################################################################################
 
@@ -23,6 +23,8 @@ $plot_dir = '/data/mta/www/mta_max_exp/Plots/';
 $img_dir  = '/data/mta_www/mta_max_exp/Images';
 
 $web_dir  = '/data/mta/www/mta_max_exp/';
+
+$house_keeping = '/data/mta/Script/Exposure/Max_exposure/house_keeping/';
 
 ###############################################################################
 
@@ -106,6 +108,6 @@ close(OUT);
 
 $file_name = "$web_dir/exposure.html";
 
-system("cat $web_dir/house_keeping/exposure.html ./ztemp > $web_dir/exposure.html");
+system("cat $house_keeping/exposure.html ./ztemp > $web_dir/exposure.html");
 
 system("rm ./ztemp");
