@@ -176,6 +176,12 @@ crate monthly report entry
 perl /data/mta/Script/Exposure/Max_exposure/acis_dose_monthly_report.perl
 
 
+STEp 9:
+-------
+secuirty update:
+
+chgrp mtagroup /data/mta_www/mta_max_exp/*
+chgrp mtagroup /data/mta_www/mta_max_exp/*/*
 
 
 

@@ -8,7 +8,7 @@ use PGPLOT;
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Jul 15, 2009							#
+#	last update: Jan 24, 2012							#
 #											#
 #########################################################################################
 
@@ -55,6 +55,7 @@ foreach $head ('hrci', 'hrcs'){
 		@max_dff  = ();
 		@m10_dff  = ();
 		$cnt      = 0;
+		$chk      = 0;
 
 		foreach $set ('dff', 'acc'){
 
@@ -74,10 +75,16 @@ foreach $head ('hrci', 'hrcs'){
 					push(@max_dff,  $atemp[8]);
 					$cnt++;
 				}else{
-					push(@mean_acc, $atemp[2]);
-					push(@min_acc,  $atemp[4]);
-					push(@m10_acc,	$atemp[6]);
-					push(@max_acc,  $atemp[8]);
+					if($chk > 0 && $atemp[2] == 0){
+						push(@mean_acc, $mean_acc[$chk-1]);
+						push(@min_acc,  $min_acc[$chk-1]);
+						push(@max_acc,  $max_acc[$chk-1]);
+					}else{
+						push(@mean_acc, $atemp[2]);
+						push(@min_acc,  $atemp[4]);
+						push(@max_acc,  $atemp[8]);
+					}
+					$chk++;
 				}
 			}
 			close(FH);
@@ -121,7 +128,7 @@ foreach $head ('hrci', 'hrcs'){
 		@temp = sort{$a<=>$b} @mean_acc;
 		@ybin = @mean_acc;
 		$ymin = $temp[0];
-		$ymax = $temp[$cnt-1];
+		$ymax = $temp[$cnt-2];
 		if($ymin == $ymax){
 			$ymax = $ymin + 1;
 		}
@@ -135,7 +142,10 @@ foreach $head ('hrci', 'hrcs'){
 		pgsvp(0.60, 1.0, 0.70, 1.00);
 		pgswin($xmin, $xmax, $ymin, $ymax);
 		pgbox(ABCST,0.0 , 0.0, ABCNSTV, 0.0, 0.0);
+		$save = $total;
+		$total--;
 		plot_fig();
+		$total = $save;
 		pgptxt($xbot, $ytop, 0.0, 0.0, "Averge Cumulative");
 #--m10
 #		@temp = sort{$a<=>$b} @m10_dff;
@@ -283,7 +293,7 @@ foreach $head ('hrci', 'hrcs'){
 			$acnt++;
 		}
 		$avg = $asum1/$acnt;
-		$std = sqrt($asum2/$cnt - $avg * $avg);
+		$std = sqrt(abs($asum2/$cnt - $avg * $avg));
 
 		$ymin = $avg - 3 * $std;
 		$ymin = int ($ymin);
@@ -301,7 +311,10 @@ foreach $head ('hrci', 'hrcs'){
 		pgsvp(0.60, 1.0, 0.38, 0.68);
 		pgswin($xmin, $xmax, $ymin, $ymax);
 		pgbox(ABCNST,0.0 , 0.0, ABCNSTV, 0.0, 0.0);
+		$save = $total;
+		$total--;
 		plot_fig();
+		$total = $save;
 		pgptxt($xbot, $ytop, 0.0, 0.0, "Max Cumulative");
 		pgclos();
 	

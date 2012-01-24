@@ -6,7 +6,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last updat: Mar 16, 2011							#
+#	last updat: Jan 24, 2012							#
 #											#
 #########################################################################################
 
@@ -24,7 +24,7 @@ $img_dir  = '/data/mta_www/mta_max_exp/Images';
 
 $web_dir  = '/data/mta/www/mta_max_exp/';
 
-$house_keeping = '/data/mta/Script/Exposure/Max_exposure/house_keeping/';
+$house_keeping = '/data/mta/Script/Exposure/house_keeping/';
 
 ###############################################################################
 
