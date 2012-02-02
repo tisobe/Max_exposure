@@ -6,7 +6,7 @@
 #											#
 #	author: t. isobe (tisobe@cfa.harvard.edu)					#
 #											#
-#	last update: Mar 04, 2009							#
+#	last update: Feb 02, 2012							#
 #											#
 #########################################################################################
 
@@ -87,7 +87,7 @@ system("perl $bin_dir/hrc_dose_acc_comp_stat_month.perl $cum_dir $data_out $lyea
 #-- plot statistics 
 #
 
-system("perl $bin_dir/hrc_dose_plot_exposure_stat_section.perl $data_out  $plot_dir");
+system("/opt/local/bin/perl $bin_dir/hrc_dose_plot_exposure_stat_section.perl $data_out  $plot_dir");
 
 #
 #--- create a html page for plotted data
