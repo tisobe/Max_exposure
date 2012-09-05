@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Jul 10, 2012                                                      #
+#       last updated: Sep 04, 2012                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -200,18 +200,18 @@ def print_stat(result, result2, year, month, outfile):
 #--- 10th brightest case
 #
 
-    f    = open(result2, 'r')
-    data = [line.strip() for line in f.readlines()]
-    f.close()
-
-    for  ent in data:
-        m = re.search('max', ent)
-        if m is not None:
-            atemp = re.split('\s+|\t+', ent)
-            max2  = atemp[1]
-            btemp = re.split('\(', ent)
-            ctemp = re.split('\s+|\t+', btemp[1])
-            max_pos2 = '(' + ctemp[1] + ',' + ctemp[2] + ')'
+#    f    = open(result2, 'r')
+#    data = [line.strip() for line in f.readlines()]
+#    f.close()
+#
+#    for  ent in data:
+#        m = re.search('max', ent)
+#        if m is not None:
+#            atemp = re.split('\s+|\t+', ent)
+#            max2  = atemp[1]
+#            btemp = re.split('\(', ent)
+#            ctemp = re.split('\s+|\t+', btemp[1])
+#            max_pos2 = '(' + ctemp[1] + ',' + ctemp[2] + ')'
 
 #
 #--- print out data

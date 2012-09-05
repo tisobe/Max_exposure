@@ -215,4 +215,4 @@ def getstat(fits):
 
 if __name__ == '__main__':
     
-    acis_dose_monthly_report(2012,7)
+    acis_dose_monthly_report(year='NA', month='NA')
