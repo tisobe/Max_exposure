@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Jul 10, 2012                                                       #
+#       last update: Oct 22, 2012                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -109,6 +109,28 @@ def acis_dose_make_data_html(indir = 'NA', outdir = 'NA'):
             out_name = outdir + inst + '.html'
             cmd = 'mv acis.html ' + out_name
             os.system(cmd)
+#
+#--- update top html page
+#
+    line = house_keeping + 'exposure.html'
+    f    = open(line, 'r')
+    data = f.read()
+    f.close()
+
+    now   = tcnv.currentTime("Display")
+    ndate = 'Last Update: ' + now
+    ndata = data.replace("Last Update:", ndate)
+
+
+    line  = web_dir + 'exposure.html'
+    f     = open(line, 'w')
+    f.write(ndata)
+    f.close()
+#
+#--- update plot page htmls
+#
+    update_plt_html_date()
+
 
 #------------------------------------------------------------------------------------------------------------------------
 #--    write_html: write a html page                                                                                   --
@@ -135,20 +157,24 @@ def write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,
     f.write('<head>\n')
     line = '<title>ACIS ' + ccd.upper() + ' Section ' + str(sec) + ' History Data</title>\n'
     f.write(line)
-    f.write('<body text="#FFFFFF" bgcolor="#000000" link="#00CCFF vlink="yellow" alink="yellow"> \n')
+    f.write("<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />")
 #
 #--- css style sheet
 #
     f.write('<style type="text/css">\n')
+    f.write('table{text-align:center;margin-left:auto;margin-right:auto;border-style:solid;border-spacing:8px;border-width:2px;border-collapse:separate}\n')
     f.write('td {text-align:center}\n')
+    f.write('a:link {color:aqua;}\n')
+    f.write('a:visited {color:green;}\n')
     f.write('</style>\n')
-    
+
     f.write('</head>\n')
 
+    f.write('<body style="color:#FFFFFF;background-color:black"> \n')
 
     line = '<br /><h3> Last Update: ' + str(lmon) + '/' + str(lday) + ' / ' +  str(lyear) + '</h3>\n'
     f.write(line)
-    f.write('<table border=1 cellspacing=3 cellpadding=3>\n')
+    f.write('<table border=1>\n')
 
     header_write(f)
 
@@ -175,6 +201,22 @@ def write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,
         f.write(line)
         line = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Image/' + file + '.png">fits</a>/</td>\n\n'
         f.write(line)
+
+        line =        '<td>' + str(mean_acc[i]) + '</td>\t'
+        line = line + '<td>' + str(std_acc[i])  + '</td>\t'
+        line = line + '<td>' + str(min_acc[i])  + '</td>\t'
+        line = line + '<td>' + str(min_apos[i]) + '</td>\t'
+        line = line + '<td>' + str(max_acc[i])  + '</td>\t'
+        line = line + '<td>' + str(max_apos[i]) + '</td>\t'
+        line = line + '<td>' + str(m10_acc[i])  + '</td>\t'
+        line = line + '<td>' + str(m10_apos[i]) + '</td>\n'
+        f.write(line)
+
+        file = 'ACIS_07_1999_' + smon + '_' + syear + '_' + ccd 
+        line = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Cumulative/' + file + '.fits.gz">fits</a>/</td>\n'
+        f.write(line)
+        line = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Image/' + file + '.png">fits</a>/</td></tr>\n\n'
+        f.write(line)
 #
 #--- put header every new year so that we can read data easier
 #
@@ -188,7 +230,7 @@ def write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,
     line = '<br /><strong style="font-size:105%;float:right">Last Update: ' + smon + '/' + str(lday) + '/' + str(lyear) + '</strong>\n'
     f.write(line)
 
-    line = 'If you have any questions about this page, contact <a href="mailto:isobe@haed.cfa.harvad.edu">isobe@haed.cfa.harvad.edu.\n'
+    line = '<p>If you have any questions about this page, contact <a href="mailto:isobe@haed.cfa.harvad.edu">isobe@haed.cfa.harvad.edu.</a></p>\n'
     f.write(line)
     f.write('</body>\n')
     f.write('</html>\n')
@@ -207,12 +249,13 @@ def header_write(f):
     input: f --- pipe to the file
     """
 
-    f.write('<trstyle="color:yellow">\n')
-    f.write('<td>&#160</td><td>&#160</td>\n')
+    f.write('<tr style="color:yellow">\n')
+    f.write('<td>&#160;</td><td>&#160;</td>\n')
     f.write('<td colspan=10>Monlthy</td>\n')
     f.write('<td colspan=10>Cumulative</td>\n')
     f.write('</tr><tr>\n')
 
+    f.write('<th>Year</th>\n')
     f.write('<th>Month</th>\n')
     f.write('<th>Mean</th>\n')
     f.write('<th>SD</th>\n')
@@ -251,10 +294,10 @@ def update_plt_html_date():
     """
     (lyear, lmon, lday, lhours, lmin, lsec, lweekday, lyday, dst) = tcnv.currentTime('Local')
 
-    line = '<br><h3> Last Update: ' + str(lmon) + '/' + str(lday) + '/' + str(lyear) + '</h3>'
+    date = 'Last Update: ' + str(lmon) + '/' + str(lday) + '/' + str(lyear)
 
 
-    cmd  = 'ls ' + plot_dir + '*html>./ztemp' 
+    cmd  = 'ls ' + plot_dir  + '/*html>./ztemp' 
     os.system(cmd)
     f    = open('./ztemp', 'r')
     data = [line.strip() for line in f.readlines()]
@@ -270,7 +313,7 @@ def update_plt_html_date():
         for oline in hdat:
             m = re.search('Last Update', oline)
             if m is not None:
-                f.write(line)
+                f.write(date)
                 f.write('\n')
 
             else:

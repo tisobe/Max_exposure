@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Jul 10, 2012                                                      #
+#       last updated: Oct 01, 2012                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -54,7 +54,7 @@ import acis_create_cumulative       as cuml
 import acis_compute_stat            as astat
 import acis_dose_plot_exposure_stat as aplot
 import acis_dose_make_data_html     as ahtml
-import acis_dose_monthly_report     as arport
+import acis_dose_monthly_report     as areport
 import acis_dose_create_image       as aimg
 
 
