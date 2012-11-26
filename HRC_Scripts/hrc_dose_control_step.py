@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Jul 10, 2012                                                      #
+#       last updated: Nov 26, 2012                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -69,7 +69,7 @@ def hrc_dose_run_step():
     print 'Please choose which processes you want to run\n'
 
     chk0 = raw_input('Do you want to run the entire process(y/n)?: ')
-    m = re.serach('y', chk0)
+    m = re.search('y', chk0)
     if m is not None:
         chk1 = 'y'
         chk2 = 'y'
@@ -87,22 +87,22 @@ def hrc_dose_run_step():
         chk6 = raw_input('Plotting Monthly Report Trend (y/n): ')
         chk7 = raw_input('Copying Data to mays (y/n): ')
 
-    m = re.serach('y', chk1)
+    m = re.search('y', chk1)
     if m is not None:
         hgdata.hrc_dose_get_data(lyear, lmonth, lyear, lmonth)          #---- extracting data
-    m = re.serach('y', chk2)
+    m = re.search('y', chk2)
     if m is not None:
         hstat.hrc_dose_extract_stat_data_month(lyear, lmonth)           #---- computing statistics
-    m = re.serach('y', chk3)
+    m = re.search('y', chk3)
     if m is not None:
         hhtml.hrc_dose_make_data_html()                                 #---- creating html pages
-    m = re.serach('y', chk4)
+    m = re.search('y', chk4)
     if m is not None:
         hp5ot.hrc_dose_plot_exposure_stat()                             #---- plotting histories
-    m = re.serach('y', chk5)
+    m = re.search('y', chk5)
     if m is not None:
         himg.create_hrc_maps(lyear, lmonth)                             #---- creating map images
-    m = re.serach('y', chk6)
+    m = re.search('y', chk6)
     if m is not None:
         monthly.hrc_dose_plot_monthly_report()                          #---- plotting monthly report trend
 

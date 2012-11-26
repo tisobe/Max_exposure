@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Jul 10, 2012                                                      #
+#       last updated: Oct 16, 2012                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -100,17 +100,17 @@ def hrc_dose_run(year='NA', month='NA'):
 #
 #--- copying data to mays ---- not used; data are now directly deposite to mays
 #
-#    syear = str(lyear)
-#    smon  = str(lmonth)
-#    if lmonth  < 10:
-#        smon = '0' + smon
-#
-#    new_data = '*' + smon + '_' + syear + '*' 
-#
-#    cmd = 'cp ' + mon_dir_hrc_full +  new_data + ' ' +  mays_dir + 'Month_hrc/.'
-#    os.system(cmd)
-#    cmd = 'cp ' + cum_dir_hrc_full +  new_data + ' ' +  mays_dir + 'Cumulative_hrc/.'
-#    os.system(cmd)
+    syear = str(lyear)
+    smon  = str(lmonth)
+    if lmonth  < 10:
+        smon = '0' + smon
+
+    new_data = '*' + smon + '_' + syear + '*' 
+
+    cmd = 'cp ' + mon_dir_hrc_full +  new_data + ' ' +  mays_dir + 'Month_hrc/.'
+    os.system(cmd)
+    cmd = 'cp ' + cum_dir_hrc_full +  new_data + ' ' +  mays_dir + 'Cumulative_hrc/.'
+    os.system(cmd)
 
 
 

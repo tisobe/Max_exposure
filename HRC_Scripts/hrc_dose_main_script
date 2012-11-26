@@ -1,10 +1,13 @@
+setenv HEADAS /soft/lheasoft/headas/x86_64-pc-linux;
+source $HEADAS/headas-init.csh
+
 source /home/mta/.ascrc
 
 cd /data/mta/Script/Exposure/Exc_py
 rm -rf param
 mkdir param
 source /home/mta/bin/reset_param
-setenv PFILE "${PDIR}"
+
 setenv PYTHONPATH "/usr/local/lib/python2.6/site-packages:$PYTHONPATH"
 
 /data/mta/Script/Exposure/Scripts/HRC_Scripts/hrc_dose_run.py

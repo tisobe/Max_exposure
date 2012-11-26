@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: jul 10, 2012                                                       #
+#       last update: Oct 22, 2012                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -194,6 +194,16 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
     f.write('<html>\n')
     f.write('<head>\n')
 
+    f.write("<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />\n")
+
+    f.write("<style  type='text/css'>\n")
+    f.write("table{text-align:center;margin-left:auto;margin-right:auto;border-style:solid;border-spacing:8px;border-width:2px;border-collapse:separate}\n")
+    f.write("a:link {color:#00CCFF;}\n")
+    f.write("a:visited {color:yellow;}\n")
+    f.write("td{text-align:center;padding:8px}\n")
+    f.write("</style>\n")
+
+
     if hrc == 'hrci':
         hname = 'HRC I'
         wname = 'HRCI'
@@ -203,21 +213,15 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
 
     line = '<title>' + hname + ' History Data</title>\n'
     f.write(line)
-    f.write('<body text="#FFFFFF" bgcolor="#000000" link="#00CCFF vlink="yellow" alink="yellow"> \n')
-#
-#--- css style sheet
-#
-    f.write('<style type="text/css">\n')
-    f.write('td {text-align:center}\n')
-    f.write('</style>\n')
-    
-    f.write('</head>\n')
+    f.write("</head>\n")
 
+    f.write('<body style="color:white;background-color:black">\n')
     line = '<h2 style="text-align:center">Data: ' + hname + '</h2>\n'
     f.write(line)
 
-    f.write('<table border=1 cellspacing=3 cellpadding=3>\n')
-    f.write('<tr><th>&#160</td><td>&#160</th><th colspan=8>Monlthy</th><th colspan=8>Cumulative</th></tr>\n')
+    f.write("<div style='padding-bottom:30px'>\n")
+    f.write('<table border=1>\n')
+    f.write('<tr><th>&#160;</th><th>&#160;</th><th colspan=8>Monlthy</th><th colspan=8>Cumulative</th></tr>\n')
     f.write('<tr style="color:yellow"><th>Year</th><th>Month</th>\n')
     f.write('<th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>Data</th><th>Map</th>\n')
     f.write('<th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>Data</th><th>Map</th></tr>\n')
@@ -252,7 +256,7 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
             f.write(line)
 
 #
-#---- cumulative HTC dose data
+#---- cumulative HRC dose data
 #
         line = '<td>%4.4f</td><td>%4.4f</td><td>%4.1f</td><td>%s</td><td>%4.1f</td><td>%s</td>\n' \
                     % (mean_acc[i], std_acc[i], min_acc[i], min_apos[i], max_acc[i], max_apos[i])
@@ -273,12 +277,13 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
             f.write('<th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>Data</th><th>Map</th></tr>\n\n')
 
     f.write('</table>\n\n')
-    f.write('<br /><br /><hr /><br />\n')
+    f.write("</div>\n")
+    f.write('<hr />\n')
 
-    line = '<br /><strong style="font-size:105%;float:right">Last Update: ' + smon + '/' + sday + '/' + str(tyear) + '</strong>\n'
+    line = '<p style="padding-top:10px;padding-bottom:10px"><strong style="font-size:105%;float:right">Last Update: ' + smon + '/' + sday + '/' + str(tyear) + '</strong></p>\n'
     f.write(line)
 
-    line = 'If you have any questions about this page, contact <a href="mailto:isobe@haed.cfa.harvad.edu">isobe@haed.cfa.harvad.edu.\n'
+    line = '<p>If you have any questions about this page, contact <a href="mailto:isobe@haed.cfa.harvad.edu">isobe@haed.cfa.harvad.edu.</a></p>\n'
     f.write(line)
     f.write('</body>\n')
     f.write('</html>\n')
