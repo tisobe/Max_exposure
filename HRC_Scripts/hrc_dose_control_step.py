@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Nov 26, 2012                                                      #
+#       last updated: Feb 06, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -19,7 +19,7 @@ import re
 #--- reading directory list
 #
 
-path = '/data/mta/Script/Exposure/house_keeping2/hrc_dir_list'
+path = '/data/mta/Script/Exposure/house_keeping/hrc_dir_list'
 f    = open(path, 'r')
 data = [line.strip() for line in f.readlines()]
 f.close()
@@ -98,7 +98,7 @@ def hrc_dose_run_step():
         hhtml.hrc_dose_make_data_html()                                 #---- creating html pages
     m = re.search('y', chk4)
     if m is not None:
-        hp5ot.hrc_dose_plot_exposure_stat()                             #---- plotting histories
+        hplot.hrc_dose_plot_exposure_stat()                             #---- plotting histories
     m = re.search('y', chk5)
     if m is not None:
         himg.create_hrc_maps(lyear, lmonth)                             #---- creating map images

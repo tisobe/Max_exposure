@@ -22,20 +22,24 @@ How to Run Them
 
 4. If you like to run a specific year/month, then set the environment first:
 
+    setenv HEADAS /soft/lheasoft/headas/x86_64-pc-linux;
+    source $HEADAS/headas-init.csh
 	source /home/mta/.ascrc
 	rm -rf param
 	mkdir param
 	source /home/mta/bin/reset_param
-	setenv PFILE "${PDIR}"
+#	setenv PFILE "${PDIR}"
 	setenv PYTHONPATH "/usr/local/lib/python2.6/site-packages:$PYTHONPATH"
 
    then run:
-	/data/mta/Script/Exposure/Scripts/ACIS_Scripts/acis_dose_contorl_step.py
+	/data/mta/Script/Exposure/Scripts/ACIS_Scripts/acis_dose_control_step.py
    or
-	/data/mta/Script/Exposure/Scripts/HRC_Scripts/hrc_dose_contorl_step.py
+	/data/mta/Script/Exposure/Scripts/HRC_Scripts/hrc_dose_control_step.py
 
    These scripts will ask several questions before running the scripts so that you can choose
    processes you want to run.
+
+----> DON'T FORGET TO COPY FULL HRC FITS FILES TO /data/mays/MTA/Exposure/Hrc/Month_hrc and Cumulative_hrc !!!
 
 #######
 Output 

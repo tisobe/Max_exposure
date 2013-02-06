@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Jul1 10, 2012                                                     #
+#       last updated: Feb 06, 2012                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -21,7 +21,7 @@ import fnmatch
 #--- reading directory list
 #
 
-path = '/data/mta/Script/Exposure/house_keeping2/hrc_dir_list'
+path = '/data/mta/Script/Exposure/house_keeping/hrc_dir_list'
 f    = open(path, 'r')
 data = [line.strip() for line in f.readlines()]
 f.close()

@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Jul 10, 2012                                                      #
+#       last updated: Feb 06, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -20,7 +20,7 @@ import fnmatch
 #--- reading directory list
 #
 
-path = '/data/mta/Script/Exposure/house_keeping2/acis_dir_list'
+path = '/data/mta/Script/Exposure/house_keeping/acis_dir_list'
 f    = open(path, 'r')
 data = [line.strip() for line in f.readlines()]
 f.close()
@@ -81,6 +81,7 @@ def acis_dose_control(year = 'NA', month = 'NA'):
         smon  = str(month)
         if month < 10:
             smon = '0' + smon
+
 #
 #--- extract data
 #
