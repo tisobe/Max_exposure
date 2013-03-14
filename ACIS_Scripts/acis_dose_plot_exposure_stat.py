@@ -8,7 +8,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Feb 06, 2013                                                       #
+#       last update: Mar 11, 2013                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -68,7 +68,7 @@ import exposureFunctions as expf
 #--- acis_dose_plot_exposure_stat: read hrc database, and plot history of exposure                                     ---
 #------------------------------------------------------------------------------------------------------------------------
 
-def acis_dose_plot_exposure_stat(indir = 'NA', outdir = 'NA', clean = 'NA'):
+def acis_dose_plot_exposure_stat(indir = 'NA', outdir = 'NA', clean = 'NA', comp_test = 'NA'):
 
     'read acis database, and plot history of exposure. input: data directory path, output directory path '
 #
@@ -126,7 +126,11 @@ def acis_dose_plot_exposure_stat(indir = 'NA', outdir = 'NA', clean = 'NA'):
 #--- move to the plot directory
 #
             outfile = inst + '.gif'
-            cmd = 'convert acis.png ' + plot_dir +  outfile
+            if comp_test == 'test':
+                cmd = 'convert acis.png ' + test_plot_dir +  outfile
+            else:
+                cmd = 'convert acis.png ' + plot_dir +  outfile
+
             os.system(cmd)
             os.system('rm acis.png')
 

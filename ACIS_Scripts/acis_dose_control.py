@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Feb 06, 2013                                                      #
+#       last updated: Mar 11, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -56,12 +56,11 @@ import acis_dose_make_data_html     as ahtml
 import acis_dose_monthly_report     as arport
 import acis_dose_create_image       as aimg
 
-
 #-----------------------------------------------------------------------------------------------------------
 #-- acis_dose_control: monthly acis dose update contorl script                                           ---
 #-----------------------------------------------------------------------------------------------------------
 
-def acis_dose_control(year = 'NA', month = 'NA'):
+def acis_dose_control(year = 'NA', month = 'NA', comp_test = 'NA'):
 
     """
     monthly acis dose update control script
@@ -76,11 +75,14 @@ def acis_dose_control(year = 'NA', month = 'NA'):
         if month < 1:
             month = 12
             year -= 1
+    else:
+        year  = int(year)
+        month = int(month)
 
-        syear = str(year)
-        smon  = str(month)
-        if month < 10:
-            smon = '0' + smon
+    syear = str(year)
+    smon  = str(month)
+    if month < 10:
+        smon = '0' + smon
 
 #
 #--- extract data
@@ -99,27 +101,27 @@ def acis_dose_control(year = 'NA', month = 'NA'):
             break
 
     if chk == 0:
-       cuml.acis_create_cumulative(file)
+       cuml.acis_create_cumulative(file, comp_test)
        pass
     else:
        pass
-       cuml.acis_create_cumulative(file2)
+       cuml.acis_create_cumulative(file2, comp_test)
 #
 #--- compute statistics
 #
-    astat.acis_dose_extract_stat_data_month(year, month)
+    astat.acis_dose_extract_stat_data_month(year, month, comp_test)
 #
 #--- plot data
 #
-    aplot.acis_dose_plot_exposure_stat(clean='Yes')
+    aplot.acis_dose_plot_exposure_stat(clean='Yes', comp_test=comp_test)
 #
 #--- create images (you need to use ds9 to create a better image)
 #
-    aimg.create_acis_maps(year, month)
+    aimg.create_acis_maps(year, month, comp_test)
 #
 #--- update html pages
 #
-    ahtml.acis_dose_make_data_html()
+    ahtml.acis_dose_make_data_html(comp_test = comp_test)
 
 #
 #--- print monthly output
@@ -131,7 +133,23 @@ def acis_dose_control(year = 'NA', month = 'NA'):
 #--------------------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    
-    acis_dose_control()
+#
+#--- check whether this is a test case
+#
+    if len(sys.argv) == 2:
+        if sys.argv[1] == 'test':               #---- this is a test case
+            comp_test = 'test'
+        else:
+            comp_test = 'real'
+    else:
+        comp_test = 'real'
+
+#
+#--- if this is a test case, run for 2013 Jan data
+#
+    if comp_test == 'test':
+        acis_dose_control(2013, 1, comp_test)
+    else:
+        acis_dose_control()
 
 

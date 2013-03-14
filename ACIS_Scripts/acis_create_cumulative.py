@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Feb 06, 2013                                                      #
+#       last updated: Mar 12, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -54,7 +54,7 @@ import exposureFunctions as expf
 #-- acis_create_cumulative: create four small section images and create cumulatvie images                ---
 #-----------------------------------------------------------------------------------------------------------
             
-def acis_create_cumulative(file='NA'):
+def acis_create_cumulative(file='NA', comp_test = 'NA'):
 
     """
     create four small section images and create cumulatvie images
@@ -148,12 +148,21 @@ def acis_create_cumulative(file='NA'):
     cfits = 'ACIS_07_1999' + erange + '*.fits'
     cmd   = 'gzip ' + mfits + ' ' + cfits
     os.system(cmd)
+#
+#-- if this is a test, output directory is different
+#
+    if comp_test == 'test':
+        cmd = 'mv ' + cfits + '.gz ' + test_cum_dir
+        os.system(cmd)
 
-    cmd = 'mv ' + cfits + '.gz ' + cum_dir
-    os.system(cmd)
+        cmd = 'mv ' + mfits + '.gz ' + test_mon_dir
+        os.system(cmd)
+    else:
+        cmd = 'mv ' + cfits + '.gz ' + cum_dir
+        os.system(cmd)
 
-    cmd = 'mv ' + mfits + '.gz ' + mon_dir
-    os.system(cmd)
+        cmd = 'mv ' + mfits + '.gz ' + mon_dir
+        os.system(cmd)
 
 
 

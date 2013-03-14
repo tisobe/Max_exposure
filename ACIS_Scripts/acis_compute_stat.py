@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Feb 06, 2013                                                      #
+#       last updated: Mar 12, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -56,7 +56,7 @@ import exposureFunctions as expf
 #-- comp_stat: compute statistics and print them out                                                     ---
 #-----------------------------------------------------------------------------------------------------------
 
-def comp_stat(line, year, month, outfile):
+def comp_stat(line, year, month, outfile, comp_test='NA'):
 
     """
     compute statistics and print them out
@@ -88,7 +88,7 @@ def comp_stat(line, year, month, outfile):
 #        os.system('dmstat  infile=zcut.fits  centroid=no > ./result2')
 #        os.system('rm  zcut.fits')
    
-        print_stat('./result', './result2', year, month, outfile)
+        print_stat('./result', './result2', year, month, outfile, comp_test)
 #        os.system('rm result result2')
         os.system('rm result')
     except:
@@ -154,7 +154,7 @@ def find_10th(fits_file):
 #-- print_stat: print out statistic                                                                      ---
 #-----------------------------------------------------------------------------------------------------------
 
-def print_stat(result, result2, year, month, outfile):
+def print_stat(result, result2, year, month, outfile, comp_test ='NA'):
 
     """
     print out statistic
@@ -217,7 +217,11 @@ def print_stat(result, result2, year, month, outfile):
 #--- print out data
 #
 
-    line = data_out + outfile
+    if comp_test == 'test':
+        line = test_data_out + outfile
+    else:
+        line = data_out + outfile
+
     f    = open(line, 'a')
 
     line = '%i\t%i\t'       % (year, month)
@@ -239,12 +243,22 @@ def print_stat(result, result2, year, month, outfile):
 #-----------------------------------------------------------------------------------------------------------
 
 
-def acis_dose_extract_stat_data_month(year='NA', month='NA'):
+def acis_dose_extract_stat_data_month(year='NA', month='NA', comp_test = 'NA'):
 
     """
     driving fuction to compute statistics
     input: year and month
     """
+#
+#--- set different output directories for test
+#
+    if comp_test == 'test':
+        tmon_dir = test_mon_dir
+        tcum_dir = test_cum_dir
+    else:
+        tmon_dir = mon_dir
+        tcum_dir = cum_dir
+
 
     if year == 'NA' or month == 'NA':
 
@@ -262,157 +276,157 @@ def acis_dose_extract_stat_data_month(year='NA', month='NA'):
 #
 #--- ACIS I2
 #
-    name1 = cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_i2.fits.gz'
-    name2 = mon_dir + 'ACIS_' + smon + '_' + syear + '_i2.fits.gz'
+    name1 = tcum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_i2.fits.gz'
+    name2 = tmon_dir + 'ACIS_' + smon + '_' + syear + '_i2.fits.gz'
 
     line    = name1 + '[1:1024,1:256]'
     outfile = 'i_2_n_0_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:1024,1:256]'
     outfile = 'i_2_n_0_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
 
     line    = name1 + '[1:1024,257:508]'            #--- the last few columns are dropped 
     outfile = 'i_2_n_1_acc_out'                     #--- to avoid bad pixles at the edge
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:1024,257:508]'
     outfile = 'i_2_n_1_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
 
     line    = name1 + '[1:1024,513:768]'
     outfile = 'i_2_n_2_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:1024,513:768]'
     outfile = 'i_2_n_2_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
 
     line    = name1 + '[1:1024,769:1020]'
     outfile = 'i_2_n_3_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:1024,769:1020]'
     outfile = 'i_2_n_3_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
 #
 #--- ACIS I3
 #
-    name1 = cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_i3.fits.gz'
-    name2 = mon_dir + 'ACIS_' + smon + '_' + syear + '_i3.fits.gz'
+    name1 = tcum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_i3.fits.gz'
+    name2 = tmon_dir + 'ACIS_' + smon + '_' + syear + '_i3.fits.gz'
 
     line    = name1 + '[1:1024,769:1020]'
     outfile = 'i_3_n_0_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:1024,769:1020]'
     outfile = 'i_3_n_0_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name1 + '[1:1024,513:768]'
     outfile = 'i_3_n_1_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:1024,513:768]'
     outfile = 'i_3_n_1_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name1 + '[1:1024,257:508]'
     outfile = 'i_3_n_2_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:1024,257:508]'
     outfile = 'i_3_n_2_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name1 + '[1:1024,1:256]'
     outfile = 'i_3_n_3_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:1024,1:256]'
     outfile = 'i_3_n_3_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
 #
 #--- ACIS S2
 #
-    name1 = cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_s2.fits.gz'
-    name2 = mon_dir + 'ACIS_' + smon + '_' + syear + '_s2.fits.gz'
+    name1 = tcum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_s2.fits.gz'
+    name2 = tmon_dir + 'ACIS_' + smon + '_' + syear + '_s2.fits.gz'
 
     line    = name1 + '[1:256,1:1020]'
     outfile = 's_2_n_0_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:256,1:1020]'
     outfile = 's_2_n_0_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name1 + '[257:508,1:1020]'
     outfile = 's_2_n_1_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[257:508,1:1020]'
     outfile = 's_2_n_1_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name1 + '[513:768,1:1020]'
     outfile = 's_2_n_2_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[513:768,1:1020]'
     outfile = 's_2_n_2_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name1 + '[769:1024,1:1020]'
     outfile = 's_2_n_3_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[769:1024,1:1020]'
     outfile = 's_2_n_3_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
 #
 #--- ACIS S3
 #
-    name1 = cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_s3.fits.gz'
-    name2 = mon_dir + 'ACIS_' + smon + '_' + syear + '_s3.fits.gz'
+    name1 = tcum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_s3.fits.gz'
+    name2 = tmon_dir + 'ACIS_' + smon + '_' + syear + '_s3.fits.gz'
 
     line    = name1 + '[1:256,1:1020]'
     outfile = 's_3_n_0_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[1:256,1:1020]'
     outfile = 's_3_n_0_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name1 + '[257:508,1:1020]'
     outfile = 's_3_n_1_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[257:508,1:1020]'
     outfile = 's_3_n_1_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name1 + '[513:768,1:1020]'
     outfile = 's_3_n_2_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[513:768,1:1020]'
     outfile = 's_3_n_2_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name1 + '[769:1024,1:1020]'
     outfile = 's_3_n_3_acc_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
     line    = name2 + '[769:1024,1:1020]'
     outfile = 's_3_n_3_dff_out'
-    comp_stat(line, year, month, outfile)
+    comp_stat(line, year, month, outfile, comp_test)
 
 
 

@@ -53,7 +53,7 @@ import exposureFunctions as expf
 #--- acis_dose_make_data_html: read hrc database, and plot history of exposure                                     ---
 #------------------------------------------------------------------------------------------------------------------------
 
-def acis_dose_make_data_html(indir = 'NA', outdir = 'NA'):
+def acis_dose_make_data_html(indir = 'NA', outdir = 'NA', comp_test = 'NA'):
 
     """
     read data and create html pages
@@ -63,10 +63,16 @@ def acis_dose_make_data_html(indir = 'NA', outdir = 'NA'):
 #--- setting indir and outdir if not given
 #
     if indir   == 'NA':
-        indir   = data_out
+        if comp_test == 'test':
+            indir   = test_data_out
+        else:
+            indir   = data_out
 
     if outdir  == 'NA':
-        outdir  = data_out
+        if comp_test == 'test':
+            outdir  = test_data_out
+        else:
+            outdir  = data_out
 
 #
 #--- read data
@@ -129,7 +135,7 @@ def acis_dose_make_data_html(indir = 'NA', outdir = 'NA'):
 #
 #--- update plot page htmls
 #
-    update_plt_html_date()
+    update_plt_html_date(comp_test)
 
 
 #------------------------------------------------------------------------------------------------------------------------
@@ -286,7 +292,7 @@ def header_write(f):
 #--------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------
 
-def update_plt_html_date():
+def update_plt_html_date(comp_test = 'NA'):
 
     """
     update html pages for plots; just replacing date
@@ -297,7 +303,11 @@ def update_plt_html_date():
     date = 'Last Update: ' + str(lmon) + '/' + str(lday) + '/' + str(lyear)
 
 
-    cmd  = 'ls ' + plot_dir  + '/*html>./ztemp' 
+    if comp_test == 'test':
+        cmd  = 'ls ' + test_plot_dir  + '/*html>./ztemp' 
+    else:
+        cmd  = 'ls ' + plot_dir  + '/*html>./ztemp' 
+
     os.system(cmd)
     f    = open('./ztemp', 'r')
     data = [line.strip() for line in f.readlines()]

@@ -6,7 +6,7 @@
 #                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                               #
 #                                                                                               #
-#       last update: Feb 06, 2013                                                               #
+#       last update: Mar 11, 2013                                                               #
 #                                                                                               #
 #################################################################################################
 
@@ -17,7 +17,6 @@ import re
 import getpass
 import socket
 import fnmatch 
-
 
 #
 #--- reading directory list
@@ -76,7 +75,7 @@ pbin_dir =  '/home/ascds/DS.release/otsbin/'
 #---  create_acis_maps: create HRC image maps for given year and month                                       ----
 #----------------------------------------------------------------------------------------------------------------
 
-def create_acis_maps(year='NA', month='NA'):
+def create_acis_maps(year='NA', month='NA', comp_test = 'NA'):
 
     """
      create ACIS image maps for given year and month 
@@ -91,8 +90,12 @@ def create_acis_maps(year='NA', month='NA'):
 #--- images for the center part
 #
 
-    acis_dose_conv_to_png(mon_dir, img_dir, year, month)
-    acis_dose_conv_to_png(cum_dir, img_dir, year, month)
+    if comp_test == 'test':
+        acis_dose_conv_to_png(test_mon_dir, test_img_dir, year, month)
+        acis_dose_conv_to_png(test_cum_dir, test_img_dir, year, month)
+    else:
+        acis_dose_conv_to_png(mon_dir, img_dir, year, month)
+        acis_dose_conv_to_png(cum_dir, img_dir, year, month)
 
 
 #----------------------------------------------------------------------------------------------------------------
