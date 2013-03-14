@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Feb 06, 2013                                                       #
+#       last update: Mar 13, 2013                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -52,24 +52,30 @@ import exposureFunctions as expf
 #--- hrc_dose_plot_exposure_stat: read hrc database, and plot history of exposure                                     ---
 #------------------------------------------------------------------------------------------------------------------------
 
-def hrc_dose_make_data_html(indir = 'NA', outdir = 'NA', indir2 = 'NA', outdir2 = 'NA'):
+def hrc_dose_make_data_html(indir = 'NA', outdir = 'NA', indir2 = 'NA', outdir2 = 'NA', comp_test = 'NA'):
 
     'read hrc database, and create html page: input: indir (data directory)'
 
 #
 #--- setting indir and outdir if not given
 #
-    if indir   == 'NA':
-        indir   = data_out
-
-    if outdir  == 'NA':
-        outdir  = data_out
-
-    if indir2  == 'NA':
-        indir2  = data_out_hrc
-
-    if outdir2 == 'NA':
-        outdir2 = data_out_hrc
+    if comp_test == 'test':
+        indir   = test_data_out
+        outdir  = test_data_out
+        indir2  = test_data_out_hrc
+        outdir2 = test_data_out_hrc
+    else:
+        if indir   == 'NA':
+            indir   = data_out
+    
+        if outdir  == 'NA':
+            outdir  = data_out
+    
+        if indir2  == 'NA':
+            indir2  = data_out_hrc
+    
+        if outdir2 == 'NA':
+            outdir2 = data_out_hrc
 
     for hrc in ('hrci', 'hrcs'):
 

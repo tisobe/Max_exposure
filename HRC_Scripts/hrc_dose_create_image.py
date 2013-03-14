@@ -6,7 +6,7 @@
 #                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                               #
 #                                                                                               #
-#       last update: Feb 06, 2013                                                               #
+#       last update: Mar 13, 2013                                                               #
 #                                                                                               #
 #################################################################################################
 
@@ -76,7 +76,7 @@ pbin_dir =  '/home/ascds/DS.release/otsbin/'
 #---  create_hrc_maps: create HRC image maps for given year and month                                        ----
 #----------------------------------------------------------------------------------------------------------------
 
-def create_hrc_maps(year= 'NA', month= 'NA'):
+def create_hrc_maps(year= 'NA', month= 'NA', comp_test = 'NA'):
 
     """
      create HRC image maps for given year and month 
@@ -93,14 +93,22 @@ def create_hrc_maps(year= 'NA', month= 'NA'):
 #--- images for the center part
 #
 
-    hrc_dose_conv_to_png(mon_dir_hrc, img_dir, year, month)
-    hrc_dose_conv_to_png(cum_dir_hrc, img_dir, year, month)
+    if comp_test == 'test':
+        hrc_dose_conv_to_png(test_mon_dir_hrc, test_img_dir, year, month)
+        hrc_dose_conv_to_png(test_cum_dir_hrc, test_img_dir, year, month)
+    else:
+        hrc_dose_conv_to_png(mon_dir_hrc, img_dir, year, month)
+        hrc_dose_conv_to_png(cum_dir_hrc, img_dir, year, month)
 
 #
 #--- image for sections for full images
 #
-    hrc_dose_conv_to_png(mon_dir_hrc_full, mon_dir_hrc_full, year, month)
-    hrc_dose_conv_to_png(cum_dir_hrc_full, cum_dir_hrc_full, year, month)
+    if comp_test == 'test':
+        hrc_dose_conv_to_png(test_mon_dir_hrc_full, test_mon_dir_hrc_full, year, month)
+        hrc_dose_conv_to_png(test_cum_dir_hrc_full, test_cum_dir_hrc_full, year, month)
+    else:
+        hrc_dose_conv_to_png(mon_dir_hrc_full, mon_dir_hrc_full, year, month)
+        hrc_dose_conv_to_png(cum_dir_hrc_full, cum_dir_hrc_full, year, month)
 
 
 #----------------------------------------------------------------------------------------------------------------

@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Feb 06, 2013                                                      #
+#       last updated: Mar 13, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -91,7 +91,7 @@ yend_s_c.append(26623)
 #--- hrc_dose_get_data: extract HRC evt1 data fro a month and create cumulative data fits file            --
 #-----------------------------------------------------------------------------------------------------------
 
-def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stopMonth = 'NA'):
+def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stopMonth = 'NA', comp_test = 'NA'):
 
     """
     extract HRC evt1 data from a month and create cumulative data fits file. Input: start year, start month, stop year, stop month
@@ -218,43 +218,52 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
 #
 #--- move the file to a depository ; first the center image -----------------------------
 #
+            if comp_test == 'test':
+                dp_web_dir = test_web_dir
+            else:
+                dp_web_dir = web_dir
+
             if hrcsCnt_c > 0:
-                cmd = 'mv total_s.fits ' + web_dir + 'Month_hrc/' +  outfile_s_c
+                cmd = 'mv total_s.fits ' + dp_web_dir + 'Month_hrc/' +  outfile_s_c
                 os.system(cmd)
-                cmd = 'gzip ' + web_dir + '/Month_hrc/*.fits'
+                cmd = 'gzip ' + dp_web_dir + '/Month_hrc/*.fits'
                 os.system(cmd)
 
-            createCumulative(year, month, 'HRC-S', 'center', web_dir, i=0)
+            createCumulative(year, month, 'HRC-S', 'center', dp_web_dir, i=0)
 
             if hrciCnt_c > 0:
-                cmd = 'mv total_i.fits ' + web_dir + 'Month_hrc/' +  outfile_i_c
+                cmd = 'mv total_i.fits ' + dp_web_dir + 'Month_hrc/' +  outfile_i_c
                 os.system(cmd)
-                cmd = 'gzip ' + web_dir + '/Month_hrc/*.fits'
+                cmd = 'gzip ' + dp_web_dir + '/Month_hrc/*.fits'
                 os.system(cmd)
             
-            createCumulative(year, month, 'HRC-I', 'center', web_dir, i=0)
+            createCumulative(year, month, 'HRC-I', 'center', dp_web_dir, i=0)
 
 #
 #---full image
 #
+            if comp_test == 'test':
+                    dp_hrc_full_data = test_hrc_full_data
+            else:
+                    dp_hrc_full_data = hrc_full_data
 
             for i in range(0,10):    
                 if hrcsCnt[i] > 0:
-                    cmd = 'mv total_s' + str(i) + '.fits ' + hrc_full_data + '/Month_hrc/' + outfile_s[i]
+                    cmd = 'mv total_s' + str(i) + '.fits ' + dp_hrc_full_data + '/Month_hrc/' + outfile_s[i]
                     os.system(cmd)
-                    cmd = 'gzip ' + hrc_full_data + '/Month_hrc/*.fits'
+                    cmd = 'gzip ' + dp_hrc_full_data + '/Month_hrc/*.fits'
                     os.system(cmd)
                 
-                createCumulative(year, month, 'HRC-S', 'full', hrc_full_data, i)
+                createCumulative(year, month, 'HRC-S', 'full', dp_hrc_full_data, i)
 
             for i in range(0,9):    
                 if hrciCnt[i] > 0:
-                    cmd = 'mv total_i' + str(i) + '.fits ' + hrc_full_data + '/Month_hrc/' + outfile_i[i]
+                    cmd = 'mv total_i' + str(i) + '.fits ' + dp_hrc_full_data + '/Month_hrc/' + outfile_i[i]
                     os.system(cmd)
-                    cmd = 'gzip ' + hrc_full_data + '/Month_hrc/*.fits'
+                    cmd = 'gzip ' + dp_hrc_full_data + '/Month_hrc/*.fits'
                     os.system(cmd)
                 
-                createCumulative(year, month, 'HRC-I', 'full', hrc_full_data, i)
+                createCumulative(year, month, 'HRC-I', 'full', dp_hrc_full_data, i)
 
 
 

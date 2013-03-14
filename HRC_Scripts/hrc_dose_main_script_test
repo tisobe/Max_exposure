@@ -1,0 +1,14 @@
+setenv HEADAS /soft/lheasoft/headas/x86_64-pc-linux;
+source $HEADAS/headas-init.csh
+
+setascds
+
+cd /data/mta/Script/Exposure/Exc_h
+rm -rf param
+mkdir param
+
+setenv PYTHONPATH "/usr/local/lib/python2.6/site-packages:$PYTHONPATH"
+
+/data/mta/Script/Exposure/Scripts/HRC_Scripts/hrc_prep_test.py
+
+/data/mta/Script/Exposure/Scripts/HRC_Scripts/hrc_dose_run.py test

@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Feb 06, 2013                                                       #
+#       last update: Mar 14, 2013                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -66,82 +66,86 @@ import exposureFunctions as expf
 #--- hrc_dose_plot_monthly_report: read hrc database, and plot history of exposure  for monthly report                ---
 #------------------------------------------------------------------------------------------------------------------------
 
-def hrc_dose_plot_monthly_report(indir = 'NA', outdir = 'NA'):
+def hrc_dose_plot_monthly_report(indir = 'NA', outdir = 'NA', comp_test = 'NA'):
 
     'read hrc database, and plot history of exposure. input: data directory path, output directory path '
 #
 #--- setting indir and outdir if not given
 #
-    if indir   == 'NA':
-        indir   = data_out
-
-    if outdir  == 'NA':
-        outdir  = img_dir
+    if comp_test == 'test':
+        indir  = data_out
+        outdir = test_img_dir
+    else:
+        if indir   == 'NA':
+            indir   = data_out
+    
+        if outdir  == 'NA':
+            outdir  = img_dir
 
 #
 #--- read HRC I data
 #
-        idate     = []
-        iyear     = []
-        imonth    = []
-        imean_acc = []
-        istd_acc  = []
-        imin_acc  = []
-        imin_apos = []
-        imax_acc  = []
-        imax_apos = []
-        im10_acc  = []
-        im10_apos = []
-        imean_dff = []
-        istd_dff  = []
-        imin_dff  = []
-        imin_dpos = []
-        imax_dff  = []
-        imax_dpos = []
-        im10_dff  = []
-        im10_dpos = []
+    idate     = []
+    iyear     = []
+    imonth    = []
+    imean_acc = []
+    istd_acc  = []
+    imin_acc  = []
+    imin_apos = []
+    imax_acc  = []
+    imax_apos = []
+    im10_acc  = []
+    im10_apos = []
+    imean_dff = []
+    istd_dff  = []
+    imin_dff  = []
+    imin_dpos = []
+    imax_dff  = []
+    imax_dpos = []
+    im10_dff  = []
+    im10_dpos = []
 
-        expf.readExpData(indir, 'hrci' , idate, iyear,imonth,imean_acc,istd_acc,imin_acc,imin_apos,  imax_acc,imax_apos,im10_acc, \
-                          im10_apos,imean_dff,istd_dff,imin_dff, imin_dpos,imax_dff,imax_dpos,im10_dff,im10_dpos)
+    expf.readExpData(indir, 'hrci' , idate, iyear,imonth,imean_acc,istd_acc,imin_acc,imin_apos,  imax_acc,imax_apos,im10_acc, \
+                      im10_apos,imean_dff,istd_dff,imin_dff, imin_dpos,imax_dff,imax_dpos,im10_dff,im10_dpos)
 
 
 #
 #--- read HRC S data
 #
-        sdate     = []
-        syear     = []
-        smonth    = []
-        smean_acc = []
-        sstd_acc  = []
-        smin_acc  = []
-        smin_apos = []
-        smax_acc  = []
-        smax_apos = []
-        sm10_acc  = []
-        sm10_apos = []
-        smean_dff = []
-        sstd_dff  = []
-        smin_dff  = []
-        smin_dpos = []
-        smax_dff  = []
-        smax_dpos = []
-        sm10_dff  = []
-        sm10_dpos = []
+    sdate     = []
+    syear     = []
+    smonth    = []
+    smean_acc = []
+    sstd_acc  = []
+    smin_acc  = []
+    smin_apos = []
+    smax_acc  = []
+    smax_apos = []
+    sm10_acc  = []
+    sm10_apos = []
+    smean_dff = []
+    sstd_dff  = []
+    smin_dff  = []
+    smin_dpos = []
+    smax_dff  = []
+    smax_dpos = []
+    sm10_dff  = []
+    sm10_dpos = []
 
-        expf.readExpData(indir, 'hrcs', sdate, syear,smonth,smean_acc,sstd_acc,smin_acc,smin_apos,  smax_acc,smax_apos,sm10_acc, \
-                          sm10_apos,smean_dff,sstd_dff,smin_dff, smin_dpos,smax_dff,smax_dpos,sm10_dff,sm10_dpos)
+    expf.readExpData(indir, 'hrcs', sdate, syear,smonth,smean_acc,sstd_acc,smin_acc,smin_apos,  smax_acc,smax_apos,sm10_acc, \
+                      sm10_apos,smean_dff,sstd_dff,smin_dff, smin_dpos,smax_dff,smax_dpos,sm10_dff,sm10_dpos)
 
 #
 #--- plot data
 #
-        plot_max_dose(idate, imax_acc, smax_acc)
+    plot_max_dose(idate, imax_acc, smax_acc)
 
 #
 #--- move the plot  to img directory
 #
 
-        cmd = 'mv hrc_max_exp.gif ' + outdir
-        os.system(cmd)
+    cmd = 'mv hrc_max_exp.gif ' + outdir
+    os.system(cmd)
 
 #------------------------------------------------------------------------------------------------------------------------
 #--- plot_max_dose: plot hrc i and hrc s max exposure plots                                                            --
@@ -287,4 +291,4 @@ def plot_panel(x, y, label, ax, ymin = 'NA', ymax = 'NA'):
 
 if __name__ == '__main__':
 
-    hrc_dose_plot_monthly_report()
+    hrc_dose_plot_monthly_report(comp_test='test')

@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Feb 06, 2013                                                      #
+#       last updated: Mar 13, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -54,7 +54,7 @@ import hrc_dose_plot_monthly_report     as monthly              #--- plotting mo
 #--- hrc_dose_run: run all needed HRC scripts to extract data and create images                             ---
 #--------------------------------------------------------------------------------------------------------------
 
-def hrc_dose_run(year='NA', month='NA'):
+def hrc_dose_run(year='NA', month='NA', comp_test = 'NA'):
 
     """
     run all needed HRC scripts to extract data and create images  
@@ -64,7 +64,7 @@ def hrc_dose_run(year='NA', month='NA'):
 #
 #--- if year and month are given, get that year and month for data extraction
 #
-    if year != 'NA' and str(year).isdigit() and str(month).isidigit():
+    if year != 'NA' and str(year).isdigit() and str(month).isdigit():
         lyear  = int(year)
         lmonth = int(month)
 
@@ -80,12 +80,12 @@ def hrc_dose_run(year='NA', month='NA'):
             lmonth = 12
             lyear -= 1
 
-    hgdata.hrc_dose_get_data(lyear, lmonth, lyear, lmonth)          #---- extracting data
-    hstat.hrc_dose_extract_stat_data_month(lyear, lmonth)           #---- computing statistics
-    hhtml.hrc_dose_make_data_html()                                 #---- creating html pages
-    hplot.hrc_dose_plot_exposure_stat()                             #---- plotting histories
-    himg.create_hrc_maps(lyear, lmonth)                             #---- creating map images
-    monthly.hrc_dose_plot_monthly_report()                          #---- plotting monthly report trend
+    hgdata.hrc_dose_get_data(lyear, lmonth, lyear, lmonth, comp_test)          #---- extracting data
+    hstat.hrc_dose_extract_stat_data_month(lyear, lmonth, comp_test)           #---- computing statistics
+    hhtml.hrc_dose_make_data_html(comp_test=comp_test)                         #---- creating html pages
+    hplot.hrc_dose_plot_exposure_stat(comp_test=comp_test)                     #---- plotting histories
+    himg.create_hrc_maps(lyear, lmonth, comp_test)                             #---- creating map images
+    monthly.hrc_dose_plot_monthly_report(comp_test = comp_test)                #---- plotting monthly report trend
 
 #
 #--- change the group to mtagroup
@@ -107,16 +107,37 @@ def hrc_dose_run(year='NA', month='NA'):
 
     new_data = '*' + smon + '_' + syear + '*' 
 
-    cmd = 'cp ' + mon_dir_hrc_full +  new_data + ' ' +  mays_dir + 'Month_hrc/.'
-    os.system(cmd)
-    cmd = 'cp ' + cum_dir_hrc_full +  new_data + ' ' +  mays_dir + 'Cumulative_hrc/.'
-    os.system(cmd)
+    if comp_test == 'test':
+        cmd = 'cp ' + test_mon_dir_hrc_full +  new_data + ' ' +  test_mays_dir + 'Month_hrc/.'
+        os.system(cmd)
+        cmd = 'cp ' + test_cum_dir_hrc_full +  new_data + ' ' +  test_mays_dir + 'Cumulative_hrc/.'
+        os.system(cmd)
+    else:
+        cmd = 'cp ' + mon_dir_hrc_full +  new_data + ' ' +  mays_dir + 'Month_hrc/.'
+        os.system(cmd)
+        cmd = 'cp ' + cum_dir_hrc_full +  new_data + ' ' +  mays_dir + 'Cumulative_hrc/.'
+        os.system(cmd)
 
 
 
 #--------------------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    
-    hrc_dose_run()
+#--- check whether this is a test case
+#
+    if len(sys.argv) == 2:
+        if sys.argv[1] == 'test':               #---- this is a test case
+            comp_test = 'test'
+        else:
+            comp_test = 'real'
+    else:
+        comp_test = 'real'
+
+#
+#--- if this is a test case, run for 2012 Dec data
+#
+    if comp_test == 'test':
+        hrc_dose_run(2012,12, comp_test)
+    else:
+        hrc_dose_run()
 

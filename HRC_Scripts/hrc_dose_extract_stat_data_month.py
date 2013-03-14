@@ -7,7 +7,7 @@
 #                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                               #
 #                                                                                               #
-#       last update: Feb 06, 2013                                                               #
+#       last update: Mar 13, 2013                                                               #
 #                                                                                               #
 #################################################################################################
 
@@ -251,7 +251,7 @@ def find10th(file):
 #--- hrc_dose_extract_stat_data_month: compute HRC statistics                                               ---
 #--------------------------------------------------------------------------------------------------------------
 
-def hrc_dose_extract_stat_data_month(year='NA', month='NA'):
+def hrc_dose_extract_stat_data_month(year='NA', month='NA', comp_test = 'NA'):
 
     """
     compute HRC statistics: input year, month
@@ -268,24 +268,41 @@ def hrc_dose_extract_stat_data_month(year='NA', month='NA'):
     smonth = str(month)
     if month < 10:
         smonth = '0' + smonth
+#
+#---- test?
+#
+    if comp_test == 'test':
+        dp_mon_dir_hrc      = test_mon_dir_hrc
+        dp_cum_dir_hrc      = test_cum_dir_hrc
+        dp_mon_dir_hrc_full = test_mon_dir_hrc_full
+        dp_cum_dir_hrc_full = test_cum_dir_hrc_full
+        dp_data_out         = test_data_out
+        dp_data_out_hrc     = test_data_out_hrc
+    else:
+        dp_mon_dir_hrc      = mon_dir_hrc
+        dp_cum_dir_hrc      = cum_dir_hrc
+        dp_mon_dir_hrc_full = mon_dir_hrc_full
+        dp_cum_dir_hrc_full = cum_dir_hrc_full
+        dp_data_out         = data_out
+        dp_data_out_hrc     = data_out_hrc
 
 #
 #--- center exposure map stat
 #
-    file = cum_dir_hrc  + '/HRCS_08_1999_' + smonth + '_' + syear + '.fits.gz'
-    out  = data_out + '/hrcs_acc_out'
+    file = dp_cum_dir_hrc  + '/HRCS_08_1999_' + smonth + '_' + syear + '.fits.gz'
+    out  = dp_data_out + '/hrcs_acc_out'
     comp_stat(file, year, month, out)
 
-    file = mon_dir_hrc + '/HRCS_'         + smonth + '_' + syear + '.fits.gz'
-    out  = data_out + '/hrcs_dff_out'
+    file = dp_mon_dir_hrc + '/HRCS_'         + smonth + '_' + syear + '.fits.gz'
+    out  = dp_data_out + '/hrcs_dff_out'
     comp_stat(file, year, month, out)
 
-    file = cum_dir_hrc  + '/HRCI_08_1999_' + smonth + '_' + syear + '.fits.gz'
-    out  = data_out + '/hrci_acc_out'
+    file = dp_cum_dir_hrc  + '/HRCI_08_1999_' + smonth + '_' + syear + '.fits.gz'
+    out  = dp_data_out + '/hrci_acc_out'
     comp_stat(file, year, month, out)
 
-    file = mon_dir_hrc + '/HRCI_'         + smonth + '_' + syear + '.fits.gz'
-    out  = data_out + '/hrci_dff_out'
+    file = dp_mon_dir_hrc + '/HRCI_'         + smonth + '_' + syear + '.fits.gz'
+    out  = dp_data_out + '/hrci_dff_out'
     comp_stat(file, year, month, out)
 
 #
@@ -293,22 +310,22 @@ def hrc_dose_extract_stat_data_month(year='NA', month='NA'):
 #
 
     for i in range(0,10):
-        file = cum_dir_hrc_full +  '/HRCS_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = data_out_hrc + '/hrcs_' + str(i) + '_acc'
+        file = dp_cum_dir_hrc_full +  '/HRCS_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
+        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_acc'
         comp_stat(file, year, month, out)
 
-        file = mon_dir_hrc_full +  '/HRCS_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = data_out_hrc + '/hrcs_' + str(i) + '_dff'
+        file = dp_mon_dir_hrc_full +  '/HRCS_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
+        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_dff'
         comp_stat(file, year, month, out)
 
 
     for i in range(0,9):
-        file = cum_dir_hrc_full +  '/HRCI_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = data_out_hrc + '/hrci_' + str(i) + '_acc'
+        file = dp_cum_dir_hrc_full +  '/HRCI_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
+        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_acc'
         comp_stat(file, year, month, out)
 
-        file = mon_dir_hrc_full +  '/HRCI_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = data_out_hrc + '/hrci_' + str(i) + '_dff'
+        file = dp_mon_dir_hrc_full +  '/HRCI_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
+        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_dff'
         comp_stat(file, year, month, out)
 
 
