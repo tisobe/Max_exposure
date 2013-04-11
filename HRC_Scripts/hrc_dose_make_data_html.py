@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.6
+#!/usr/bin/env /proj/sot/ska/bin/python
 
 #########################################################################################
 #                                                                                       #
@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Mar 13, 2013                                                       #
+#       last update: Apr 11, 2013                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -255,10 +255,10 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
             f.write(line)
 
             fname = wname + '_' + smonth + '_' + str(year[i]) + '.fits.gz'
-            line  = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Month_hrc/' + fname +'">fits</a></td>\n'
+            line  = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Month_hrc/' + fname +'">fits</a></td>\n'
             f.write(line)
             fname = wname + '_' + smonth + '_' + str(year[i]) + '.png'
-            line  = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Images/' + fname + '">map</a></td>\n'
+            line  = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Images/' + fname + '">map</a></td>\n'
             f.write(line)
 
 #
@@ -269,10 +269,10 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
 
         f.write(line)
         fname = wname + '_08_1999_' + smonth + '_' + str(year[i]) + '.fits.gz'
-        line  = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Cumulative_hrc/' + fname +'">fits</a></td>\n'
+        line  = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Cumulative_hrc/' + fname +'">fits</a></td>\n'
         f.write(line)
         fname = wname + '_08_1999_' + smonth + '_' + str(year[i]) + '.png'
-        line  = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Images/' + fname + '">map</a></td>\n\n'
+        line  = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Images/' + fname + '">map</a></td>\n\n'
         f.write(line)
 
 #
