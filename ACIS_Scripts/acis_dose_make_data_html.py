@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.6
+#!/usr/bin/env /proj/sot/ska/bin/python
 
 #########################################################################################
 #                                                                                       #
@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Feb 06, 2013                                                       #
+#       last update: Apr 11, 2013                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -203,9 +203,9 @@ def write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,
             smon = '0' + smon
         file = 'ACIS_' + smon + '_' + syear + '_' + ccd 
 
-        line = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Month/' + file + '.fits.gz">fits</a>/</td>\n'
+        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Month/' + file + '.fits.gz">fits</a>/</td>\n'
         f.write(line)
-        line = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Image/' + file + '.png">fits</a>/</td>\n\n'
+        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Image/' + file + '.png">fits</a>/</td>\n\n'
         f.write(line)
 
         line =        '<td>' + str(mean_acc[i]) + '</td>\t'
@@ -219,9 +219,9 @@ def write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,
         f.write(line)
 
         file = 'ACIS_07_1999_' + smon + '_' + syear + '_' + ccd 
-        line = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Cumulative/' + file + '.fits.gz">fits</a>/</td>\n'
+        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Cumulative/' + file + '.fits.gz">fits</a>/</td>\n'
         f.write(line)
-        line = '<td><a href="http://cxc.harvard.edu/mta_days/mta_max_exp/Image/' + file + '.png">fits</a>/</td></tr>\n\n'
+        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Image/' + file + '.png">fits</a>/</td></tr>\n\n'
         f.write(line)
 #
 #--- put header every new year so that we can read data easier
