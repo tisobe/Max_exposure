@@ -264,7 +264,7 @@ def create_image(line, outfile):
     input line: instruction,, outfile: output file name
     """
 
-    cmd  = 'dmcopy "' + line + '" out.fits option=image clobber=yes'
+    cmd  = 'dmcopy "' + line + '" out.fits option=image  clobber=yes'
     os.system(cmd)
 
     cmd  = 'dmstat out.fits centroid=no > stest'

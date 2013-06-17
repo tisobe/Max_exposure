@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Apr 11, 2013                                                      #
+#       last updated: May 14, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -157,7 +157,6 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
 #
 #--- extract each evt1 file, extract the central part, and combine them into a one file
 #
-            i
             hrciCnt   = [0, 0, 0, 0, 0, 0, 0, 0, 0]                                 #--- counters for how many hrc-i and hrc-s are extracted
             hrcsCnt   = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  
             hrciCnt_c = 0
@@ -297,13 +296,13 @@ def set_cmd_line(fitsName, detector, type,  i):
             xend   = str(xend_s[i])
             ystart = str(ystart_s[i])
             yend   = str(yend_s[i])
-            mem    = str(130)
+            mem    = str(200)
         if detector == 'HRC-I':
             xstart = str(xstart_i[i])
             xend   = str(xend_i[i])
             ystart = str(ystart_i[i])
             yend   = str(yend_i[i])
-            mem    = str(130)
+            mem    = str(200)
 
 
     line = fitsName + '[EVENTS][bin rawx='+ xstart + ':' + xend + ':1, rawy=' + ystart + ':' + yend + ':1]'
@@ -369,7 +368,7 @@ def createCumulative(year, month, detector,  type, arch_dir, i=0):
 
     if chk > 0: 
         line = arch_dir + '/Month_hrc/' + hrc + '[opt type=i2,null=-99]'
-        cmd  = 'dmcopy infile="' + line + '"  outfile=ztemp.fits clobber="yes"'
+        cmd  = 'dmcopy infile="' + line + '"  outfile="./ztemp.fits"  clobber="yes"'
         os.system(cmd)
 
         cmd  = 'dmimgcalc infile=' + arch_dir + 'Cumulative_hrc/' + chrc + ' infile2=ztemp.fits outfile =' + chrc2 + ' operation=add clobber=yes'

@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Apr 11, 2013                                                      #
+#       last updated: Jun 11, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -15,6 +15,14 @@ import os
 import string
 import re
 
+#
+#--- pylab plotting routine related modules
+#
+import matplotlib as mpl
+
+if __name__ == '__main__':
+
+    mpl.use('Agg')
 #
 #--- reading directory list
 #
@@ -83,9 +91,9 @@ def hrc_dose_run(year='NA', month='NA', comp_test = 'NA'):
     hgdata.hrc_dose_get_data(lyear, lmonth, lyear, lmonth, comp_test)          #---- extracting data
     hstat.hrc_dose_extract_stat_data_month(lyear, lmonth, comp_test)           #---- computing statistics
     hhtml.hrc_dose_make_data_html(comp_test=comp_test)                         #---- creating html pages
-    hplot.hrc_dose_plot_exposure_stat(comp_test=comp_test)                     #---- plotting histories
+#    hplot.hrc_dose_plot_exposure_stat(comp_test=comp_test)                     #---- plotting histories
     himg.create_hrc_maps(lyear, lmonth, comp_test)                             #---- creating map images
-    monthly.hrc_dose_plot_monthly_report(comp_test = comp_test)                #---- plotting monthly report trend
+#    monthly.hrc_dose_plot_monthly_report(comp_test = comp_test)                #---- plotting monthly report trend
 
 #
 #--- change the group to mtagroup
@@ -121,18 +129,26 @@ def hrc_dose_run(year='NA', month='NA', comp_test = 'NA'):
 
 
 #--------------------------------------------------------------------------------------------------------
+#
+#--- pylab plotting routine related modules
+#
+from pylab import *
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as font_manager
+import matplotlib.lines as lines
 
-if __name__ == '__main__':
+#
 #--- check whether this is a test case
 #
-    if len(sys.argv) == 2:
-        if sys.argv[1] == 'test':               #---- this is a test case
-            comp_test = 'test'
-        else:
-            comp_test = 'real'
+if len(sys.argv) == 2:
+    if sys.argv[1] == 'test':               #---- this is a test case
+        comp_test = 'test'
     else:
         comp_test = 'real'
+else:
+    comp_test = 'real'
 
+if __name__ == '__main__':
 #
 #--- if this is a test case, run for 2012 Dec data
 #
