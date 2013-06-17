@@ -8,7 +8,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Apr 11, 2013                                                       #
+#       last update: Jun 11, 2013                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -18,18 +18,15 @@ import os
 import string
 import re
 import copy
-
+import numpy as np
 #
 #--- pylab plotting routine related modules
 #
-
-from pylab import *
-import numpy as np
 import matplotlib as mpl
-import matplotlib.pyplot as plt
-import matplotlib.font_manager as font_manager
-import matplotlib.lines as lines
 
+if __name__ == '__main__':
+
+    mpl.use('Agg')
 
 #
 #--- reading directory list
@@ -292,7 +289,28 @@ def plot_panel(x, y, label, ax, ymin = 'NA', ymax = 'NA'):
 
 
 #--------------------------------------------------------------------------------------------------------
+#
+#--- pylab plotting routine related modules
+#
+from pylab import *
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as font_manager
+import matplotlib.lines as lines
+
+#
+#--- check whether this is a test case
+#
+if len(sys.argv) == 2:
+    if sys.argv[1] == 'test':               #---- this is a test case
+        comp_test = 'test'
+    else:
+        comp_test = 'real'
+else:
+    comp_test = 'real'
 
 if __name__ == '__main__':
 
-    acis_dose_plot_exposure_stat()
+    if comp_test == 'test':
+        acis_dose_plot_exposure_stat(clean ='Yes', comp_test='test')
+    else:
+        acis_dose_plot_exposure_stat(clean ='Yes')

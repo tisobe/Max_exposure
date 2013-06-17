@@ -116,7 +116,7 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
                 m = re.search('fits', file)
                 if m is not None:
                         
-                    [fitsName] = mtac.useArc4gl('retrieve','flight', 'acis', 1, 'evt1', filename=file)
+                    fitsName = mtac.useArc4gl('retrieve','flight', 'acis', 1, 'evt1', filename=file)
 
                     line = file + '[EVENTS][bin tdetx=2800:5200:1, tdety=1650:4150:1][option type=i4]'
 

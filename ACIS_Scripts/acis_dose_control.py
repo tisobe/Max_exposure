@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Mar 11, 2013                                                      #
+#       last updated: Jun 10, 2013                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -16,6 +16,14 @@ import string
 import re
 import fnmatch
 
+#
+#--- pylab plotting routine related modules
+#
+import matplotlib as mpl
+
+if __name__ == '__main__':
+
+    mpl.use('Agg')
 #
 #--- reading directory list
 #
@@ -131,19 +139,27 @@ def acis_dose_control(year = 'NA', month = 'NA', comp_test = 'NA'):
 
 
 #--------------------------------------------------------------------------------------------------------
+#
+#--- pylab plotting routine related modules
+#
+from pylab import *
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as font_manager
+import matplotlib.lines as lines
 
-if __name__ == '__main__':
 #
 #--- check whether this is a test case
 #
-    if len(sys.argv) == 2:
-        if sys.argv[1] == 'test':               #---- this is a test case
-            comp_test = 'test'
-        else:
-            comp_test = 'real'
+if len(sys.argv) == 2:
+    if sys.argv[1] == 'test':               #---- this is a test case
+        comp_test = 'test'
     else:
         comp_test = 'real'
+else:
+    comp_test = 'real'
 
+
+if __name__ == '__main__':
 #
 #--- if this is a test case, run for 2013 Jan data
 #
