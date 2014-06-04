@@ -107,8 +107,8 @@ def create_hrc_maps(year= 'NA', month= 'NA', comp_test = 'NA'):
         hrc_dose_conv_to_png(test_mon_dir_hrc_full, test_mon_dir_hrc_full, year, month)
         hrc_dose_conv_to_png(test_cum_dir_hrc_full, test_cum_dir_hrc_full, year, month)
     else:
-        hrc_dose_conv_to_png(mon_dir_hrc_full, mon_dir_hrc_full, year, month)
-        hrc_dose_conv_to_png(cum_dir_hrc_full, cum_dir_hrc_full, year, month)
+        hrc_dose_conv_to_png(mon_dir_hrc_full, full_images, year, month)
+        hrc_dose_conv_to_png(cum_dir_hrc_full, full_images, year, month)
 
 
 #----------------------------------------------------------------------------------------------------------------

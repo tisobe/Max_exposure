@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Arp 30, 2013                                                       #
+#       last update: Jun 04, 2014                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -23,9 +23,9 @@ import numpy as np
 #
 
 from pylab import *
-if __name__ == '__main__':
-
-    mpl.use('Agg')
+#if __name__ == '__main__':
+#
+#    mpl.use('Agg')
 
 #
 #--- reading directory list
@@ -83,55 +83,15 @@ def hrc_dose_plot_monthly_report(indir = 'NA', outdir = 'NA', comp_test = 'NA'):
 #
 #--- read HRC I data
 #
-    idate     = []
-    iyear     = []
-    imonth    = []
-    imean_acc = []
-    istd_acc  = []
-    imin_acc  = []
-    imin_apos = []
-    imax_acc  = []
-    imax_apos = []
-    im10_acc  = []
-    im10_apos = []
-    imean_dff = []
-    istd_dff  = []
-    imin_dff  = []
-    imin_dpos = []
-    imax_dff  = []
-    imax_dpos = []
-    im10_dff  = []
-    im10_dpos = []
-
-    expf.readExpData(indir, 'hrci' , idate, iyear,imonth,imean_acc,istd_acc,imin_acc,imin_apos,  imax_acc,imax_apos,im10_acc, \
-                      im10_apos,imean_dff,istd_dff,imin_dff, imin_dpos,imax_dff,imax_dpos,im10_dff,im10_dpos)
+    [idate, iyear,imonth,imean_acc,istd_acc,imin_acc,imin_apos, imax_acc,imax_apos,iasig1, iasig2, iasig3, \
+     imean_dff,istd_dff,imin_dff, imin_dpos,imax_dff,imax_dpos,idsig1, idsig2, idsig3] = expf.readExpData(indir,'hrci') 
 
 
 #
 #--- read HRC S data
 #
-    sdate     = []
-    syear     = []
-    smonth    = []
-    smean_acc = []
-    sstd_acc  = []
-    smin_acc  = []
-    smin_apos = []
-    smax_acc  = []
-    smax_apos = []
-    sm10_acc  = []
-    sm10_apos = []
-    smean_dff = []
-    sstd_dff  = []
-    smin_dff  = []
-    smin_dpos = []
-    smax_dff  = []
-    smax_dpos = []
-    sm10_dff  = []
-    sm10_dpos = []
-
-    expf.readExpData(indir, 'hrcs', sdate, syear,smonth,smean_acc,sstd_acc,smin_acc,smin_apos,  smax_acc,smax_apos,sm10_acc, \
-                      sm10_apos,smean_dff,sstd_dff,smin_dff, smin_dpos,smax_dff,smax_dpos,sm10_dff,sm10_dpos)
+    [sdate, syear,smonth,smean_acc,sstd_acc,smin_acc,smin_apos,  smax_acc,smax_apos,sasig1, sasig2, sasig3, \
+      smean_dff,sstd_dff,smin_dff, smin_dpos,smax_dff,smax_dpos,sdsig1, sdsig2,sdsig3] = expf.readExpData(indir,'hrcs')
 
 #
 #--- plot data

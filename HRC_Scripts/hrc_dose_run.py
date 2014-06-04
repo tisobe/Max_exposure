@@ -91,9 +91,9 @@ def hrc_dose_run(year='NA', month='NA', comp_test = 'NA'):
     hgdata.hrc_dose_get_data(lyear, lmonth, lyear, lmonth, comp_test)          #---- extracting data
     hstat.hrc_dose_extract_stat_data_month(lyear, lmonth, comp_test)           #---- computing statistics
     hhtml.hrc_dose_make_data_html(comp_test=comp_test)                         #---- creating html pages
-#    hplot.hrc_dose_plot_exposure_stat(comp_test=comp_test)                     #---- plotting histories
+    hplot.hrc_dose_plot_exposure_stat(comp_test=comp_test)                     #---- plotting histories
     himg.create_hrc_maps(lyear, lmonth, comp_test)                             #---- creating map images
-#    monthly.hrc_dose_plot_monthly_report(comp_test = comp_test)                #---- plotting monthly report trend
+    monthly.hrc_dose_plot_monthly_report(comp_test = comp_test)                #---- plotting monthly report trend
 
 #
 #--- change the group to mtagroup

@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: May 14, 2013                                                      #
+#       last updated: Mar 03, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -163,7 +163,10 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
             hrcsCnt_c = 0
 
             for file in fitsList:
-                [fitsName] = mtac.useArc4gl('retrieve','flight', 'hrc', 1, 'evt1', filename=file)
+                try:
+                    [fitsName] = mtac.useArc4gl('retrieve','flight', 'hrc', 1, 'evt1', filename=file)
+                except:
+                    continue
 
                 detector = whichHRC(fitsName)                                                   #--- checking which HRC (S or I)
 #

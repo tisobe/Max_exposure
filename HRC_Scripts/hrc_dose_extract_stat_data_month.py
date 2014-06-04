@@ -7,7 +7,7 @@
 #                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                               #
 #                                                                                               #
-#       last update: apr 11, 2013                                                               #
+#       last update: Jun 04, 2014                                                               #
 #                                                                                               #
 #################################################################################################
 
@@ -15,6 +15,7 @@ import sys
 import os
 import string
 import re
+import random
 
 #
 #--- reading directory list
@@ -47,13 +48,18 @@ import convertTimeFormat    as tcnv
 #--- mta common functions
 #
 
-import mta_common_functions as mtac
+import mta_common_functions as mcf
 
 #
 #--- Exposure related funcions shared
 #
 
 import exposureFunctions as expf
+#
+#--- temp writing file name
+#
+rtail  = int(10000 * random.random())       #---- put a romdom # tail so that it won't mix up with other scripts space
+zspace = '/tmp/zspace' + str(rtail)
 
 
 #--------------------------------------------------------------------------------------------------------------
@@ -66,19 +72,20 @@ def comp_stat(file, year, month, out):
     compute statistics for the hrc image and print out the result: input: hrc image file, year, month, output file name.
     """
 
-    chk = mtac.chkFile(file)        #--- checking whether the file exists
+    chk = mcf.chkFile(file)        #--- checking whether the file exists
 
     if chk > 0:
 #
 #--- to avoid getting min value from the outside of the frame edge of a CCD, set threshold
 #
-        cmd = 'dmimgthresh infile=' + file + ' outfile=zcut.fits  cut="0:1.e10" value=0 clobber=yes'
+        cmd = '/bin/nice -n15 dmimgthresh infile=' + file + ' outfile=zcut.fits  cut="0:1.e10" value=0 clobber=yes'
         os.system(cmd)
-        cmd = 'dmstat  infile=zcut.fits  centroid=no > ./result'
+        cmd = 'dmstat  infile=zcut.fits  centroid=no >' + zspace
         os.system(cmd)
-        os.system('rm zcut.fits')
 
-        f    = open('./result', 'r')
+        mcf.rm_file('./zcut.fits')
+
+        f    = open(zspace, 'r')
         data = [line.strip() for line in f.readlines()]
         f.close()
         
@@ -92,50 +99,40 @@ def comp_stat(file, year, month, out):
                 break
 
         if val != 'NA':
-            upper = find10th(file)
-            if upper == 'I/INDEF':
-                cmd = 'dmstat  infile=' + file + '  centroid=no > ./result2'
-                os.system(cmd)
-                
-            else:
-                cmd = 'dmimgthresh infile=' + file + ' outfile=zcut.fits  cut="0:' + upper + '" value=0 clobber=yes'
-                os.system(cmd)
-                cmd = 'dmstat  infile=zcut.fits  centroid=no > ./result2'
-                os.system(cmd)
-                os.system('rm ./zcut.fits')
+            (mean,  dev,  min,  max , min_pos_x,  min_pos_y,  max_pos_x,  max_pos_y)  = readStat(zspace)
+            mcf.rm_file(zspace)
 
-            (mean,  dev,  min,  max , min_pos_x,  min_pos_y,  max_pos_x,  max_pos_y)  = readStat('result')
-            (mean2, dev2, min2, max2, min_pos_x2, min_pos_y2, max_pos_x2, max_pos_y2) = readStat('result2')
-            os.system('rm result result2')
+            (sig1, sig2, sig3) = find_two_sigma_value(file)
 
         else:
             (mean,  dev,  min,  max , min_pos_x,  min_pos_y,  max_pos_x,  max_pos_y)  = ('NA','NA','NA','NA','NA','NA','NA','NA')
+            (sig1, sig2, sig3) = ('NA', 'NA', 'NA')
 
     else:
         (mean,  dev,  min,  max , min_pos_x,  min_pos_y,  max_pos_x,  max_pos_y)  = ('NA','NA','NA','NA','NA','NA','NA','NA')
-        (mean2, dev2, min2, max2, min_pos_x2, min_pos_y2, max_pos_x2, max_pos_y2) = ('NA','NA','NA','NA','NA','NA','NA','NA')
+        (sig1, sig2, sig3) = ('NA', 'NA', 'NA')
 
 
 #
 #--- print out the results
 #
 
-    chk = mtac.chkFile(out)        #--- checking whether the file exists
+    chk = mcf.chkFile(out)        #--- checking whether the file exists
 
     if chk > 0:
         f = open(out, 'a')
     else:
         f = open(out, 'w')
 
-    line = '%d\t%d\t' % (year, month)
-    f.write(line)
 
-    if mean == 'NA' or mean2 == 'NA':
-        f.write('NA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\n')
-    else:
-        line = '%5.6f\t%5.6f\t%5.1f\t(%d,%d)\t' % (mean, dev, min, min_pos_x, min_pos_y)
+    if mean == 'NA':
+        line = '%d\t%d\t' % (year, month)
         f.write(line)
-        line = '%5.1f\t(%d,%d)\t%5.1f\t(%d,%d)\n' % (max, max_pos_x, max_pos_y, max2, max_pos_x2, max_pos_y2)
+        f.write('NA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\n')
+    else:
+        line = '%d\t%d\t' % (year, month)
+        line = line +  '%5.6f\t%5.6f\t%5.1f\t(%d,%d)\t' % (float(mean), float(dev), float(min), float(min_pos_x), float(min_pos_y))
+        line = line +  '%5.1f\t(%d,%d)\t%5.1f\t%5.1f\t%5.1f\n' % (float(max), float(max_pos_x), float(max_pos_y), float(sig1), float(sig2), float(sig3))
         f.write(line)
 
     f.close()
@@ -192,60 +189,64 @@ def readStat(file):
 
     return (mean, dev, min, max, min_pos_x, min_pos_y, max_pos_x, max_pos_y)
 
-
-
 #--------------------------------------------------------------------------------------------------------------
-#--- find10th: finding 10th brightest pisxel position                                                       ---
 #--------------------------------------------------------------------------------------------------------------
-
-def find10th(file):
-
-    """
-    finding 10th brightest pisxel position: input file name
-    """
-
-    cmd = 'dmimghist infile=' + file + ' outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
+#--------------------------------------------------------------------------------------------------------------
+        
+def find_two_sigma_value(fits):
+#
+#-- make histgram
+#
+    cmd = ' dmimghist infile=' + fits + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
     os.system(cmd)
-    cmd = 'dmlist infile=outfile.fits opt=data > zout'
+    cmd = 'dmlist infile=outfile.fits outfile=' + zspace + ' opt=data'
     os.system(cmd)
-    os.system('rm outfile.fits')
     
-    f    = open('./zout', 'r')
+    f= open(zspace, 'r')
     data = [line.strip() for line in f.readlines()]
     f.close()
-
+    mcf.rm_file(zspace)
+#
+#--- read bin # and its count rate
+#
     hbin = []
     hcnt = []
-    tot  = 0
+    vsum = 0
+
     for ent in data:
-        ent.lstrip()
         atemp = re.split('\s+|\t+', ent)
-        if atemp[0].isdigit():
-            hbin.append(atemp[1])
-            hcnt.append(atemp[3])
+        if mcf.chkNumeric(atemp[0]):
+            hbin.append(float(atemp[1]))
+            val = int(atemp[4])
+            hcnt.append(val)
+            vsum += val
 
 #
-#--- checking 10 th bright position
+#--- checking one sigma and two sigma counts
 #
 
-    try:
-        j = 0
-        for i in range(len(hbin)-1, 0, -1):
-            if j == 9:
-                val = i
+    if len(hbin) > 0:
+        v68= int(0.68 * vsum)
+        v95= int(0.95 * vsum)
+        v99= int(0.997 * vsum)
+        sigma1 = -999
+        sigma2 = -999
+        sigma3 = -999
+        acc= 0
+        for i in range(0, len(hbin)):
+            acc += hcnt[i]
+            if acc > v68 and sigma1 < 0:
+                sigma1 = hbin[i]
+            elif acc > v95 and sigma2 < 0:
+                sigma2 = hbin[i]
+            elif acc > v99 and sigma3 < 0:
+                sigma3 = hbin[i]
                 break
-            else:
-                if hcnt[i] > 0:
-                    j += 1
-
-        upper = hbin[val]
-    except:
-        upper  = 'I/INDEF'
-
-    return upper
-
-
-        
+    
+        return (sigma1, sigma2, sigma3)
+    
+    else:
+        return(0, 0, 0)
 
 #--------------------------------------------------------------------------------------------------------------
 #--- hrc_dose_extract_stat_data_month: compute HRC statistics                                               ---
@@ -285,7 +286,6 @@ def hrc_dose_extract_stat_data_month(year='NA', month='NA', comp_test = 'NA'):
         dp_cum_dir_hrc_full = cum_dir_hrc_full
         dp_data_out         = data_out
         dp_data_out_hrc     = data_out_hrc
-
 #
 #--- center exposure map stat
 #
@@ -311,21 +311,21 @@ def hrc_dose_extract_stat_data_month(year='NA', month='NA', comp_test = 'NA'):
 
     for i in range(0,10):
         file = dp_cum_dir_hrc_full +  '/HRCS_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_acc'
+        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_acc_out'
         comp_stat(file, year, month, out)
 
         file = dp_mon_dir_hrc_full +  '/HRCS_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_dff'
+        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_dff_out'
         comp_stat(file, year, month, out)
 
 
     for i in range(0,9):
         file = dp_cum_dir_hrc_full +  '/HRCI_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_acc'
+        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_acc_out'
         comp_stat(file, year, month, out)
 
         file = dp_mon_dir_hrc_full +  '/HRCI_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_dff'
+        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_dff_out'
         comp_stat(file, year, month, out)
 
 
@@ -333,4 +333,7 @@ def hrc_dose_extract_stat_data_month(year='NA', month='NA', comp_test = 'NA'):
 
 if __name__ == '__main__':
 
-    hrc_dose_extract_stat_data_month()
+    year  = int(sys.argv[1])
+    month = int(sys.argv[2])
+
+    hrc_dose_extract_stat_data_month(year, month)

@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Apr 11, 2013                                                       #
+#       last update: Jun 04, 2014                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -88,37 +88,17 @@ def hrc_dose_make_data_html(indir = 'NA', outdir = 'NA', indir2 = 'NA', outdir2 
 #
         expf.clean_data(indir)
 
-        date     = []
-        year     = []
-        month    = []
-        mean_acc = []
-        std_acc  = []
-        min_acc  = []
-        min_apos = []
-        max_acc  = []
-        max_apos = []
-        m10_acc  = []
-        m10_apos = []
-        mean_dff = []
-        std_dff  = []
-        min_dff  = []
-        min_dpos = []
-        max_dff  = []
-        max_dpos = []
-        m10_dff  = []
-        m10_dpos = []
-
 #
 #--- read HRC histrical data
 #
-        expf.readExpData(indir, hrc, date, year,month,mean_acc,std_acc,min_acc,min_apos,max_acc,max_apos,m10_acc, \
-                           m10_apos,mean_dff,std_dff,min_dff,min_dpos,max_dff,max_dpos,m10_dff,m10_dpos)
+        [date,year,month,mean_acc,std_acc,min_acc,min_apos, max_acc,max_apos,asig1, asig2, asig3, mean_dff,std_dff, \
+                      min_dff, min_dpos,max_dff,max_dpos,dsig1, dsig2, dsig3] = expf.readExpData(indir,hrc)
         
 #
 #--- create a HTML page to display histrical data
 #
-        printHtml(indir, outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_apos,max_acc,max_apos,m10_acc, \
-                           m10_apos,mean_dff,std_dff,min_dff,min_dpos,max_dff,max_dpos,m10_dff,m10_dpos)
+        printHtml(indir, outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_apos,max_acc,max_apos, asig1, asig2, asig3, \
+                           mean_dff,std_dff,min_dff,min_dpos,max_dff,max_dpos, dsig1, dsig2, dsig3)
 
 #
 #--- full exposure map --------
@@ -127,55 +107,32 @@ def hrc_dose_make_data_html(indir = 'NA', outdir = 'NA', indir2 = 'NA', outdir2 
 #
 #--- just in a case, clear up the files before reading them
 #
-        expf.clean_data(indir2)
+#        expf.clean_data(indir2)
 
 
         for i in range(0,10):
             if hrc == 'hrci' and i == 9:
                 break
 
-            date     = []
-            year     = []
-            month    = []
-            mean_acc = []
-            std_acc  = []
-            min_acc  = []
-            min_apos = []
-            max_acc  = []
-            max_apos = []
-            m10_acc  = []
-            m10_apos = []
-            mean_dff = []
-            std_dff  = []
-            min_dff  = []
-            min_dpos = []
-            max_dff  = []
-            max_dpos = []
-            m10_dff  = []
-            m10_dpos = []
-
-
             hrc2 = hrc + '_' + str(i)           #--- naming is slightly different from the center exposure maps
 #
 #--- read HRC histrical data --- sec='full' indicating reading full exposure maps
 #
-            expf.readExpData(indir2, hrc2, date, year,month,mean_acc,std_acc,min_acc,min_apos,max_acc,max_apos,m10_acc, \
-                           m10_apos,mean_dff,std_dff,min_dff,min_dpos,max_dff,max_dpos,m10_dff,m10_dpos, sec='full')
+            [date,year,month,mean_acc,std_acc,min_acc,min_apos, max_acc,max_apos,asig1, asig2, asig3, mean_dff,std_dff, \
+                      min_dff, min_dpos,max_dff,max_dpos,dsig1, dsig2, dsig3] = expf.readExpData(indir2, hrc2)
 #
 #--- create a HTML page to display histrical data
 #
-            printHtml(indir2, outdir2, hrc2, date, year,month,mean_acc,std_acc,min_acc,min_apos,max_acc,max_apos,m10_acc, \
-                           m10_apos,mean_dff,std_dff,min_dff,min_dpos,max_dff,max_dpos,m10_dff,m10_dpos)
-
-
+            printHtml(indir2, outdir2, hrc2, date, year,month,mean_acc,std_acc,min_acc,min_apos,max_acc,max_apos, asig1, asig2, asig3, \
+                           mean_dff,std_dff,min_dff,min_dpos,max_dff,max_dpos, dsig1, dsig2, dsig3)
 
 
 #--------------------------------------------------------------------------------------------------------
 #--  printHtml: create HTML page to display HRC historical data                                      ----
 #--------------------------------------------------------------------------------------------------------
 
-def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_apos,max_acc,max_apos,m10_acc,m10_apos,mean_dff,  \
-                std_dff,min_dff,min_dpos,max_dff,max_dpos,m10_dff,m10_dpos):
+def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_apos,max_acc,max_apos, asig1, asig2, asig3,mean_dff,  \
+                std_dff,min_dff,min_dpos,max_dff,max_dpos,dsig1, dsig2, dsig3):
 
     'create HTML page to display HRC historical data.'
 
@@ -227,10 +184,10 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
 
     f.write("<div style='padding-bottom:30px'>\n")
     f.write('<table border=1>\n')
-    f.write('<tr><th>&#160;</th><th>&#160;</th><th colspan=8>Monlthy</th><th colspan=8>Cumulative</th></tr>\n')
+    f.write('<tr><th>&#160;</th><th>&#160;</th><th colspan=11>Monlthy</th><th colspan=11>Cumulative</th></tr>\n')
     f.write('<tr style="color:yellow"><th>Year</th><th>Month</th>\n')
-    f.write('<th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>Data</th><th>Map</th>\n')
-    f.write('<th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>Data</th><th>Map</th></tr>\n')
+    f.write('<th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>68% Level</th><th>95% Level</th><th>99.7% Level</th><th>Data</th><th>Map</th>\n')
+    f.write('<th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>68% Level</th><th>95% Level</th><th>99.7% Level</th><th>Data</th><th>Map</th></tr>\n')
 
     for i in range(0, len(date)):
 
@@ -250,8 +207,8 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
             f.write(line)
             f.write('<td>No Data</td><td>No Image</td>\n')
         else:
-            line = '<tr><td>%d</td><td>%d</td><td>%4.4f</td><td>%4.4f</td><td>%4.1f</td><td>%s</td><td>%4.1f</td><td>%s</td>\n' \
-                    % (year[i], month[i], mean_dff[i], std_dff[i], min_dff[i],min_dpos[i], max_dff[i], max_dpos[i])
+            line = '<tr><td>%d</td><td>%d</td><td>%4.4f</td><td>%4.4f</td><td>%4.1f</td><td>%s</td><td>%4.1f</td><td>%s</td><td>%4.1f</td><td>%s</td><td>%4.1f</td>\n' \
+                    % (year[i], month[i], mean_dff[i], std_dff[i], min_dff[i],min_dpos[i], max_dff[i], max_dpos[i],dsig1[i], dsig2[i], dsig3[i])
             f.write(line)
 
             fname = wname + '_' + smonth + '_' + str(year[i]) + '.fits.gz'
@@ -264,8 +221,8 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
 #
 #---- cumulative HRC dose data
 #
-        line = '<td>%4.4f</td><td>%4.4f</td><td>%4.1f</td><td>%s</td><td>%4.1f</td><td>%s</td>\n' \
-                    % (mean_acc[i], std_acc[i], min_acc[i], min_apos[i], max_acc[i], max_apos[i])
+        line = '<td>%4.4f</td><td>%4.4f</td><td>%4.1f</td><td>%s</td><td>%4.1f</td><td>%s</td><td>%4.1f</td><td>%s</td><td>%4.1f</td>\n' \
+                    % (mean_acc[i], std_acc[i], min_acc[i], min_apos[i], max_acc[i], max_apos[i], asig1[i], asig2[i], asig3[i])
 
         f.write(line)
         fname = wname + '_08_1999_' + smonth + '_' + str(year[i]) + '.fits.gz'
@@ -279,8 +236,8 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
 #--- put header every new year so that we can read data easier
 #
         if month[i] % 12 == 0 and i != (len(date)-1):
-            f.write('\n<tr style="color:yellow"><th>Year</th><th>Month</th><th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>Data</th><th>Map</th>\n')
-            f.write('<th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>Data</th><th>Map</th></tr>\n\n')
+            f.write('\n<tr style="color:yellow"><th>Year</th><th>Month</th><th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>68% Level</th><th>95% Level</th><th>99.7% Level</th><th>Data</th><th>Map</th>\n')
+            f.write('<th>Mean</th><th>SD</th><th>Min</th><th>Min Position</th><th>Max</th><th>Max Position</th><th>68% Level</th><th>95% Level</th><th>99.7% Level</th><th>Data</th><th>Map</th></tr>\n\n')
 
     f.write('</table>\n\n')
     f.write("</div>\n")
@@ -298,7 +255,43 @@ def printHtml(indir,outdir,  hrc, date, year,month,mean_acc,std_acc,min_acc,min_
 
 
 #--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
+
+def update_main_html():
+
+    [tyear, mon, day, hours, min, sec, weekday, yday, dst] = tcnv.currentTime("Local")
+    
+    today = str(mon) + '/' + str(day) + '/ ' +str(tyear)
+
+    syear = tyear
+    smon  = mon -1
+    if smon < 1:
+        smon  = 12
+        syear = tyear -1
+
+    lyear = str(syear)
+
+    lmon  = str(smon)
+    if smon < 10:
+        lmon = '0' + lmon
+
+    line = lmon + '_' + lyear
+
+    file = hosue_keeping + 'template'
+    data = open(file, 'r').read()
+    data = data.replace('#LATEST#', line)
+    data = data.replace('#DATE#',   today)
+
+    file = web_dir + 'exposure.html'
+    fo   = open(file, 'w')
+    fo.write(data)
+    fo.close()
+
+
+#--------------------------------------------------------------------------------------------------------
 
 if __name__ == '__main__':
 
-    hrc_dose_make_data_html()
+#    hrc_dose_make_data_html()
+    update_main_html()

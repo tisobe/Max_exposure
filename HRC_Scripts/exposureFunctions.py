@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Apr 11, 2013                                                      #
+#       last updated: May 29, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -64,7 +64,7 @@ tempout = tempdir + 'ztemp'
 #-- readExpData: read data from acis/hrc history data files                                                                ---
 #------------------------------------------------------------------------------------------------------------------------
 
-def readExpData(indir, inst, date , year ,month ,mean_acc ,std_acc ,min_acc ,min_apos , max_acc ,max_apos ,m10_acc ,
+def readExpData_old(indir, inst, date , year ,month ,mean_acc ,std_acc ,min_acc ,min_apos , max_acc ,max_apos ,m10_acc ,
 			m10_apos ,mean_dff ,std_dff ,min_dff ,min_dpos ,max_dff ,max_dpos ,m10_dff ,m10_dpos,sec='NA'):
 
     """
@@ -127,6 +127,96 @@ def readExpData(indir, inst, date , year ,month ,mean_acc ,std_acc ,min_acc ,min
                 m10_acc.append(float(atemp[8]))
                 m10_apos.append(atemp[9])
 
+
+#------------------------------------------------------------------------------------------------------------------------
+#-- readExpData: read data from acis/hrc history data files                                                                ---
+#------------------------------------------------------------------------------------------------------------------------
+
+def readExpData(indir, inst, sec='NA'):
+
+    """
+    read data from acis/hrc history data files
+            input: indir: directory where the data locate
+                   inst:  instruments hrci, hrcs, or acis data such as i_2_n_1 (for i_2_n_1_dff_out)
+                   sec:   indicator of input file form
+    """
+    date     = []
+    year     = []
+    month    = []
+    mean_acc = []
+    std_acc  = []
+    min_acc  = []
+    min_apos = []
+    max_acc  = []
+    max_apos = []
+    asig1    = []
+    asig2    = []
+    asig3    = []
+    mean_dff = []
+    std_dff  = []
+    min_dff  = []
+    min_dpos = []
+    max_dff  = []
+    max_dpos = []
+    dsig1    = []
+    dsig2    = []
+    dsig3    = []
+
+    for set in ('dff', 'acc'):
+
+        m = re.search('hrc', inst)
+#
+#--- HRC data
+#
+        if m is not None:
+            if sec == 'NA':
+                file = indir +  inst + '_' + set + '_out'
+            else:
+                file = indir +  inst + '_' + set
+
+#
+#--- ACIS data
+#
+        else:
+            file = indir +  inst + '_' + set + '_out'
+
+        f    = open(file, 'r')
+        data = [line.strip() for line in f.readlines()]
+        f.close()
+
+        for ent in data:
+            ent.lstrip()
+            m = re.search('NA', ent)
+            if m is not None:
+                ent = ent.replace('NA', '0')
+
+            atemp = re.split('\s+|\t+', ent)
+            if set == 'dff':
+		time = float(atemp[0]) + (float(atemp[1]) - 0.5) / 12
+		date.append(time)
+                year.append(int(atemp[0]))
+                month.append(int(atemp[1]))
+                mean_dff.append(float(atemp[2]))
+                std_dff.append(float(atemp[3]))
+                min_dff.append(float(atemp[4]))
+                min_dpos.append(atemp[5])
+                max_dff.append(float(atemp[6]))
+                max_dpos.append(atemp[7])
+                dsig1.append(float(atemp[8]))
+                dsig2.append(float(atemp[9]))
+                dsig3.append(float(atemp[10]))
+            else:
+                mean_acc.append(float(atemp[2]))
+                std_acc.append(float(atemp[3]))
+                min_acc.append(float(atemp[4]))
+                min_apos.append(atemp[5])
+                max_acc.append(float(atemp[6]))
+                max_apos.append(atemp[7])
+                asig1.append(float(atemp[8]))
+                asig2.append(float(atemp[9]))
+                asig3.append(float(atemp[10]))
+
+    return [date,year,month,mean_acc,std_acc,min_acc,min_apos, max_acc,max_apos,asig1, asig2, asig3, mean_dff,std_dff,min_dff, min_dpos,max_dff,max_dpos,dsig1, dsig2, dsig3]
 
 #---------------------------------------------------------------------------------------------------------------------
 #--   clean_data: clean up and correct ACIS/HRC data.                                                               --
@@ -264,7 +354,7 @@ def create_image(line, outfile):
     input line: instruction,, outfile: output file name
     """
 
-    cmd  = 'dmcopy "' + line + '" out.fits option=image  clobber=yes'
+    cmd  = 'dmcopy "' + line + '" out.fits option=image clobber=yes'
     os.system(cmd)
 
     cmd  = 'dmstat out.fits centroid=no > stest'
