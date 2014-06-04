@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Apr 11, 2013                                                       #
+#       last update: May 30, 2014                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -92,25 +92,27 @@ def acis_dose_make_data_html(indir = 'NA', outdir = 'NA', comp_test = 'NA'):
             min_apos = []
             max_acc  = []
             max_apos = []
-            m10_acc  = []
-            m10_apos = []
+            asig1    = []
+            asig2    = []
+            asig3    = []
             mean_dff = []
             std_dff  = []
             min_dff  = []
             min_dpos = []
             max_dff  = []
             max_dpos = []
-            m10_dff  = []
-            m10_dpos = []
+            dsig1    = []
+            dsig2    = []
+            dsig3    = []
         
-            expf.readExpData(indir, inst, date, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,max_apos,m10_acc, \
-                      m10_apos,mean_dff,std_dff,min_dff, min_dpos,max_dff,max_dpos,m10_dff,m10_dpos)
+            [date,year,month,mean_acc,std_acc,min_acc,min_apos, max_acc,max_apos,asig1, asig2, asig3, mean_dff,std_dff, \
+              min_dff, min_dpos,max_dff,max_dpos,dsig1, dsig2, dsig3] = expf.readExpData(indir, inst)
 
 #
 #--- write html page
 #
-            write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,max_apos,m10_acc, \
-                                 m10_apos,mean_dff,std_dff,min_dff, min_dpos,max_dff,max_dpos,m10_dff,m10_dpos)
+            write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos, max_acc,max_apos,asig1, asig2, asig3, \
+                                 mean_dff,std_dff,min_dff, min_dpos,max_dff,max_dpos,dsig1, dsig2, dsig3)
 
             out_name = outdir + inst + '.html'
             cmd = 'mv acis.html ' + out_name
@@ -142,8 +144,8 @@ def acis_dose_make_data_html(indir = 'NA', outdir = 'NA', comp_test = 'NA'):
 #--    write_html: write a html page                                                                                   --
 #------------------------------------------------------------------------------------------------------------------------
 
-def write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,max_apos,m10_acc, \
-                m10_apos,mean_dff,std_dff,min_dff, min_dpos,max_dff,max_dpos,m10_dff,m10_dpos):
+def write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos, max_acc,max_apos, asig1, asig2, asig3, \
+               mean_dff,std_dff,min_dff, min_dpos,max_dff,max_dpos,dsig1, dsig2, dsig3):
 
     """
     write a html page:
@@ -194,18 +196,20 @@ def write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,
         line = line + '<td>' + str(min_dpos[i]) + '</td>\t'
         line = line + '<td>' + str(max_dff[i])  + '</td>\t'
         line = line + '<td>' + str(max_dpos[i]) + '</td>\t'
-        line = line + '<td>' + str(m10_dff[i])  + '</td>\t'
-        line = line + '<td>' + str(m10_dpos[i]) + '</td>\n'
+        line = line + '<td>' + str(dsig1[i])    + '</td>\t'
+        line = line + '<td>' + str(dsig2[i])    + '</td>\t'
+        line = line + '<td>' + str(dsig3[i])    + '</td>\t'
         f.write(line)
         syear = str(year[i])
         smon  = str(month[i])
         if month[i] < 10:
             smon = '0' + smon
-        file = 'ACIS_' + smon + '_' + syear + '_' + ccd 
+        lccd = ccd.replace('_', '')
+        file = 'ACIS_' + smon + '_' + syear + '_' + lccd 
 
-        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Month/' + file + '.fits.gz">fits</a>/</td>\n'
+        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Month/' + file + '.fits.gz">fits</a></td>\n'
         f.write(line)
-        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Image/' + file + '.png">fits</a>/</td>\n\n'
+        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Images/' + file + '.png">map</a></td>\n\n'
         f.write(line)
 
         line =        '<td>' + str(mean_acc[i]) + '</td>\t'
@@ -214,14 +218,15 @@ def write_html(ccd, sec, year,month,mean_acc,std_acc,min_acc,min_apos,  max_acc,
         line = line + '<td>' + str(min_apos[i]) + '</td>\t'
         line = line + '<td>' + str(max_acc[i])  + '</td>\t'
         line = line + '<td>' + str(max_apos[i]) + '</td>\t'
-        line = line + '<td>' + str(m10_acc[i])  + '</td>\t'
-        line = line + '<td>' + str(m10_apos[i]) + '</td>\n'
+        line = line + '<td>' + str(asig1[i])    + '</td>\t'
+        line = line + '<td>' + str(asig2[i])    + '</td>\t'
+        line = line + '<td>' + str(asig3[i])    + '</td>\n'
         f.write(line)
 
-        file = 'ACIS_07_1999_' + smon + '_' + syear + '_' + ccd 
-        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Cumulative/' + file + '.fits.gz">fits</a>/</td>\n'
+        file = 'ACIS_07_1999_' + smon + '_' + syear + '_' + lccd 
+        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Cumulative/' + file + '.fits.gz">fits</a></td>\n'
         f.write(line)
-        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Image/' + file + '.png">fits</a>/</td></tr>\n\n'
+        line = '<td><a href="https://cxc.cfa.harvard.edu/mta_days/mta_max_exp/Images/' + file + '.png">map</a></td></tr>\n\n'
         f.write(line)
 #
 #--- put header every new year so that we can read data easier
@@ -257,8 +262,8 @@ def header_write(f):
 
     f.write('<tr style="color:yellow">\n')
     f.write('<td>&#160;</td><td>&#160;</td>\n')
-    f.write('<td colspan=10>Monlthy</td>\n')
-    f.write('<td colspan=10>Cumulative</td>\n')
+    f.write('<td colspan=11>Monlthy</td>\n')
+    f.write('<td colspan=11>Cumulative</td>\n')
     f.write('</tr><tr>\n')
 
     f.write('<th>Year</th>\n')
@@ -269,8 +274,9 @@ def header_write(f):
     f.write('<th>Min Position</th>\n')
     f.write('<th>Max</th>\n')
     f.write('<th>Max Position</th>\n')
-    f.write('<th>10th Bright</th>\n')
-    f.write('<th>10th Bright  Position</th>\n')
+    f.write('<th>68% Level</th>\n')
+    f.write('<th>95% Level</th>\n')
+    f.write('<th>99.7% Level</th>\n')
     f.write('<th>Data</th>\n')
     f.write('<th>Map</th>\n')
 
@@ -280,8 +286,9 @@ def header_write(f):
     f.write('<th>Min Position</th>\n')
     f.write('<th>Max</th>\n')
     f.write('<th>Max Position</th>\n')
-    f.write('<th>10th Bright</th>\n')
-    f.write('<th>10th Bright  Position</th>\n')
+    f.write('<th>68% Level</th>\n')
+    f.write('<th>95% Level</th>\n')
+    f.write('<th>99.7% Level</th>\n')
     f.write('<th>Data</th>\n')
     f.write('<th>Map</th>\n')
     f.write('</tr>\n')

@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Apr 11, 2013                                                      #
+#       last updated: May 29, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -94,7 +94,7 @@ def acis_create_cumulative(file='NA', comp_test = 'NA'):
 #--- CCD I2
 #
     sec  = 'ACIS' + erange + '_i2.fits'
-    cmd  = 'dmcopy ' + file + '[264:1288,1416:2435] ' + sec
+    cmd  = 'dmcopy ' + file + '[264:1285,1416:2435] ' + sec
     os.system(cmd)
 
     last =  cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_i2.fits.gz'
@@ -107,7 +107,7 @@ def acis_create_cumulative(file='NA', comp_test = 'NA'):
 #--- CCD I3
 #
     sec  = 'ACIS' + erange + '_i3.fits'
-    cmd  = 'dmcopy ' + file + '[1308:2332,1416:2435] ' + sec
+    cmd  = 'dmcopy ' + file + '[1310:2331,1416:2435] ' + sec
     os.system(cmd)
 
     last =  cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_i3.fits.gz'

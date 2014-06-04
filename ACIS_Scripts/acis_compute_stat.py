@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Apr 11, 2013                                                      #
+#       last updated: Mau 29, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -14,6 +14,7 @@ import sys
 import os
 import string
 import re
+import random
 
 #
 #--- reading directory list
@@ -44,13 +45,18 @@ import convertTimeFormat as tcnv
 #
 #--- mta common functions
 #
-import mta_common_functions as mtac
+import mta_common_functions as mcf
 
 #
 #--- Exposure related funcions shared
 #
 
 import exposureFunctions as expf
+#
+#--- temp writing file name
+#
+rtail  = int(10000 * random.random())       #---- put a romdom # tail so that it won't mix up with other scripts space
+zspace = '/tmp/zspace' + str(rtail)
 
 #-----------------------------------------------------------------------------------------------------------
 #-- comp_stat: compute statistics and print them out                                                     ---
@@ -72,27 +78,22 @@ def comp_stat(line, year, month, outfile, comp_test='NA'):
 #-- to avoid get min from outside of the edge of a CCD
 #
 
-    try:
-        os.system('dmimgthresh infile=temp.fits  outfile=zcut.fits  cut="0:1e10" value=0 clobber=yes')
-        os.system('dmstat  infile=zcut.fits  centroid=no > ./result')
-        os.system('rm zcut.fits')
+###    try:
+    os.system('dmimgthresh infile=temp.fits  outfile=zcut.fits  cut="0:1e10" value=0 clobber=yes')
+#
+#-- find avg, min, max and deviation
+#
+    [avg, minv, minp, maxv, maxp, dev] = extract_stat_result('zcut.fits')
+#
+#-- find the one sigma and two sigma count rate:
+#
+    [sigma1, sigma2, sigma3] = find_two_sigma_value('zcut.fits')
 
-#
-#-- find the 10th brightest ccd position and the count
-#
-
-#        upper = find_10th('temp.fits')
-#
-#        cmd   = 'dmimgthresh infile=temp.fits  outfile=zcut.fits  cut="0:' + str(upper) + '" value=0 clobber=yes'
-#        os.system(cmd)
-#        os.system('dmstat  infile=zcut.fits  centroid=no > ./result2')
-#        os.system('rm  zcut.fits')
    
-        print_stat('./result', './result2', year, month, outfile, comp_test)
-#        os.system('rm result result2')
-        os.system('rm result')
-    except:
-        pass
+    print_stat(avg, minv, minp, maxv, maxp, dev, sigma1, sigma2, sigma3,  year, month, outfile, comp_test)
+
+###    except:
+###        pass
 
     os.system('rm temp.fits')
 
@@ -101,71 +102,90 @@ def comp_stat(line, year, month, outfile, comp_test='NA'):
 #-----------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------
 
-def find_10th(fits_file):
+def find_two_sigma_value(fits_file):
 
     """
-    find 10th brightest value    input: fits file
     """
 #
 #-- make histgram
 #
     cmd = ' dmimghist infile=' + fits_file + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
     os.system(cmd)
-    os.system('dmlist infile=outfile.fits outfile=./zout opt=data')
+    cmd = 'dmlist infile=outfile.fits outfile=' + zspace + ' opt=data'
+    os.system(cmd)
 
-    f    = open('./zout', 'r')
+    f    = open(zspace, 'r')
     data = [line.strip() for line in f.readlines()]
     f.close()
-    os.system('rm outfile.fits ./zout')
+    mcf.rm_file(zspace)
 #
 #--- read bin # and its count rate
 #
     hbin = []
     hcnt = []
+    vsum = 0
 
     for ent in data:
-        try:
-            atemp = re.split('\s+|\t+', ent)
-            if (len(atemp) > 3) and mtac.chkNumeric(atemp[1])  and mtac.chkNumeric(atemp[2])  and (int(atemp[4]) > 0):
-                hbin.append(float(atemp[1]))
-                hcnt.append(int(atemp[4]))
-        except:
-            pass
+###        try:
+        atemp = re.split('\s+|\t+', ent)
+        if mcf.chkNumeric(atemp[0]):
+            hbin.append(float(atemp[1]))
+            val = int(atemp[4])
+            hcnt.append(val)
+            vsum += val
+###        except:
+###            pass
 
 #
-#--- checking 10 th bright position
+#--- checking one sigma and two sigma counts
 #
-    try:
-        j = 0
-        for i in  range(len(hbin)-1, 0, -1):
-            if j == 9:
-                val = i
+
+    if len(hbin) > 0:
+        v68    = int(0.68 * vsum)
+        v95    = int(0.95 * vsum)
+        v99    = int(0.997 * vsum)
+        sigma1 = -999
+        sigma2 = -999
+        sigma3 = -999
+        acc    = 0
+        for i in range(0, len(hbin)):
+            acc += hcnt[i]
+            if acc > v68 and sigma1 < 0:
+                sigma1 = hbin[i]
+            elif acc > v95 and sigma2 < 0:
+                sigma2 = hbin[i]
+            elif acc > v99 and sigma3 < 0:
+                sigma3 = hbin[i]
                 break
-            else:
-                if hcnt[i] > 0:                 #---- only when the value is larger than 0, record as count
-                    j += 1
 
-        return hbin[val]
-    except:
-        return 'I/INDEF'
+        return (sigma1, sigma2, sigma3)
+
+    else:
+        return(0, 0, 0)
 
 
 #-----------------------------------------------------------------------------------------------------------
-#-- print_stat: print out statistic                                                                      ---
+#-----------------------------------------------------------------------------------------------------------
 #-----------------------------------------------------------------------------------------------------------
 
-def print_stat(result, result2, year, month, outfile, comp_test ='NA'):
+def extract_stat_result(file):
 
     """
-    print out statistic
-        input: result and result2 (output of dmstat)
-               year, month
-               outfile: the name of output file
+    extract stat informaiton:
+    Input:  file    --- image fits file 
+    Output: avg
+            minp
+            maxp
+            devp 
     """
+    cmd = 'dmstat infile=' + file + '  centroid=no >' + zspace
+    os.system(cmd)
 
-    f    = open(result, 'r')
+    f    = open(zspace, 'r')
     data = [line.strip() for line in f.readlines()]
     f.close()
+
+    mcf.rm_file(zspace)
 
 #
 #--- extract mean, dev, min, and max
@@ -179,39 +199,37 @@ def print_stat(result, result2, year, month, outfile, comp_test ='NA'):
         m4 = re.search('sigma',ent)
 
         if m1 is not None:
-            mean = atemp[1]
+            avg   = atemp[1]
 
         if m2 is not None:
-            min   = atemp[1]
+            minv   = atemp[1]
             btemp = re.split('\(', ent)
             ctemp = re.split('\s+|\t+', btemp[1])
-            min_pos = '(' + ctemp[1] + ',' + ctemp[2] + ')'
+            minp  = '(' + ctemp[1] + ',' + ctemp[2] + ')'
 
         if m3 is not None:
-            max   = atemp[1]
+            maxv   = atemp[1]
             btemp = re.split('\(', ent)
             ctemp = re.split('\s+|\t+', btemp[1])
-            max_pos = '(' + ctemp[1] + ',' + ctemp[2] + ')'
+            maxp  = '(' + ctemp[1] + ',' + ctemp[2] + ')'
 
         if m4 is not None:
             dev = atemp[1]
 
-#
-#--- 10th brightest case
-#
+    return [avg, minv, minp, maxv,  maxp, dev]
 
-#    f    = open(result2, 'r')
-#    data = [line.strip() for line in f.readlines()]
-#    f.close()
-#
-#    for  ent in data:
-#        m = re.search('max', ent)
-#        if m is not None:
-#            atemp = re.split('\s+|\t+', ent)
-#            max2  = atemp[1]
-#            btemp = re.split('\(', ent)
-#            ctemp = re.split('\s+|\t+', btemp[1])
-#            max_pos2 = '(' + ctemp[1] + ',' + ctemp[2] + ')'
+#-----------------------------------------------------------------------------------------------------------
+#-- print_stat: print out statistic                                                                      ---
+#-----------------------------------------------------------------------------------------------------------
+
+def print_stat(avg, minv, minp, maxv, maxp, dev, sigma1, sigma2, sigma3, year, month, outfile, comp_test ='NA'):
+
+    """
+    print out statistic
+        input: result and result2 (output of dmstat)
+               year, month
+               outfile: the name of output file
+    """
 
 #
 #--- print out data
@@ -225,15 +243,10 @@ def print_stat(result, result2, year, month, outfile, comp_test ='NA'):
     f    = open(line, 'a')
 
     line = '%i\t%i\t'       % (year, month)
-    f.write(line)
-    line = '%5.6f\t%5.6f\t' % (float(mean), float(dev))
-    f.write(line)
-    line = '%5.1f\t%s\t'    % (float(min), min_pos)
-    f.write(line)
-    line = '%5.1f\t%s\t'    % (float(max), max_pos)
-    f.write(line)
-#    line = '%5.1f\t%s\n'    % (float(max2), max_pos2)
-    line = '%5.1f\t%s\n'    % (0, '(0,0)')
+    line = line + '%5.6f\t%5.6f\t' % (float(avg), float(dev))
+    line = line + '%5.1f\t%s\t'    % (float(minv), minp)
+    line = line + '%5.1f\t%s\t'    % (float(maxv), maxp)
+    line = line + '%5.1f\t%5.1f\t%5.1f\n'    % (float(sigma1), float(sigma2), float(sigma3))
     f.write(line)
     f.close()
 
@@ -258,7 +271,6 @@ def acis_dose_extract_stat_data_month(year='NA', month='NA', comp_test = 'NA'):
     else:
         tmon_dir = mon_dir
         tcum_dir = cum_dir
-
 
     if year == 'NA' or month == 'NA':
 
@@ -433,6 +445,15 @@ def acis_dose_extract_stat_data_month(year='NA', month='NA', comp_test = 'NA'):
 
 #--------------------------------------------------------------------------------------------------------
 
+if len(sys.argv) == 3:
+    year = sys.argv[1] 
+    year = int(year)
+    mon  = sys.argv[2]
+    mon  = int(mon)
+else:
+    year = 'na'
+    mon  = 'na'
+
 if __name__ == '__main__':
     
-    acis_dose_extract_stat_data_month()
+    acis_dose_extract_stat_data_month(year, mon)
