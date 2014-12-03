@@ -7,7 +7,7 @@
 #                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                               #
 #                                                                                               #
-#       last update: Jun 04, 2014                                                               #
+#       last update: Dec 03, 2014                                                               #
 #                                                                                               #
 #################################################################################################
 
@@ -16,6 +16,13 @@ import os
 import string
 import re
 import random
+
+#
+#--- from ska
+#
+from Ska.Shell import getenv, bash
+
+ascdsenv = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
 
 #
 #--- reading directory list
@@ -78,10 +85,14 @@ def comp_stat(file, year, month, out):
 #
 #--- to avoid getting min value from the outside of the frame edge of a CCD, set threshold
 #
-        cmd = '/bin/nice -n15 dmimgthresh infile=' + file + ' outfile=zcut.fits  cut="0:1.e10" value=0 clobber=yes'
-        os.system(cmd)
-        cmd = 'dmstat  infile=zcut.fits  centroid=no >' + zspace
-        os.system(cmd)
+        cmd1 = "/usr/bin/env PERL5LIB="
+        cmd2 = ' /bin/nice -n15 dmimgthresh infile=' + file + ' outfile=zcut.fits  cut="0:1.e10" value=0 clobber=yes'
+        cmd  = cmd1 + cmd2
+        bash(cmd,  env=ascdsenv)
+        cmd1 = "/usr/bin/env PERL5LIB="
+        cmd2 = ' dmstat  infile=zcut.fits  centroid=no >' + zspace
+        cmd  = cmd1 + cmd2
+        bash(cmd,  env=ascdsenv)
 
         mcf.rm_file('./zcut.fits')
 
@@ -197,10 +208,16 @@ def find_two_sigma_value(fits):
 #
 #-- make histgram
 #
-    cmd = ' dmimghist infile=' + fits + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
-    os.system(cmd)
-    cmd = 'dmlist infile=outfile.fits outfile=' + zspace + ' opt=data'
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimghist infile=' + fits + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
+
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmlist infile=outfile.fits outfile=' + zspace + ' opt=data'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
+
     
     f= open(zspace, 'r')
     data = [line.strip() for line in f.readlines()]

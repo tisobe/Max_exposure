@@ -45,7 +45,7 @@ sys.path.append(mta_dir)
 #--- this convert fits files to image files
 #
 
-import mta_convert_fits_to_image as mtaimg
+import mta_convert_fits_to_image_ciao as mtaimg
 
 #
 #--- check whose account, and set a path to temp location

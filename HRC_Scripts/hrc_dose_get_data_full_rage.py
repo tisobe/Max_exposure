@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Mar 03, 2014                                                      #
+#       last updated: Dec 03, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -15,6 +15,12 @@ import sys
 import os
 import string
 import re
+#
+#--- from ska
+#
+from Ska.Shell import getenv, bash
+
+ascdsenv = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
 
 #
 #--- reading directory list
@@ -86,6 +92,12 @@ ystart_s_c.append(22528)
 yend_s_c  = []
 yend_s_c.append(26623)
 
+#
+#--- a couple of things needed
+#
+dare   = mtac.get_val('.dare',   dir = bindata_dir, lst=1)
+hakama = mtac.get_val('.hakama', dir = bindata_dir, lst=1)
+
 
 #-----------------------------------------------------------------------------------------------------------
 #--- hrc_dose_get_data: extract HRC evt1 data fro a month and create cumulative data fits file            --
@@ -100,12 +112,12 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
 
     if startYear == 'NA' or startMonth == 'NA' or stopYear == 'NA' or stopMonth == 'NA':
         startYear  = raw_input('Starting Year: ')
-        startyear  = int(startYear)
+        startYear  = int(startYear)
         startMonth = raw_input('Starting Month: ')
         startMonth = int(startMonth)
 
         stopYear   = raw_input('Stopping Year: ')
-        stopyear   = int(stopYear)
+        stopYear   = int(stopYear)
         stopMonth  = raw_input('Stopping Month: ')
         stopMonth  = int(stopMonth)
 
@@ -141,18 +153,48 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
 #
 #--- using ar4gl, get file names
 #
-            ydate1 = tcnv.findYearDate(year, month, 1)
+            smonth = str(month)
+            if month < 10:
+                smonth = '0' + smonth
+
+            syear = str(year)
+            start = smonth + '/01/' + syear[2] + syear[3] + ',00:00:00'
 
             nextMonth = month + 1
             if nextMonth > 12:
                 lyear     = year + 1
-                ydate2 = tcnv.findYearDate(lyear, 1, 1)
+                nextMonth = 1
             else:
                 lyear  = year                
-                ydate2 = tcnv.findYearDate(year, nextMonth, 1)
 
-            fitsList = mtac.useArc4gl('browse', 'flight', 'hrc', 1, 'evt1', year, ydate1, lyear, ydate2)
+            smonth = str(nextMonth)
+            if nextMonth < 10:
+                smonth = '0' + smonth
 
+            syear = str(lyear)
+            stop  = smonth + '/01/' + syear[2] + syear[3] + ',00:00:00'
+
+            line = 'operation=browse\n'
+            line = line + 'dataset=flight\n'
+            line = line + 'detector=hrc\n'
+            line = line + 'level=1\n'
+            line = line + 'filetype=evt1\n'
+            line = line + 'tstart=' + start + '\n'
+            line = line + 'tstop=' +  stop  + '\n'
+            line = line + 'go\n'
+            f    = open('./zspace', 'w')
+            f.write(line)
+            f.close()
+            cmd1 = "/usr/bin/env PERL5LIB="
+            cmd2 =  ' echo ' +  hakama + ' |arc4gl -U' + dare + ' -Sarcocc -i./zspace > ./zout'
+            cmd  = cmd1 + cmd2
+            bash(cmd,  env=ascdsenv)
+            mtac.rm_file('./zspace')
+
+            f    = open('./zout', 'r')
+            fitsList = [line.strip() for line in f.readlines()]
+            f.close()
+            mtac.rm_file('./zout')
 
 #
 #--- extract each evt1 file, extract the central part, and combine them into a one file
@@ -162,9 +204,33 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
             hrciCnt_c = 0
             hrcsCnt_c = 0
 
-            for file in fitsList:
+            for line in fitsList:
+                m = re.search('fits', line)
+                if m is None:
+                    continue
+
                 try:
-                    [fitsName] = mtac.useArc4gl('retrieve','flight', 'hrc', 1, 'evt1', filename=file)
+#                    [fitsName] = mtac.useArc4gl('retrieve','flight', 'hrc', 1, 'evt1', filename=file)
+                    atemp = re.split('\s+', line)
+                    fitsName  = atemp[0]
+                    line = 'operation=retrieve\n'
+                    line = line + 'dataset=flight\n'
+                    line = line + 'detector=hrc\n'
+                    line = line + 'level=1\n'
+                    line = line + 'filetype=evt1\n'
+                    line = line + 'filename=' + fitsName + '\n'
+                    line = line + 'go\n'
+                    f    = open('./zspace', 'w')
+                    f.write(line)
+                    f.close()
+                    cmd1 = "/usr/bin/env PERL5LIB="
+                    cmd2 =  ' echo ' +  hakama + ' |arc4gl -U' + dare + ' -Sarcocc -i./zspace'
+                    cmd  = cmd1 + cmd2
+                    bash(cmd,  env=ascdsenv)
+                    mtac.rm_file('./zspace')
+
+                    cmd = 'gzip -d ' + fitsName + '.gz'
+                    os.system(cmd)
                 except:
                     continue
 
@@ -371,11 +437,16 @@ def createCumulative(year, month, detector,  type, arch_dir, i=0):
 
     if chk > 0: 
         line = arch_dir + '/Month_hrc/' + hrc + '[opt type=i2,null=-99]'
-        cmd  = 'dmcopy infile="' + line + '"  outfile="./ztemp.fits"  clobber="yes"'
-        os.system(cmd)
+        cmd1 = "/usr/bin/env PERL5LIB="
+        cmd2 = ' dmcopy infile="' + line + '"  outfile="./ztemp.fits"  clobber="yes"'
+        cmd  = cmd1 + cmd2
+        bash(cmd,  env=ascdsenv)
 
-        cmd  = 'dmimgcalc infile=' + arch_dir + 'Cumulative_hrc/' + chrc + ' infile2=ztemp.fits outfile =' + chrc2 + ' operation=add clobber=yes'
-        os.system(cmd)
+        cmd1 = "/usr/bin/env PERL5LIB="
+        cmd2 = ' dmimgcalc infile=' + arch_dir + 'Cumulative_hrc/' + chrc + ' infile2=ztemp.fits outfile =' + chrc2 + ' operation=add clobber=yes'
+        cmd  = cmd1 + cmd2
+        bash(cmd,  env=ascdsenv)
+
         os.system('rm ./ztemp.fits')
 
         cmd  = 'gzip ' + chrc2
@@ -415,8 +486,11 @@ def findEntry(file, term):
     'find a value corresponding to a given marker in a fits file: input: file name, marker. the file must be an output of dmlist opt=data.'
 
     val = 'NA'
-    cmd = 'dmlist infile=' + file + ' opt=head > zout'
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmlist infile=' + file + ' opt=head > zout'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
+
     f    = open('zout', 'r')
     data = [line.strip() for line in f.readlines()]
     f.close()
