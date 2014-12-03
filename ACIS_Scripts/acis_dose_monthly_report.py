@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Apr 11, 2013                                                      #
+#       last updated: Nov 04, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -14,6 +14,14 @@ import sys
 import os
 import string
 import re
+
+#
+#--- from ska
+#
+from Ska.Shell import getenv, bash
+
+ascdsenv = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
+
 
 #
 #--- reading directory list
@@ -178,8 +186,10 @@ def getstat(fits):
     output: (mean, std, min, max)
     """
 
-    cmd = 'dmstat ' + fits + ' centroid=no > ./ztemp'
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmstat ' + fits + ' centroid=no > ./ztemp'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
     f    = open('./ztemp', 'r')
     data = [line.strip() for line in f.readlines()]

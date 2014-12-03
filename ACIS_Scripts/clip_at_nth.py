@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Apr 11, 2013                                                      #
+#       last updated: Nov 04, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -15,6 +15,13 @@ import os
 import string
 import re
 import fnmatch
+
+#
+#--- from ska
+#
+from Ska.Shell import getenv, bash
+
+ascdsenv = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
 
 #
 #--- reading directory list
@@ -71,8 +78,10 @@ def clip_at_nth(infits, cut=10):
 #
     upper = find_nth(infits, cut)
 
-    cmd   = 'dmimgthresh infile=' + infits+ ' outfile=zout.fits cut="0:' + str(upper) + '" value=0 clobber=yes'
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimgthresh infile=' + infits+ ' outfile=zout.fits cut="0:' + str(upper) + '" value=0 clobber=yes'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
     outfile = infits.replace('.fits','_full.fits')
     cmd     = 'mv ' + infits + ' ' + outfile
@@ -105,9 +114,16 @@ def find_nth(fits_file = 'NA', cut= 10):
 #
 #-- make histgram
 #
-    cmd = ' dmimghist infile=' + fits_file + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
-    os.system(cmd)
-    os.system('dmlist infile=outfile.fits outfile=./zout opt=data')
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimghist infile=' + fits_file + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
+
+    
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 =' dmlist infile=outfile.fits outfile=./zout opt=data'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
     f    = open('./zout', 'r')
     data = [line.strip() for line in f.readlines()]

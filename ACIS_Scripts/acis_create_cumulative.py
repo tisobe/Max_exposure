@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: May 29, 2014                                                      #
+#       last updated: Dec 03, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -15,6 +15,13 @@ import sys
 import os
 import string
 import re
+
+#
+#--- from ska
+#
+from Ska.Shell import getenv, bash
+
+ascdsenv = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
 
 #
 #--- reading directory list
@@ -87,67 +94,80 @@ def acis_create_cumulative(file='NA', comp_test = 'NA'):
 #
     last =  cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '.fits.gz'
     out  = 'ACIS_07_1999' + erange + '.fits'
-    cmd  = 'dmimgcalc ' + last + ' ' + file + ' ' + out + ' add'
-    os.system(cmd)
-
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimgcalc ' + last + ' ' + file + ' ' + out + ' add'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 #
 #--- CCD I2
 #
     sec  = 'ACIS' + erange + '_i2.fits'
-    cmd  = 'dmcopy ' + file + '[264:1285,1416:2435] ' + sec
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmcopy ' + file + '[264:1285,1416:2435] ' + sec
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
     last =  cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_i2.fits.gz'
     out  = 'ACIS_07_1999' + erange + '_i2.fits'
-    cmd  = 'dmimgcalc ' + last + ' ' + sec + ' ' + out + ' add'
-    os.system(cmd)
-    
-
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimgcalc ' + last + ' ' + sec + ' ' + out + ' add'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 #
 #--- CCD I3
 #
     sec  = 'ACIS' + erange + '_i3.fits'
-    cmd  = 'dmcopy ' + file + '[1310:2331,1416:2435] ' + sec
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmcopy ' + file + '[1310:2331,1416:2435] ' + sec
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
     last =  cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_i3.fits.gz'
     out  = 'ACIS_07_1999' + erange + '_i3.fits'
-    cmd  = 'dmimgcalc ' + last + ' ' + sec + ' ' + out + ' add'
-    os.system(cmd)
-    
-
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimgcalc ' + last + ' ' + sec + ' ' + out + ' add'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 #
 #--- CCD S2
 #
     sec  = 'ACIS' + erange + '_s2.fits'
-    cmd  = 'dmcopy ' + file + '[80:1098,56:1076] ' + sec
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmcopy ' + file + '[80:1098,56:1076] ' + sec
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
     last =  cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_s2.fits.gz'
     out  = 'ACIS_07_1999' + erange + '_s2.fits'
-    cmd  = 'dmimgcalc ' + last + ' ' + sec + ' ' + out + ' add'
-    os.system(cmd)
-    
-
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimgcalc ' + last + ' ' + sec + ' ' + out + ' add'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 #
 #--- CCD S3
 #
     sec  = 'ACIS' + erange + '_s3.fits'
-    cmd  = 'dmcopy ' + file + '[1122:2141,56:1076] ' + sec
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmcopy ' + file + '[1122:2141,56:1076] ' + sec
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
     last =  cum_dir + 'ACIS_07_1999_' + smon + '_' + syear + '_s3.fits.gz'
     out  = 'ACIS_07_1999' + erange + '_s3.fits'
-    cmd  = 'dmimgcalc ' + last + ' ' + sec + ' ' + out + ' add'
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimgcalc ' + last + ' ' + sec + ' ' + out + ' add'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
     
 #
 #--- gip the files and move to depositories
 #
     mfits = 'ACIS' + erange + '*.fits'
     cfits = 'ACIS_07_1999' + erange + '*.fits'
-    cmd   = 'gzip ' + mfits + ' ' + cfits
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' gzip ' + mfits + ' ' + cfits
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 #
 #-- if this is a test, output directory is different
 #

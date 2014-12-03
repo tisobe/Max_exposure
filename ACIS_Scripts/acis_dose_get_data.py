@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Apr 11, 2013                                                      #
+#       last updated: Dec 03, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -14,6 +14,12 @@ import sys
 import os
 import string
 import re
+
+#
+#--- from ska
+#
+from Ska.Shell import getenv, bash
+ascdsenv  = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
 
 #
 #--- reading directory list
@@ -53,6 +59,12 @@ import mta_common_functions as mtac
 
 import exposureFunctions as expf
 
+#
+#--- a couple of things needed
+#
+dare   = mtac.get_val('.dare',   dir = bindata_dir, lst=1)
+hakama = mtac.get_val('.hakama', dir = bindata_dir, lst=1)
+
 
 #-----------------------------------------------------------------------------------------------------------
 #-- acis_dose_get_data: extract ACIS evt1 data and create combined image file                            ---
@@ -67,14 +79,14 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
     if startYear == 'NA' or startMonth == 'NA'or stopYear == 'NA' or stopMonth == 'NA':
 
         startYear  = raw_input('Start Year: ')
-        startyear  = int(startYear)
+        startYear  = int(float(startYear))
         startMonth = raw_input('Start Month: ')
-        startMonth = int(startMonth)
+        startMonth = int(float(startMonth))
 
         stopYear   = raw_input('Stop Year: ')
-        stopyear   = int(stopYear)
+        stopYear   = int(float(stopYear))
         stopMonth  = raw_input('Stop Month: ')
-        stopMonth  = int(stopMonth)
+        stopMonth  = int(float(stopMonth))
 #
 #--- start extracting the data for the year/month period
 #
@@ -93,31 +105,78 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
 #
 #--- using ar4gl, get file names
 #
-            ydate1 = tcnv.findYearDate(year, month, 1)
+#            ydate1 = tcnv.findYearDate(year, month, 1)
+            start = smonth + '/01/' + syear + ',00:00:00'
 
             nextMonth = month + 1
+#            if nextMonth > 12:
+#                nyear     = year + 1
+#                ydate2 = tcnv.findYearDate(nyear, 1, 1)
+#            else:
+#                nyear  = year                
+#                ydate2 = tcnv.findYearDate(year, nextMonth, 1)
+            nyear = year + 1
             if nextMonth > 12:
-                nyear     = year + 1
-                ydate2 = tcnv.findYearDate(nyear, 1, 1)
-            else:
-                nyear  = year                
-                ydate2 = tcnv.findYearDate(year, nextMonth, 1)
+                nextMonth = 1
+                nyear += 1
+            syear = str(nyear)
+            smon  = str(nextMonth)
+            if nextMonth < 10:
+                smon = '0' + smon
+            stop = smon + '/01/' + syear[2] + syear[3] + ',00:00:00'
+            
 
-            fitsList = mtac.useArc4gl('browse', 'flight', 'acis', 1, 'evt1', year, ydate1, nyear, ydate2)
 
+            line = 'operation=browse\n'
+            line = line + 'dataset=flight\n'
+            line = line + 'detector=acis\n'
+            line = line + 'level=1\n'
+            line = line + 'filetype=evt1\n'
+            line = line + 'tstart=' + start + '\n'
+            line = line + 'tstop=' +  stop  + '\n'
+            line = line + 'go\n'
+            f    = open('./zspace', 'w')
+            f.write(line)
+            f.close()
+            cmd1 = "/usr/bin/env PERL5LIB="
+            cmd2 =  ' echo ' +  hakama + ' |arc4gl -U' + dare + ' -Sarcocc -i./zspace > ./zout'
+            cmd  = cmd1 + cmd2
+            bash(cmd,  env=ascdsenv)
+            mtac.rm_file('./zspace')
 
+            f    = open('./zout', 'r')
+            fitsList = [line.strip() for line in f.readlines()]
+            f.close()
+            mtac.rm_file('./zout')
 #
 #--- extract each evt1 file, extract the central part, and combine them into a one file
 #
             i = 0
             acisCnt = 0
 
-            for file in fitsList:
-                m = re.search('fits', file)
+            for  line in fitsList:
+                m = re.search('fits', line)
                 if m is not None:
+                    atemp = re.split('\s+', line)
+                    file  = atemp[0]
+                    line = 'operation=retrieve\n'
+                    line = line + 'dataset=flight\n'
+                    line = line + 'detector=acis\n'
+                    line = line + 'level=1\n'
+                    line = line + 'filetype=evt1\n'
+                    line = line + 'filename=' + file + '\n'
+                    line = line + 'go\n'
+                    f    = open('./zspace', 'w')
+                    f.write(line)
+                    f.close()
+                    cmd1 = "/usr/bin/env PERL5LIB="
+                    cmd2 =  ' echo ' +  hakama + ' |arc4gl -U' + dare + ' -Sarcocc -i./zspace'
+                    cmd  = cmd1 + cmd2
+                    bash(cmd,  env=ascdsenv)
+                    mtac.rm_file('./zspace')
                         
-                    fitsName = mtac.useArc4gl('retrieve','flight', 'acis', 1, 'evt1', filename=file)
-
+                    cmd = 'gzip -d ' + file + '.gz'
+                    os.system(cmd)
                     line = file + '[EVENTS][bin tdetx=2800:5200:1, tdety=1650:4150:1][option type=i4]'
 
                     ichk =  expf.create_image(line, 'ztemp.fits')               #---  create an image file
@@ -144,8 +203,10 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
             upper = find_10th(outfile)
 
             outfile2 = './ACIS_' + smonth + '_' + lyear + '.fits'
-            cmd   = 'dmimgthresh infile=' + outfile + ' outfile=' + outfile2 + ' cut="0:' + str(upper) + '" value=0 clobber=yes'
-            os.system(cmd)
+            cmd1 = "/usr/bin/env PERL5LIB="
+            cmd2 = ' dmimgthresh infile=' + outfile + ' outfile=' + outfile2 + ' cut="0:' + str(upper) + '" value=0 clobber=yes'
+            cmd = cmd1 + cmd2
+            bash(cmd,  env=ascdsenv)
 
             cmd   = 'gzip ' + outfile
             os.system(cmd)
@@ -164,9 +225,15 @@ def find_10th(fits_file):
 #
 #-- make histgram
 #
-    cmd = ' dmimghist infile=' + fits_file + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
-    os.system(cmd)
-    os.system('dmlist infile=outfile.fits outfile=./zout opt=data')
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimghist infile=' + fits_file + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
+
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 =' dmlist infile=outfile.fits outfile=./zout opt=data'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
     f    = open('./zout', 'r')
     data = [line.strip() for line in f.readlines()]

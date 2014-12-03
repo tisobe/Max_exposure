@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Mau 29, 2014                                                      #
+#       last updated: Dec 03, 2014                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -15,6 +15,13 @@ import os
 import string
 import re
 import random
+
+#
+#--- from ska
+#
+from Ska.Shell import getenv, bash
+
+ascdsenv = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
 
 #
 #--- reading directory list
@@ -71,15 +78,20 @@ def comp_stat(line, year, month, outfile, comp_test='NA'):
            Example: ACIS_04_2012.fits.gz[1:1024,1:256]
     """
 
-    cmd = 'dmcopy ' + line + ' temp.fits clobber="yes"'
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmcopy ' + line + ' temp.fits clobber="yes"'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
 #
 #-- to avoid get min from outside of the edge of a CCD
 #
 
 ###    try:
-    os.system('dmimgthresh infile=temp.fits  outfile=zcut.fits  cut="0:1e10" value=0 clobber=yes')
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimgthresh infile=temp.fits  outfile=zcut.fits  cut="0:1e10" value=0 clobber=yes'
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 #
 #-- find avg, min, max and deviation
 #
@@ -109,10 +121,15 @@ def find_two_sigma_value(fits_file):
 #
 #-- make histgram
 #
-    cmd = ' dmimghist infile=' + fits_file + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
-    os.system(cmd)
-    cmd = 'dmlist infile=outfile.fits outfile=' + zspace + ' opt=data'
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmimghist infile=' + fits_file + '  outfile=outfile.fits hist=1::1 strict=yes clobber=yes'
+    cmd  = cmd1 + cmd2 
+    bash(cmd,  env=ascdsenv)
+
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmlist infile=outfile.fits outfile=' + zspace + ' opt=data'
+    cmd  = cmd1 + cmd2 
+    bash(cmd,  env=ascdsenv)
 
     f    = open(zspace, 'r')
     data = [line.strip() for line in f.readlines()]
@@ -178,8 +195,10 @@ def extract_stat_result(file):
             maxp
             devp 
     """
-    cmd = 'dmstat infile=' + file + '  centroid=no >' + zspace
-    os.system(cmd)
+    cmd1 = "/usr/bin/env PERL5LIB="
+    cmd2 = ' dmstat infile=' + file + '  centroid=no >' + zspace
+    cmd  = cmd1 + cmd2
+    bash(cmd,  env=ascdsenv)
 
     f    = open(zspace, 'r')
     data = [line.strip() for line in f.readlines()]
