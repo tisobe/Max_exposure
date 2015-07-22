@@ -8,7 +8,7 @@ html pages.
 How to Run Them
 ################
 
-1. ssh into r2d2 as mta
+1. ssh into c3po-v as mta
 2. Go to /data/mta/Script/Exposure/Exc
 3a. For ACIS, run:
 	/data/mta/Script/Exposure/Scripts/ACIS_Scripts/acis_dose_wrap_script
@@ -104,13 +104,13 @@ data_out_hrc: Contains histrical data for hrc full image
    	<year>, <month>, <mean>, <std.,<min>, <min location>, <max>, <max location>, <10th brightest>, <location of 10th brightest>
 
 plot_dir: contains plots of exposure histories
-	i_<ccd>_n_<section>.gif:   acis <ccd>, <section>  plot 
+	i_<ccd>_n_<section>.png:   acis <ccd>, <section>  plot 
 	i_<ccd>_n_<section>.html   acis <ccd>, <section>  html page for the plot
 
-	hrci.gif:		   hrc i plot
-	hrcs.gif:		   hrc s plot
-	hrci_<section>.gif:	   hrc i plot for <section>
-	hrcs_<section>.gif:	   hrc s plot for <section>
+	hrci.png:		   hrc i plot
+	hrcs.png:		   hrc s plot
+	hrci_<section>.png:	   hrc i plot for <section>
+	hrcs_<section>.png:	   hrc s plot for <section>
 	hrci.html:		   hrc i html page for the plot
 	hrcs.html:		   hrc s html page for the plot
 
@@ -132,7 +132,7 @@ img_dir: containing image maps of ACIS and HRC
 	HRCI_08_1999_<month>_<year>.png		hrc i cumulative image for <month> <year>
 	HRCS_08_1999_<month>_<year>.png		hrc s cumulative image for <month> <year>
 
-	hrc_max_exp.gif:			monthly report plot
+	hrc_max_exp.png:			monthly report plot
 
 ####################
 Script Descriptions
@@ -222,7 +222,7 @@ clean: if it is not "NA", clean the data files (removing duplicate and add missi
 
 Output:
 in plot_dir:
-	i_<ccd>_n_<section>.gif:   acis <ccd>, <section>  plot 
+	i_<ccd>_n_<section>.png:   acis <ccd>, <section>  plot 
 
 acis_dose_create_image.py
 -------------------------
@@ -353,10 +353,10 @@ Input:
 
 Output:
 in plot_dir:
-	hrci.gif:		   hrc i plot
-	hrcs.gif:		   hrc s plot
-	hrci_<section>.gif:	   hrc i plot for <section>
-	hrcs_<section>.gif:	   hrc s plot for <section>
+	hrci.png:		   hrc i plot
+	hrcs.png:		   hrc s plot
+	hrci_<section>.png:	   hrc i plot for <section>
+	hrcs_<section>.png:	   hrc s plot for <section>
 
 hrc_dose_create_image.py
 ------------------------
@@ -399,7 +399,7 @@ Input:
 
 Output:
 in imag_dir:
-	hrc_max_exp.gif
+	hrc_max_exp.png
 
 
 ++++++++++++++++++++++++++
@@ -430,7 +430,7 @@ Input:
     	size       # size of the output image; format: 125x125 --- no contorl of size on ps and jpg file
     	color      # color of the output image: hear, rainbow1 etc. default is grey
                  	to see which color is available, type: 'ls /home/ascds/DS.release/data/*.lut'
-    	type       # image type: ps, gif, jpg, or png
+    	type       # image type: ps, png, jpg, or png
 
 Output:
 	outfile.<type>
