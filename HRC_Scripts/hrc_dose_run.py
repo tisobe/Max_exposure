@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Jun 11, 2013                                                      #
+#       last updated: Nov 03, 2015                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -88,12 +88,30 @@ def hrc_dose_run(year='NA', month='NA', comp_test = 'NA'):
             lmonth = 12
             lyear -= 1
 
-    hgdata.hrc_dose_get_data(lyear, lmonth, lyear, lmonth, comp_test)          #---- extracting data
-    hstat.hrc_dose_extract_stat_data_month(lyear, lmonth, comp_test)           #---- computing statistics
-    hhtml.hrc_dose_make_data_html(comp_test=comp_test)                         #---- creating html pages
-    hplot.hrc_dose_plot_exposure_stat(comp_test=comp_test)                     #---- plotting histories
-    himg.create_hrc_maps(lyear, lmonth, comp_test)                             #---- creating map images
-    monthly.hrc_dose_plot_monthly_report(comp_test = comp_test)                #---- plotting monthly report trend
+    try:
+        hgdata.hrc_dose_get_data(lyear, lmonth, lyear, lmonth, comp_test)          #---- extracting data
+    except:
+        pass
+    try:
+        hstat.hrc_dose_extract_stat_data_month(lyear, lmonth, comp_test)           #---- computing statistics
+    except:
+        pass
+    try:
+        hhtml.hrc_dose_make_data_html(comp_test=comp_test)                         #---- creating html pages
+    except:
+        pass
+    try:
+        hplot.hrc_dose_plot_exposure_stat(comp_test=comp_test)                     #---- plotting histories
+    except:
+        pass
+    try:
+        himg.create_hrc_maps(lyear, lmonth, comp_test)                             #---- creating map images
+    except:
+        pass
+    try:
+        monthly.hrc_dose_plot_monthly_report(comp_test = comp_test)                #---- plotting monthly report trend
+    except:
+        pass
 
 #
 #--- change the group to mtagroup

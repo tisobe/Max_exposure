@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: Jun 04, 2014                                                       #
+#       last update: Jul 06, 2015                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -102,14 +102,17 @@ def hrc_dose_plot_exposure_stat(indir = 'NA', indir2 = 'NA', outdir = 'NA', clea
 #
 #--- plot data
 #
-            plot_hrc_dose(date, mean_acc, min_acc, max_acc, s1_acc, s2_acc, s3_acc, mean_dff, min_dff, max_dff, s1_dff, s2_dff, s3_dff)
+            try:
+                plot_hrc_dose(date, mean_acc, min_acc, max_acc, s1_acc, s2_acc, s3_acc, mean_dff, min_dff, max_dff, s1_dff, s2_dff, s3_dff)
 
 #
 #--- move to the plot directory
 #
-            outfile = inst + '.png'
-            cmd     = 'mv hrc.png ' + plot_dir_full +  outfile
-            os.system(cmd)
+                outfile = inst + '.png'
+                cmd     = 'mv hrc.png ' + plot_dir_full +  outfile
+                os.system(cmd)
+            except:
+                pass
 #
 #--- central part of the data---------
 #
@@ -119,14 +122,17 @@ def hrc_dose_plot_exposure_stat(indir = 'NA', indir2 = 'NA', outdir = 'NA', clea
 #
 #--- plot data
 #
-        plot_hrc_dose(date, mean_acc, min_acc, max_acc, s1_acc, s2_acc, s3_acc, mean_dff, min_dff, max_dff, s1_dff, s2_dff, s3_dff)
+        try:
+            plot_hrc_dose(date, mean_acc, min_acc, max_acc, s1_acc, s2_acc, s3_acc, mean_dff, min_dff, max_dff, s1_dff, s2_dff, s3_dff)
 
 #
 #--- move to the plot directory
 #
-        outfile = detector + '.png'
-        cmd     = 'mv hrc.png ' + plot_dir +  outfile
-        os.system(cmd)
+            outfile = detector + '.png'
+            cmd     = 'mv hrc.png ' + plot_dir +  outfile
+            os.system(cmd)
+        except:
+            pass
 
 
 

@@ -8,7 +8,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last update: May 29, 2014                                                       #
+#       last update: Mar 03, 2016                                                       #
 #                                                                                       #
 #########################################################################################
 
@@ -133,14 +133,18 @@ def read_data(indir, inst, part):
     f.close()
     for ent in data:
         atemp = re.split('\s+', ent)
+        try:
+            avg.append(float(atemp[2]))
+            smin.append(float(atemp[4]))
+            smax.append(float(atemp[6]))
+            s1.append(float(atemp[8]))
+            s2.append(float(atemp[9]))
+            s3.append(float(atemp[10]))
+        except:
+            continue
+
         time  = float(atemp[0]) + float(atemp[1])/12.0 + 0.5
         date.append(time)
-        avg.append(float(atemp[2]))
-        smin.append(float(atemp[4]))
-        smax.append(float(atemp[6]))
-        s1.append(float(atemp[8]))
-        s2.append(float(atemp[9]))
-        s3.append(float(atemp[10]))
 
     return [date,  avg, smin, smax, s1, s2, s3]
 
@@ -171,32 +175,51 @@ def plot_acis_dose(date, amean, amin, amax, accs1, accs2, accs3, dmean, dmin, dm
 #--- mean
 #
     ax1 = plt.subplot(4,2,1)
-    plot_panel(date, dmean, 'Average', ax1)
+    try:
+        plot_panel(date, dmean, 'Average', ax1)
+    except:
+        pass
+
 #
 #--- mean cumulative
 #
     ax2 = plt.subplot(4,2,2)
-    plot_panel(date, amean, 'Average Cumulative', ax2)
+    try:
+        plot_panel(date, amean, 'Average Cumulative', ax2)
+    except:
+        pass
 #
 #--- min
 #
     ax3 = plt.subplot(4,2,3)
-    plot_panel(date, dmin, 'Minimum', ax3)
+    try:
+        plot_panel(date, dmin, 'Minimum', ax3)
+    except:
+        pass
 #
 #--- min cumulative
 #
     ax4 = plt.subplot(4,2,4)
-    plot_panel(date, amin, 'Minimum Cumulative', ax4)
+    try:
+        plot_panel(date, amin, 'Minimum Cumulative', ax4)
+    except:
+        pass
 #
 #--- max
 #
     ax5 = plt.subplot(4,2,5)
-    plot_panel(date, dmax, 'Maximum', ax5)
+    try:
+        plot_panel(date, dmax, 'Maximum', ax5)
+    except:
+        pass
 #
 #--- max cumulative
 #
     ax6 = plt.subplot(4,2,6)
-    plot_panel(date, amax, 'Maximum Cumulative', ax6)
+    try:
+        plot_panel(date, amax, 'Maximum Cumulative', ax6)
+    except:
+        pass
 
 
 #
@@ -204,12 +227,18 @@ def plot_acis_dose(date, amean, amin, amax, accs1, accs2, accs3, dmean, dmin, dm
 #
     labels = ["68% Value ", "95% Value", "99.7% Value"]
     ax7 = plt.subplot(4,2,7)
-    plot_panel2(date, dffs1, dffs2, dffs3,  labels, ax7)
+    try:
+        plot_panel2(date, dffs1, dffs2, dffs3,  labels, ax7)
+    except:
+        pass
 #
 #--- 68, 95, and 99.6% cumulative
 #
     ax8 = plt.subplot(4,2,8)
-    plot_panel2(date, accs1, accs2, accs3, labels, ax8)
+    try:
+        plot_panel2(date, accs1, accs2, accs3, labels, ax8)
+    except:
+        pass
 
 #
 #--- plot x axis tick label only at the bottom ones

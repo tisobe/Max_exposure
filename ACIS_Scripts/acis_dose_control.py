@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Jun 10, 2013                                                      #
+#       last updated: Jul 06, 2015                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -99,42 +99,42 @@ def acis_dose_control(year = 'NA', month = 'NA', comp_test = 'NA'):
 #
 #--- create cumulative data and sectioned data for bot month and cumulative data
 #
-    file = 'ACIS_' + smon + '_' + syear + '.fits'
-    file2= 'ACIS_' + smon + '_' + syear + '.fits.gz'
-
-    chk = 0
-    for test in os.listdir('./'):
-        if fnmatch.fnmatch(test, file2):
-            chk = 1
-            break
-
-    if chk == 0:
-       cuml.acis_create_cumulative(file, comp_test)
-       pass
-    else:
-       pass
-       cuml.acis_create_cumulative(file2, comp_test)
+##    file = 'ACIS_' + smon + '_' + syear + '.fits'
+##    file2= 'ACIS_' + smon + '_' + syear + '.fits.gz'
+##
+##    chk = 0
+##    for test in os.listdir('./'):
+##        if fnmatch.fnmatch(test, file2):
+##            chk = 1
+##            break
+##
+##    if chk == 0:
+##       cuml.acis_create_cumulative(file, comp_test)
+##       pass
+##    else:
+##       pass
+##       cuml.acis_create_cumulative(file2, comp_test)
 #
 #--- compute statistics
 #
-    astat.acis_dose_extract_stat_data_month(year, month, comp_test)
+##    astat.acis_dose_extract_stat_data_month(year, month, comp_test)
 #
 #--- plot data
 #
-    aplot.acis_dose_plot_exposure_stat(clean='Yes', comp_test=comp_test)
+##    aplot.acis_dose_plot_exposure_stat(clean='Yes', comp_test=comp_test)
 #
 #--- create images (you need to use ds9 to create a better image)
 #
-    aimg.create_acis_maps(year, month, comp_test)
+##    aimg.create_acis_maps(year, month, comp_test)
 #
 #--- update html pages
 #
-    ahtml.acis_dose_make_data_html(comp_test = comp_test)
+##    ahtml.acis_dose_make_data_html(comp_test = comp_test)
 
 #
 #--- print monthly output
 #
-    arport.acis_dose_monthly_report()
+##    arport.acis_dose_monthly_report()
 
 
 

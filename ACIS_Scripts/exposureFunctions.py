@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Dec 03, 2014                                                      #
+#       last updated: Mar 03, 2016                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -22,7 +22,7 @@ import fnmatch
 #
 from Ska.Shell import getenv, bash
 
-ascdsenv = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
+ascdsenv = getenv('source /home/ascds/.ascrc -r release; source /home/mta/bin/reset_param', shell='tcsh')
 
 #
 #--- reading directory list
@@ -337,19 +337,23 @@ def combine_image(fits1, fits2):
         cmd =  'mv ' + fits1 + ' ' + fits2
         os.system(cmd)
     else:
-         cmd1 = "/usr/bin/env PERL5LIB="
-         cmd2 = ' dmimgcalc infile=' + fits1 + ' infile2=' + fits2 + ' outfile=mtemp.fits operation=add  clobber=yes'
-         cmd  = cmd1 + cmd2
-         bash(cmd,  env=ascdsenv)
+        try:
+            cmd1 = "/usr/bin/env PERL5LIB="
+            cmd2 = ' dmimgcalc infile=' + fits1 + ' infile2=' + fits2 + ' outfile=mtemp.fits operation=add  clobber=yes'
+            cmd  = cmd1 + cmd2
+            bash(cmd,  env=ascdsenv)
 
-         cmd = 'rm ' + fits1
-         os.system(cmd)
+            cmd = 'rm ' + fits1
+            os.system(cmd)
 #
 #--- rename the combined fits image to "fits2"
 #
 
-         cmd = 'mv mtemp.fits ' + fits2
-         os.system(cmd)
+            cmd = 'mv mtemp.fits ' + fits2
+            os.system(cmd)
+        except:
+            cmd = 'rm ' + fits1
+            os.system(cmd)
 
 
 #-----------------------------------------------------------------------------------------------------
@@ -363,15 +367,21 @@ def create_image(line, outfile):
     input line: instruction,, outfile: output file name
     """
 
+#    try:
     cmd1 = "/usr/bin/env PERL5LIB="
     cmd2 = ' dmcopy "' + line + '" out.fits option=image clobber=yes'
     cmd  = cmd1 + cmd2
     bash(cmd,  env=ascdsenv)
+#    except:
+#        pass
 
-    cmd1 = "/usr/bin/env PERL5LIB="
-    cmd2 = ' dmstat out.fits centroid=no > stest'
-    cmd  = cmd1 + cmd2
-    bash(cmd,  env=ascdsenv)
+    try:
+        cmd1 = "/usr/bin/env PERL5LIB="
+        cmd2 = ' dmstat out.fits centroid=no > stest'
+        cmd  = cmd1 + cmd2
+        bash(cmd,  env=ascdsenv)
+    except:
+        pass
 #
 #--- if there is actually data, condense the iamge so that it won't take too much space
 #

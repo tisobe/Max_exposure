@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Dec 03, 2014                                                      #
+#       last updated: Mar 03, 2016                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -19,7 +19,7 @@ import re
 #--- from ska
 #
 from Ska.Shell import getenv, bash
-ascdsenv  = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
+ascdsenv  = getenv('source /home/ascds/.ascrc -r release; source /home/mta/bin/reset_param', shell='tcsh')
 
 #
 #--- reading directory list
@@ -172,8 +172,11 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
                     cmd1 = "/usr/bin/env PERL5LIB="
                     cmd2 =  ' echo ' +  hakama + ' |arc4gl -U' + dare + ' -Sarcocc -i./zspace'
                     cmd  = cmd1 + cmd2
-                    bash(cmd,  env=ascdsenv)
-                    mtac.rm_file('./zspace')
+                    try:
+                        bash(cmd,  env=ascdsenv)
+                        mtac.rm_file('./zspace')
+                    except:
+                        continue
                         
                     cmd = 'gzip -d ' + file + '.gz'
                     os.system(cmd)

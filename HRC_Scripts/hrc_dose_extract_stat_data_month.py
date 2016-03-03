@@ -7,7 +7,9 @@
 #                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                               #
 #                                                                                               #
-#       last update: Dec 03, 2014                                                               #
+#       last update: Oct 13, 2015                                                               #
+#                                                                                               #
+#       commented out full image statistics     Jan 04, 2016                                    #
 #                                                                                               #
 #################################################################################################
 
@@ -85,20 +87,23 @@ def comp_stat(file, year, month, out):
 #
 #--- to avoid getting min value from the outside of the frame edge of a CCD, set threshold
 #
-        cmd1 = "/usr/bin/env PERL5LIB="
-        cmd2 = ' /bin/nice -n15 dmimgthresh infile=' + file + ' outfile=zcut.fits  cut="0:1.e10" value=0 clobber=yes'
-        cmd  = cmd1 + cmd2
-        bash(cmd,  env=ascdsenv)
-        cmd1 = "/usr/bin/env PERL5LIB="
-        cmd2 = ' dmstat  infile=zcut.fits  centroid=no >' + zspace
-        cmd  = cmd1 + cmd2
-        bash(cmd,  env=ascdsenv)
+        try:
+            cmd1 = "/usr/bin/env PERL5LIB="
+            cmd2 = ' /bin/nice -n15 dmimgthresh infile=' + file + ' outfile=zcut.fits  cut="0:1.e10" value=0 clobber=yes'
+            cmd  = cmd1 + cmd2
+            bash(cmd,  env=ascdsenv)
+            cmd1 = "/usr/bin/env PERL5LIB="
+            cmd2 = ' dmstat  infile=zcut.fits  centroid=no >' + zspace
+            cmd  = cmd1 + cmd2
+            bash(cmd,  env=ascdsenv)
 
-        mcf.rm_file('./zcut.fits')
+            mcf.rm_file('./zcut.fits')
 
-        f    = open(zspace, 'r')
-        data = [line.strip() for line in f.readlines()]
-        f.close()
+            f    = open(zspace, 'r')
+            data = [line.strip() for line in f.readlines()]
+            f.close()
+        except:
+            data = []
         
         val = 'NA'
         for ent in data:
@@ -326,24 +331,24 @@ def hrc_dose_extract_stat_data_month(year='NA', month='NA', comp_test = 'NA'):
 #--- full exposure map stat
 #
 
-    for i in range(0,10):
-        file = dp_cum_dir_hrc_full +  '/HRCS_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_acc_out'
-        comp_stat(file, year, month, out)
-
-        file = dp_mon_dir_hrc_full +  '/HRCS_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_dff_out'
-        comp_stat(file, year, month, out)
-
-
-    for i in range(0,9):
-        file = dp_cum_dir_hrc_full +  '/HRCI_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_acc_out'
-        comp_stat(file, year, month, out)
-
-        file = dp_mon_dir_hrc_full +  '/HRCI_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
-        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_dff_out'
-        comp_stat(file, year, month, out)
+##    for i in range(0,10):
+##        file = dp_cum_dir_hrc_full +  '/HRCS_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
+##        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_acc_out'
+##        comp_stat(file, year, month, out)
+##
+##        file = dp_mon_dir_hrc_full +  '/HRCS_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
+##        out  = dp_data_out_hrc + '/hrcs_' + str(i) + '_dff_out'
+##        comp_stat(file, year, month, out)
+##
+##
+##    for i in range(0,9):
+##        file = dp_cum_dir_hrc_full +  '/HRCI_09_1999_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
+##        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_acc_out'
+##        comp_stat(file, year, month, out)
+##
+##        file = dp_mon_dir_hrc_full +  '/HRCI_' + smonth + '_' + syear + '_'+ str(i) +  '.fits.gz'
+##        out  = dp_data_out_hrc + '/hrci_' + str(i) + '_dff_out'
+##        comp_stat(file, year, month, out)
 
 
 #--------------------------------------------------------------------------------------------------------

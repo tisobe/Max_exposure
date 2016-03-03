@@ -1,11 +1,8 @@
-source ~/.ascrc 
-
-
 cd /data/mta/Script/Exposure/Exc_h
 rm -rf param
 mkdir param
 
-setenv PYTHONPATH "/proj/sot/ska/arch/x86_64-linux_CentOS-5/lib/python2.7/site-packages:$PYTHONPATH"
+source /proj/sot/ska/bin/ska_envs.csh
 
 /data/mta/Script/Exposure/Scripts/HRC_Scripts/hrc_prep_test.py
 

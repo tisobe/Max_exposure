@@ -18,6 +18,12 @@ import re
 import copy
 import numpy as np
 
+#import matplotlib as mpl
+#import matplotlib.pyplot as plt
+#import matplotlib.font_manager as font_manager
+#import matplotlib.lines as lines
+
+
 #
 #--- pylab plotting routine related modules
 #
@@ -123,7 +129,7 @@ def plot_max_dose(date, hrci_max, hrcs_max):
 #
 
     mpl.rcParams['font.size'] = 16
-    mpl.rcParams['font.style'] = 'bold'
+    #mpl.rcParams['font.style'] = 'bold'
     mpl.rcParams['axes.linewidth'] = 2.0
     props = font_manager.FontProperties(size=14)
     plt.subplots_adjust(hspace=0.05)

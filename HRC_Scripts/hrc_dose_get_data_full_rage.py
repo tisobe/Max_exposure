@@ -7,7 +7,9 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Dec 03, 2014                                                      #
+#       last updated: Mar 03, 2016                                                      #
+#                                                                                       #
+#       commented out full image part   Jan 04, 2016                                    #
 #                                                                                       #
 #########################################################################################
 
@@ -20,7 +22,7 @@ import re
 #
 from Ska.Shell import getenv, bash
 
-ascdsenv = getenv('source /home/ascds/.ascrc -r release', shell='tcsh')
+ascdsenv = getenv('source /home/ascds/.ascrc -r release;source /home/mta/bin/reset_param', shell='tcsh')
 
 #
 #--- reading directory list
@@ -258,28 +260,28 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
 #---- now work on the full image ----------------------------------------
 #
 
-                for i in range(0, 10):
-
-                    if detector == 'HRC-I' and i == 9:                  #---- HRC-I has only 9 sections HRC-S has 10 sections
-                        break
-
-                    line = set_cmd_line(fitsName, detector, 'full',  i)           #---- set command line
-
-                    ichk =  expf.create_image(line, 'ztemp.fits')           #---- create an image file
+##                for i in range(0, 10):
+##
+##                    if detector == 'HRC-I' and i == 9:                  #---- HRC-I has only 9 sections HRC-S has 10 sections
+##                        break
+##
+##                    line = set_cmd_line(fitsName, detector, 'full',  i)           #---- set command line
+##
+##                    ichk =  expf.create_image(line, 'ztemp.fits')           #---- create an image file
 #
 #--- for HRC S
 #
-                    if detector == 'HRC-S' and ichk > 0:
-                        fits  = 'total_s' + str(i) + '.fits'
-                        expf.combine_image('ztemp.fits', fits)    #--- add ztemp.fits to fits, if there if no fits, mv ztempfits to fits
-                        hrcsCnt[i] += 1
+##                    if detector == 'HRC-S' and ichk > 0:
+##                        fits  = 'total_s' + str(i) + '.fits'
+##                        expf.combine_image('ztemp.fits', fits)    #--- add ztemp.fits to fits, if there if no fits, mv ztempfits to fits
+##                        hrcsCnt[i] += 1
 #
 #--- for HRC I
 #
-                    elif detector == 'HRC-I' and ichk > 0:
-                        fits  = 'total_i' + str(i) + '.fits'
-                        expf.combine_image('ztemp.fits', fits)
-                        hrciCnt[i] += 1
+##                    elif detector == 'HRC-I' and ichk > 0:
+##                        fits  = 'total_i' + str(i) + '.fits'
+##                        expf.combine_image('ztemp.fits', fits)
+##                        hrciCnt[i] += 1
 
                 cmd = 'rm out.fits ' + fitsName
                 os.system(cmd)
@@ -310,28 +312,28 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
 #
 #---full image
 #
-            if comp_test == 'test':
-                    dp_hrc_full_data = test_hrc_full_data
-            else:
-                    dp_hrc_full_data = hrc_full_data
-
-            for i in range(0,10):    
-                if hrcsCnt[i] > 0:
-                    cmd = 'mv total_s' + str(i) + '.fits ' + dp_hrc_full_data + '/Month_hrc/' + outfile_s[i]
-                    os.system(cmd)
-                    cmd = 'gzip ' + dp_hrc_full_data + '/Month_hrc/*.fits'
-                    os.system(cmd)
-                
-                createCumulative(year, month, 'HRC-S', 'full', dp_hrc_full_data, i)
-
-            for i in range(0,9):    
-                if hrciCnt[i] > 0:
-                    cmd = 'mv total_i' + str(i) + '.fits ' + dp_hrc_full_data + '/Month_hrc/' + outfile_i[i]
-                    os.system(cmd)
-                    cmd = 'gzip ' + dp_hrc_full_data + '/Month_hrc/*.fits'
-                    os.system(cmd)
-                
-                createCumulative(year, month, 'HRC-I', 'full', dp_hrc_full_data, i)
+##            if comp_test == 'test':
+##                    dp_hrc_full_data = test_hrc_full_data
+##            else:
+##                    dp_hrc_full_data = hrc_full_data
+##
+##            for i in range(0,10):    
+##                if hrcsCnt[i] > 0:
+##                    cmd = 'mv total_s' + str(i) + '.fits ' + dp_hrc_full_data + '/Month_hrc/' + outfile_s[i]
+##                    os.system(cmd)
+##                    cmd = 'gzip ' + dp_hrc_full_data + '/Month_hrc/*.fits'
+##                    os.system(cmd)
+##                
+##                createCumulative(year, month, 'HRC-S', 'full', dp_hrc_full_data, i)
+##
+##            for i in range(0,9):    
+##                if hrciCnt[i] > 0:
+##                    cmd = 'mv total_i' + str(i) + '.fits ' + dp_hrc_full_data + '/Month_hrc/' + outfile_i[i]
+##                    os.system(cmd)
+##                    cmd = 'gzip ' + dp_hrc_full_data + '/Month_hrc/*.fits'
+##                    os.system(cmd)
+##                
+##                createCumulative(year, month, 'HRC-I', 'full', dp_hrc_full_data, i)
 
 
 
@@ -487,14 +489,14 @@ def findEntry(file, term):
 
     val = 'NA'
     cmd1 = "/usr/bin/env PERL5LIB="
-    cmd2 = ' dmlist infile=' + file + ' opt=head > zout'
+    cmd2 = ' dmlist infile=' + file + ' opt=head >  zout '
     cmd  = cmd1 + cmd2
     bash(cmd,  env=ascdsenv)
 
     f    = open('zout', 'r')
     data = [line.strip() for line in f.readlines()]
     f.close()
-    os.system('rm zout')
+    os.system('rm -rf  zout')
 
     for ent in data:
         m = re.search(term, ent)
