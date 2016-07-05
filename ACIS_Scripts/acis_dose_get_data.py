@@ -6,7 +6,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Mar 03, 2016                                                      #
+#       last updated: Jul 05, 2016                                                      #
 #                                                                                       #
 #########################################################################################
 
@@ -19,7 +19,7 @@ import re
 #--- from ska
 #
 from Ska.Shell import getenv, bash
-ascdsenv  = getenv('source /home/ascds/.ascrc -r release; source /home/mta/bin/reset_param', shell='tcsh')
+ascdsenv  = getenv('source /home/ascds/.ascrc -r release; source /home/mta/bin/reset_param ', shell='tcsh')
 
 #
 #--- reading directory list
@@ -59,13 +59,6 @@ import mta_common_functions as mtac
 
 import exposureFunctions as expf
 
-#
-#--- a couple of things needed
-#
-dare   = mtac.get_val('.dare',   dir = bindata_dir, lst=1)
-hakama = mtac.get_val('.hakama', dir = bindata_dir, lst=1)
-
-
 #-----------------------------------------------------------------------------------------------------------
 #-- acis_dose_get_data: extract ACIS evt1 data and create combined image file                            ---
 #-----------------------------------------------------------------------------------------------------------
@@ -93,7 +86,6 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
     for year in range(startYear, stopYear+1):
 
         lyear = str(year)
-        syear = lyear[2] + lyear[3]
 
         month_list =  expf.make_month_list(year, startYear, stopYear, startMonth, stopMonth)  #---- create a list of month appropriate for the year
 
@@ -103,19 +95,12 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
             if month < 10:
                 smonth = '0' + smonth
 #
-#--- using ar4gl, get file names
+#--- using ar5gl, get file names
 #
-#            ydate1 = tcnv.findYearDate(year, month, 1)
-            start = smonth + '/01/' + syear + ',00:00:00'
+            start = lyear + '-' + smonth + '-01T00:00:00'
 
             nextMonth = month + 1
-#            if nextMonth > 12:
-#                nyear     = year + 1
-#                ydate2 = tcnv.findYearDate(nyear, 1, 1)
-#            else:
-#                nyear  = year                
-#                ydate2 = tcnv.findYearDate(year, nextMonth, 1)
-            nyear = year + 1
+            nyear = int(float(lyear))
             if nextMonth > 12:
                 nextMonth = 1
                 nyear += 1
@@ -123,9 +108,7 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
             smon  = str(nextMonth)
             if nextMonth < 10:
                 smon = '0' + smon
-            stop = smon + '/01/' + syear[2] + syear[3] + ',00:00:00'
-            
-
+            stop = syear + '-' + smon + '-01T00:00:00'
 
             line = 'operation=browse\n'
             line = line + 'dataset=flight\n'
@@ -138,8 +121,8 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
             f    = open('./zspace', 'w')
             f.write(line)
             f.close()
-            cmd1 = "/usr/bin/env PERL5LIB="
-            cmd2 =  ' echo ' +  hakama + ' |arc4gl -U' + dare + ' -Sarcocc -i./zspace > ./zout'
+            cmd1 = "/usr/bin/env PERL5LIB= "
+            cmd2 =  ' /proj/axaf/simul/bin/arc5gl -user isobe -script ./zspace > ./zout'
             cmd  = cmd1 + cmd2
             bash(cmd,  env=ascdsenv)
             mtac.rm_file('./zspace')
@@ -170,7 +153,7 @@ def acis_dose_get_data(startYear='NA', startMonth='NA', stopYear='NA', stopMonth
                     f.write(line)
                     f.close()
                     cmd1 = "/usr/bin/env PERL5LIB="
-                    cmd2 =  ' echo ' +  hakama + ' |arc4gl -U' + dare + ' -Sarcocc -i./zspace'
+                    cmd2 =  ' /proj/axaf/simul/bin/arc5gl -user isobe -script ./zspace'
                     cmd  = cmd1 + cmd2
                     try:
                         bash(cmd,  env=ascdsenv)

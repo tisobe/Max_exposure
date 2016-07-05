@@ -7,7 +7,7 @@
 #                                                                                       #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                       #
 #                                                                                       #
-#       last updated: Mar 03, 2016                                                      #
+#       last updated: Jul 05, 2016                                                      #
 #                                                                                       #
 #       commented out full image part   Jan 04, 2016                                    #
 #                                                                                       #
@@ -153,14 +153,15 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
                 outfile_s[i] = './HRCS_' + smonth + '_' + lyear + '_' + str(i) + '.fits'
 
 #
-#--- using ar4gl, get file names
+#--- using ar5gl, get file names
 #
             smonth = str(month)
             if month < 10:
                 smonth = '0' + smonth
 
             syear = str(year)
-            start = smonth + '/01/' + syear[2] + syear[3] + ',00:00:00'
+            #start = smonth + '/01/' + syear[2] + syear[3] + ',00:00:00'
+            start = syear + '-' + smonth + '-01T00:00:00'
 
             nextMonth = month + 1
             if nextMonth > 12:
@@ -174,7 +175,8 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
                 smonth = '0' + smonth
 
             syear = str(lyear)
-            stop  = smonth + '/01/' + syear[2] + syear[3] + ',00:00:00'
+            #stop  = smonth + '/01/' + syear[2] + syear[3] + ',00:00:00'
+            stop  = lyear + '-' + smonth + '-01T00:00:00'
 
             line = 'operation=browse\n'
             line = line + 'dataset=flight\n'
@@ -188,7 +190,7 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
             f.write(line)
             f.close()
             cmd1 = "/usr/bin/env PERL5LIB="
-            cmd2 =  ' echo ' +  hakama + ' |arc4gl -U' + dare + ' -Sarcocc -i./zspace > ./zout'
+            cmd2 =  '  /proj/axaf/simul/bin/arc5gl -user isobe -script ./zspace > ./zout'
             cmd  = cmd1 + cmd2
             bash(cmd,  env=ascdsenv)
             mtac.rm_file('./zspace')
@@ -226,7 +228,7 @@ def hrc_dose_get_data(startYear = 'NA', startMonth = 'NA', stopYear = 'NA', stop
                     f.write(line)
                     f.close()
                     cmd1 = "/usr/bin/env PERL5LIB="
-                    cmd2 =  ' echo ' +  hakama + ' |arc4gl -U' + dare + ' -Sarcocc -i./zspace'
+                    cmd2 =  ' /proj/axaf/simul/bin/arc5gl -user isobe -script  ./zspace'
                     cmd  = cmd1 + cmd2
                     bash(cmd,  env=ascdsenv)
                     mtac.rm_file('./zspace')
