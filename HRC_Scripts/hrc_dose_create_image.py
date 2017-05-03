@@ -6,7 +6,7 @@
 #                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                               #
 #                                                                                               #
-#       last update: Apr 11, 2013                                                               #
+#       last update: May 03, 2017                                                               #
 #                                                                                               #
 #################################################################################################
 
@@ -139,6 +139,10 @@ def hrc_dose_conv_to_png(indir, outdir, year, month):
             file_p  = indir + file
 
             mtaimg.mta_convert_fits_to_image(file_p, outfile, 'log', '125x125', 'heat', 'png')
+            cmd = 'convert -trim ' + outfile + ' ztemp.png'
+            os.system(cmd)
+            cmd = 'mv ztemp.png ' + outfile
+            os.system(cmd)
         else:
             pass
 
